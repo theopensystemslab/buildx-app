@@ -6,9 +6,14 @@ import type {
 } from "@opensystemslab/buildx-core";
 import {
   BuildXScene,
-  cachedHousesTE,
+  cachedElementsTE,
+  cachedHouseTypesTE,
+  cachedMaterialsTE,
+  cachedModelsTE,
+  cachedModulesTE,
   defaultCachedHousesOps,
   houseGroupTE,
+  localHousesTE,
 } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
 import { useEffect, useRef, useState } from "react";
@@ -16,9 +21,11 @@ import usePortal from "react-cool-portal";
 import FullScreenContainer from "~/ui/FullScreenContainer";
 import IconButton from "~/ui/IconButton";
 import { Menu } from "~/ui/icons";
-import { A, TE } from "~/utils/functions";
+import { A, TE, unwrapTaskEither } from "~/utils/functions";
 import BuildXContextMenu from "./menu/BuildXContextMenu";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
+import { suspend } from "suspend-react";
+import { sequenceT } from "fp-ts/lib/Apply";
 
 let scene: BuildXScene | null = null;
 
@@ -28,6 +35,23 @@ export const getBuildXScene = (): BuildXScene | null => {
 
 const App = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  suspend(
+    () =>
+      pipe(
+        sequenceT(TE.ApplicativeSeq)(
+          cachedMaterialsTE,
+          // elements depends on materials
+          cachedElementsTE,
+          cachedModulesTE,
+          // models depends on modules
+          cachedModelsTE,
+          cachedHouseTypesTE
+        ),
+        unwrapTaskEither
+      ),
+    ["main"]
+  );
 
   const [contextMenu, setContextMenu] = useState<{
     scopeElement: ScopeElement;
@@ -87,7 +111,7 @@ const App = () => {
     });
 
     pipe(
-      cachedHousesTE,
+      localHousesTE,
       TE.chain((houses) => {
         // this is new
         if (houses.length === 0) setObjectsSidebar(true);
@@ -95,6 +119,7 @@ const App = () => {
         return pipe(
           houses,
           A.traverse(TE.ApplicativePar)(
+            // @ts-ignore
             ({
               houseId,
               systemId,
