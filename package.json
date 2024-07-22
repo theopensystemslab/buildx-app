@@ -12,7 +12,9 @@
   "dependencies": {
     "@carbon/icons-react": "^11.45.0",
     "@opensystemslab/buildx-core": "^0.3.10",
+    "@tanstack/react-table": "^8.19.3",
     "clsx": "^2.1.1",
+    "d3-dsv": "^3.0.1",
     "fathom-client": "^3.7.2",
     "fp-ts": "^2.16.8",
     "next": "14.2.5",
@@ -29,6 +31,7 @@
     "valtio": "^1.13.2"
   },
   "devDependencies": {
+    "@types/d3-dsv": "^3.0.7",
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
