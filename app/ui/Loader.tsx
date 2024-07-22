@@ -1,8 +1,9 @@
-import React from "react"
+import React from "react";
 
-export default function Loader() {
+const Loader = () => {
+  console.log("Loader");
   return (
-    <div className="absolute top-0 w-full h-full flex justify-center items-center">
+    <div className="absolute z-50 top-0 w-full h-full flex justify-center items-center">
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -22,5 +23,7 @@ export default function Loader() {
         <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
       </svg>
     </div>
-  )
-}
+  );
+};
+
+export default Loader;

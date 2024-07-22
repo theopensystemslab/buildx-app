@@ -16,7 +16,7 @@ import {
   localHousesTE,
 } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import usePortal from "react-cool-portal";
 import FullScreenContainer from "~/ui/FullScreenContainer";
 import IconButton from "~/ui/IconButton";
@@ -26,6 +26,7 @@ import BuildXContextMenu from "./menu/BuildXContextMenu";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import { suspend } from "suspend-react";
 import { sequenceT } from "fp-ts/lib/Apply";
+import Loader from "../ui/Loader";
 
 let scene: BuildXScene | null = null;
 
@@ -33,7 +34,7 @@ export const getBuildXScene = (): BuildXScene | null => {
   return scene;
 };
 
-const App = () => {
+const SuspendedApp = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   suspend(
@@ -188,5 +189,11 @@ const App = () => {
     </FullScreenContainer>
   );
 };
+
+const App = () => (
+  <Suspense fallback={<Loader />}>
+    <SuspendedApp />
+  </Suspense>
+);
 
 export default App;
