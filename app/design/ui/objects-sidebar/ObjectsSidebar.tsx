@@ -1,15 +1,22 @@
-import { useHouseTypes } from "@opensystemslab/buildx-core";
+import { cachedHouseTypesTE } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
 import { Fragment, Suspense } from "react";
+import { suspend } from "suspend-react";
 import Loader from "~/ui/Loader";
 import Sidebar from "~/ui/Sidebar";
-import { A } from "~/utils/functions";
+import { A, unwrapTaskEither } from "~/utils/functions";
 import HouseThumbnail from "./HouseThumbnail";
 
 const HouseTypes = (props: { close: () => void }) => {
   const { close } = props;
 
-  const houseTypes = useHouseTypes();
+  const houseTypes = suspend(
+    () => unwrapTaskEither(cachedHouseTypesTE),
+    ["houseTypes"]
+  );
+
+  console.log({ houseTypes });
+
   return (
     <Fragment>
       {pipe(
