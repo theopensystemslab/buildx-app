@@ -6,14 +6,10 @@ import type {
 } from "@opensystemslab/buildx-core";
 import {
   BuildXScene,
-  cachedElementsTE,
-  cachedHouseTypesTE,
-  cachedMaterialsTE,
-  cachedModelsTE,
-  cachedModulesTE,
   defaultCachedHousesOps,
   houseGroupTE,
   localHousesTE,
+  useSuspendAllBuildData,
 } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
 import { Suspense, useEffect, useRef, useState } from "react";
@@ -21,12 +17,10 @@ import usePortal from "react-cool-portal";
 import FullScreenContainer from "~/ui/FullScreenContainer";
 import IconButton from "~/ui/IconButton";
 import { Menu } from "~/ui/icons";
-import { A, TE, unwrapTaskEither } from "~/utils/functions";
+import { A, TE } from "~/utils/functions";
+import Loader from "../ui/Loader";
 import BuildXContextMenu from "./menu/BuildXContextMenu";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
-import { suspend } from "suspend-react";
-import { sequenceT } from "fp-ts/lib/Apply";
-import Loader from "../ui/Loader";
 
 let scene: BuildXScene | null = null;
 
@@ -37,22 +31,7 @@ export const getBuildXScene = (): BuildXScene | null => {
 const SuspendedApp = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  suspend(
-    () =>
-      pipe(
-        sequenceT(TE.ApplicativeSeq)(
-          cachedMaterialsTE,
-          // elements depends on materials
-          cachedElementsTE,
-          cachedModulesTE,
-          // models depends on modules
-          cachedModelsTE,
-          cachedHouseTypesTE
-        ),
-        unwrapTaskEither
-      ),
-    ["main"]
-  );
+  useSuspendAllBuildData();
 
   const [contextMenu, setContextMenu] = useState<{
     scopeElement: ScopeElement;
