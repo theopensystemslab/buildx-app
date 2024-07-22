@@ -14,9 +14,15 @@ importers:
       '@opensystemslab/buildx-core':
         specifier: ^0.3.10
         version: 0.3.10(@tiptap/core@2.5.0(@tiptap/pm@2.5.0))(@types/react@18.3.3)(graphql@16.9.0)(mixpanel@0.17.0)(monocle-ts@2.3.13(fp-ts@2.16.8))(newtype-ts@0.3.5(fp-ts@2.16.8)(monocle-ts@2.3.13(fp-ts@2.16.8)))(pino-http@8.6.1)(pino-pretty@11.2.1)(pino@8.21.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.166.1)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))
+      '@tanstack/react-table':
+        specifier: ^8.19.3
+        version: 8.19.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      d3-dsv:
+        specifier: ^3.0.1
+        version: 3.0.1
       fathom-client:
         specifier: ^3.7.2
         version: 3.7.2
@@ -60,6 +66,9 @@ importers:
         specifier: ^1.13.2
         version: 1.13.2(@types/react@18.3.3)(react@18.3.1)
     devDependencies:
+      '@types/d3-dsv':
+        specifier: ^3.0.7
+        version: 3.0.7
       '@types/node':
         specifier: ^20.14.10
         version: 20.14.10
@@ -370,6 +379,17 @@ packages:
   '@swc/helpers@0.5.5':
     resolution: {integrity: sha512-KGYxvIOXcceOAbEk4bi/dVLEK9z8sZ0uBB3Il5b1rhfClSpcX0yfRO0KmTkqR2cnQDymwLB+25ZyMzICg/cm/A==}
 
+  '@tanstack/react-table@8.19.3':
+    resolution: {integrity: sha512-MtgPZc4y+cCRtU16y1vh1myuyZ2OdkWgMEBzyjYsoMWMicKZGZvcDnub3Zwb6XF2pj9iRMvm1SO1n57lS0vXLw==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+
+  '@tanstack/table-core@8.19.3':
+    resolution: {integrity: sha512-IqREj9ADoml9zCAouIG/5kCGoyIxPFdqdyoxis9FisXFi5vT+iYfEfLosq4xkU/iDbMcEuAj+X8dWRLvKYDNoQ==}
+    engines: {node: '>=12'}
+
   '@tiptap/core@2.5.0':
     resolution: {integrity: sha512-BEjzVhkyD2LNxiKjEBBbIEpaGE+2I4gclqEIJ4BxrWW+0BgOlYQvqoDn2PF+dAAyXGAxrlwb/+G27tDqRwE+ZQ==}
     peerDependencies:
@@ -380,6 +400,9 @@ packages:
 
   '@tweenjs/tween.js@23.1.2':
     resolution: {integrity: sha512-kMCNaZCJugWI86xiEHaY338CU5JpD0B97p1j1IKNn/Zto8PgACjQx0UxbHjmOcLl/dDOBnItwD07KmCs75pxtQ==}
+
+  '@types/d3-dsv@3.0.7':
+    resolution: {integrity: sha512-n6QBF9/+XASqcKK6waudgL0pf/S5XHPPI8APyMLLUHd8NqouBGLsU8MgtO7NINGtPBtk9Kko/W4ea0oAspwh9g==}
 
   '@types/draco3d@1.4.10':
     resolution: {integrity: sha512-AX22jp8Y7wwaBgAixaSvkoG4M/+PlAcm3Qs4OW8yT9DM4xUpWKeFhLueTAyZF39pviAdcDdeJoACapiAceqNcw==}
@@ -2699,6 +2722,14 @@ snapshots:
       '@swc/counter': 0.1.3
       tslib: 2.6.3
 
+  '@tanstack/react-table@8.19.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/table-core': 8.19.3
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@tanstack/table-core@8.19.3': {}
+
   '@tiptap/core@2.5.0(@tiptap/pm@2.5.0)':
     dependencies:
       '@tiptap/pm': 2.5.0
@@ -2725,6 +2756,8 @@ snapshots:
       prosemirror-view: 1.33.8
 
   '@tweenjs/tween.js@23.1.2': {}
+
+  '@types/d3-dsv@3.0.7': {}
 
   '@types/draco3d@1.4.10': {}
 
