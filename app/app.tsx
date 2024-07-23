@@ -1,5 +1,9 @@
 "use client";
-import { decodeShareUrlPayload, setHouses } from "@opensystemslab/buildx-core";
+import {
+  decodeShareUrlPayload,
+  setHouses,
+  updateLocatePolygon,
+} from "@opensystemslab/buildx-core";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -15,11 +19,21 @@ const App = () => {
     }
 
     try {
-      const { houses } = decodeShareUrlPayload(q);
+      const { houses, polygon } = decodeShareUrlPayload(q);
 
-      setHouses(houses);
+      if (houses && houses.length > 0) setHouses(houses);
+      if (polygon !== null) updateLocatePolygon(polygon);
 
-      router.push("/design");
+      switch (true) {
+        // case polygon !== null && houses && houses.length > 0:
+        //   router.push("build");
+        //   return;
+        case polygon !== null:
+          router.push("design");
+          return;
+        default:
+          router.push("locate");
+      }
     } catch (e) {
       console.error(e);
       router.push("/locate");

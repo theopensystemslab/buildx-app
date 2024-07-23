@@ -1,7 +1,6 @@
 import React from "react";
 
 const Loader = () => {
-  console.log("Loader");
   return (
     <div className="absolute z-50 top-0 w-full h-full flex justify-center items-center">
       <svg

@@ -1,50 +1,50 @@
 // @ts-nocheck
-import { ScopeElement } from "@opensystemslab/buildx-core"
-import { invalidate } from "@react-three/fiber"
-import { pipe } from "fp-ts/lib/function"
-import React, { useEffect, useMemo, useState } from "react"
-import { LevelType } from "../../../../server/data/levelTypes"
-import { parseDna } from "../../../../server/data/modules"
-import { useAllLevelTypes } from "../../../db/systems"
-import Radio from "../../../ui/Radio"
-import { ChangeLevel } from "../../../ui/icons"
-import { A, O, T } from "../../../utils/functions"
-import { getLayoutsWorker } from "../../../workers"
-import { createHouseLayoutGroup } from "../../ui-3d/fresh/scene/houseLayoutGroup"
+import { ScopeElement } from "@opensystemslab/buildx-core";
+import { invalidate } from "@react-three/fiber";
+import { pipe } from "fp-ts/lib/function";
+import React, { useEffect, useMemo, useState } from "react";
+import { LevelType } from "../../../../server/data/levelTypes";
+import { parseDna } from "../../../../server/data/modules";
+import { useAllLevelTypes } from "../../../db/systems";
+import Radio from "../../../ui/Radio";
+import { ChangeLevel } from "../../../ui/icons";
+import { A, O, T } from "../../../utils/functions";
+import { getLayoutsWorker } from "../../../workers";
+import { createHouseLayoutGroup } from "../../ui-3d/fresh/scene/houseLayoutGroup";
 import {
   AltLevelTypeLayout,
   Layout,
   LayoutType,
   isActiveLayout,
-} from "../../ui-3d/fresh/scene/userData"
-import ContextMenuNested from "../common/ContextMenuNested"
+} from "../../ui-3d/fresh/scene/userData";
+import ContextMenuNested from "../common/ContextMenuNested";
 
 type Props = {
-  scopeElement: ScopeElement
-  close: () => void
-}
+  scopeElement: ScopeElement;
+  close: () => void;
+};
 
 type LevelTypeOption = {
-  label: string
-  value: { levelType: LevelType; layout: Layout }
-}
+  label: string;
+  value: { levelType: LevelType; layout: Layout };
+};
 
 const ChangeLevelType = (props: Props) => {
   const {
     scopeElement,
     scopeElement: { dna, rowIndex },
     close,
-  } = props
+  } = props;
 
-  const houseGroup = scopeElement.elementGroup.houseGroup
-  const { systemId, houseId } = houseGroup.userData
-  const { dnas } = houseGroup.activeLayoutGroup.userData
+  const houseGroup = scopeElement.elementGroup.houseGroup;
+  const { systemId, houseId } = houseGroup.userData;
+  const { dnas } = houseGroup.activeLayoutGroup.userData;
 
-  const { levelType: currentLevelTypeCode } = parseDna(dna)
+  const { levelType: currentLevelTypeCode } = parseDna(dna);
 
-  const allLevelTypes = useAllLevelTypes()
+  const allLevelTypes = useAllLevelTypes();
 
-  const [altOpts, setAltOpts] = useState<LevelTypeOption[]>([])
+  const [altOpts, setAltOpts] = useState<LevelTypeOption[]>([]);
 
   const origOpt = useMemo(
     (): O.Option<LevelTypeOption> =>
@@ -61,7 +61,7 @@ const ChangeLevelType = (props: Props) => {
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [allLevelTypes, houseGroup.userData, currentLevelTypeCode]
-  )
+  );
 
   useEffect(() => {
     pipe(
@@ -92,9 +92,9 @@ const ChangeLevelType = (props: Props) => {
                     type: LayoutType.Enum.ALT_LEVEL_TYPE,
                     target: scopeElement,
                     levelType,
-                  }
+                  };
 
-                  houseGroup.userData.pushAltLayout(layout)
+                  houseGroup.userData.pushAltLayout(layout);
 
                   return {
                     label: levelType.description,
@@ -102,22 +102,21 @@ const ChangeLevelType = (props: Props) => {
                       layout,
                       levelType,
                     },
-                  }
+                  };
                 })
               )
           )
         )
       )
     )().then((altOpts) => {
-      // console.log({ altWinTypeOpts })
-      setAltOpts(altOpts)
-    })
+      setAltOpts(altOpts);
+    });
 
     return () => {
-      houseGroup.userData.dropAltLayoutsByType(LayoutType.Enum.ALT_LEVEL_TYPE)
-    }
+      houseGroup.userData.dropAltLayoutsByType(LayoutType.Enum.ALT_LEVEL_TYPE);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dnas, houseId, rowIndex, scopeElement, systemId])
+  }, [dnas, houseId, rowIndex, scopeElement, systemId]);
   //       const originalOption: LevelTypeOption =
   // const origLevelTypeOpt = useMemo((): O.Option<LevelTypeOption> =>
   // pipe(allLevelTypes, A.findFirst(({})=> levelType. {
@@ -134,51 +133,51 @@ const ChangeLevelType = (props: Props) => {
           levelType: { code },
         },
       }) => {
-        let levelString = "level height"
+        let levelString = "level height";
 
         if (code[0] === "F") {
-          levelString = "foundations type"
+          levelString = "foundations type";
         }
 
         if (code[0] === "R") {
-          levelString = "roof type"
+          levelString = "roof type";
         }
 
-        return levelString
+        return levelString;
       }
     )
-  )
+  );
 
   const previewLevelType = (incoming: LevelTypeOption["value"] | null) => {
-    const { setPreviewLayout } = houseGroup.userData
+    const { setPreviewLayout } = houseGroup.userData;
 
     if (incoming) {
       if (!isActiveLayout(incoming.layout)) {
-        setPreviewLayout(incoming.layout)
+        setPreviewLayout(incoming.layout);
       }
     } else {
-      setPreviewLayout(null)
+      setPreviewLayout(null);
     }
 
-    invalidate()
-  }
+    invalidate();
+  };
 
   const changeLevelType = ({ layout }: LevelTypeOption["value"]) => {
-    const { setActiveLayout, setPreviewLayout, updateDB } = houseGroup.userData
+    const { setActiveLayout, setPreviewLayout, updateDB } = houseGroup.userData;
 
     if (!isActiveLayout(layout)) {
-      setActiveLayout(layout)
+      setActiveLayout(layout);
     }
 
-    setPreviewLayout(null)
+    setPreviewLayout(null);
 
     updateDB().then(() => {
-      houseGroup.userData.refreshAltSectionTypeLayouts()
-      houseGroup.userData.switchHandlesVisibility("STRETCH")
-    })
+      houseGroup.userData.refreshAltSectionTypeLayouts();
+      houseGroup.userData.switchHandlesVisibility("STRETCH");
+    });
 
-    close()
-  }
+    close();
+  };
   return (
     <ContextMenuNested
       long
@@ -204,7 +203,7 @@ const ChangeLevelType = (props: Props) => {
         O.toNullable
       )}
     </ContextMenuNested>
-  )
-}
+  );
+};
 
-export default ChangeLevelType
+export default ChangeLevelType;
