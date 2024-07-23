@@ -9,7 +9,7 @@ import { Fragment, useEffect, useState } from "react";
 import usePortal from "react-cool-portal";
 import { Layer, Source, useControl } from "react-map-gl";
 import { useEvent } from "react-use";
-import { A, O } from "~/utils/functions";
+import { A, O, TE } from "~/utils/functions";
 import useFlyTo, { flyToDefaultOpts } from "../hooks/useFlyTo";
 import { LocateEvents } from "../state/events";
 import { polygonFeatureParser } from "../state/geojson";
@@ -17,6 +17,7 @@ import { polygonDrawStyles } from "./mapStyles";
 import Link from "next/link";
 import { Feature, Geometry } from "geojson";
 import {
+  polygonTE,
   updateLocatePolygon,
   useLocatePolygon,
 } from "@opensystemslab/buildx-core";
@@ -158,34 +159,37 @@ const PolygonControl = (props: Props) => {
   const flyTo = useFlyTo();
 
   useEffect(() => {
-    if (polygon !== null) {
-      draw.add({
-        type: "FeatureCollection",
-        features: [
-          {
-            geometry: polygon,
-            properties: {},
-            type: "Feature",
+    const timeout = setTimeout(() => {
+      updateLabels();
+    }, (flyToDefaultOpts.duration ?? 0) - 1000);
+
+    pipe(
+      polygonTE,
+      TE.map((polygon) => {
+        draw.add({
+          type: "FeatureCollection",
+          features: [
+            {
+              geometry: polygon,
+              properties: {},
+              type: "Feature",
+            },
+          ],
+        });
+
+        const {
+          geometry: {
+            coordinates: [lng, lat],
           },
-        ],
-      });
+        } = centerOfMass(polygon);
 
-      const {
-        geometry: {
-          coordinates: [lng, lat],
-        },
-      } = centerOfMass(polygon);
+        flyTo([lng, lat]);
+      })
+    )();
 
-      flyTo([lng, lat]);
-
-      const timeout = setTimeout(() => {
-        updateLabels();
-      }, (flyToDefaultOpts.duration ?? 0) - 1000);
-
-      return () => {
-        clearTimeout(timeout);
-      };
-    }
+    return () => {
+      clearTimeout(timeout);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draw]);
 

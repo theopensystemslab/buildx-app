@@ -2,15 +2,17 @@
 import { Search } from "@carbon/icons-react";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { polygonTE, useLocatePolygon } from "@opensystemslab/buildx-core";
+import { pipe } from "fp-ts/lib/function";
+import { useEffect, useRef, useState } from "react";
 import usePortal from "react-cool-portal";
 import { useMap } from "react-map-gl";
-import IconButton from "~/ui//IconButton";
-import css from "./GeocoderControl.module.css";
-import { dispatchLocateEvent, LocateEvents } from "../state/events";
 import { useEvent } from "react-use";
+import IconButton from "~/ui//IconButton";
 import useFlyTo from "../hooks/useFlyTo";
-import { useLocatePolygon } from "@opensystemslab/buildx-core";
+import { dispatchLocateEvent, LocateEvents } from "../state/events";
+import css from "./GeocoderControl.module.css";
+import { TE } from "@/app/utils/functions";
 
 type Props = {
   leftMenuContainerId: string;
@@ -21,11 +23,19 @@ const GeocoderControl = (props: Props) => {
   const geocoderDiv = useRef<HTMLDivElement>(null);
   const { current: map } = useMap();
 
-  const polygon = useLocatePolygon();
+  // const polygon = useLocatePolygon();
 
-  const [geocoderEnabled, setGeocoderEnabled] = useState(() => {
-    return polygon === null;
-  });
+  const [geocoderEnabled, setGeocoderEnabled] = useState(true);
+
+  useEffect(() => {
+    pipe(
+      polygonTE,
+      TE.map((polygon) => {
+        if (polygon !== null) setGeocoderEnabled(false);
+        else if (polygon === null) setGeocoderEnabled(true);
+      })
+    )();
+  }, []);
 
   const hideGeocoder = () => {
     setGeocoderEnabled(false);
