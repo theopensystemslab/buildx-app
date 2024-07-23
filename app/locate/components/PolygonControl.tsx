@@ -13,14 +13,13 @@ import { A, O } from "~/utils/functions";
 import useFlyTo, { flyToDefaultOpts } from "../hooks/useFlyTo";
 import { LocateEvents } from "../state/events";
 import { polygonFeatureParser } from "../state/geojson";
-import {
-  setMapPolygon,
-  trashMapPolygon,
-  useMapPolygon,
-} from "../state/polygon";
 import { polygonDrawStyles } from "./mapStyles";
 import Link from "next/link";
 import { Feature, Geometry } from "geojson";
+import {
+  updateLocatePolygon,
+  useLocatePolygon,
+} from "@opensystemslab/buildx-core";
 
 type Props = {
   leftMenuContainerId: string;
@@ -79,7 +78,7 @@ const PolygonControl = (props: Props) => {
       O.map((feature) => {
         const result = polygonFeatureParser.safeParse(feature);
         if (result.success) {
-          setMapPolygon(result.data.geometry);
+          updateLocatePolygon(result.data.geometry);
         }
       })
     );
@@ -146,10 +145,10 @@ const PolygonControl = (props: Props) => {
     internalShowHide: false,
   });
 
-  const mapPolygon = useMapPolygon();
+  const polygon = useLocatePolygon();
 
   const trash = () => {
-    trashMapPolygon();
+    updateLocatePolygon(null);
     draw.deleteAll();
     setDrawMode("draw_polygon");
     syncMode();
@@ -159,12 +158,12 @@ const PolygonControl = (props: Props) => {
   const flyTo = useFlyTo();
 
   useEffect(() => {
-    if (mapPolygon !== null) {
+    if (polygon !== null) {
       draw.add({
         type: "FeatureCollection",
         features: [
           {
-            geometry: mapPolygon,
+            geometry: polygon,
             properties: {},
             type: "Feature",
           },
@@ -175,7 +174,7 @@ const PolygonControl = (props: Props) => {
         geometry: {
           coordinates: [lng, lat],
         },
-      } = centerOfMass(mapPolygon);
+      } = centerOfMass(polygon);
 
       flyTo([lng, lat]);
 
@@ -218,7 +217,7 @@ const PolygonControl = (props: Props) => {
           }}
         />
       </Source>
-      {mapPolygon === null && drawMode === "draw_polygon" && (
+      {polygon === null && drawMode === "draw_polygon" && (
         <TopLeftPortal>
           <div>
             <h2>Draw the outline of your site</h2>
@@ -226,7 +225,7 @@ const PolygonControl = (props: Props) => {
         </TopLeftPortal>
       )}
 
-      {mapPolygon !== null && (
+      {polygon !== null && (
         <Fragment>
           <LeftMenuPortal>
             <IconButton onClick={trash}>

@@ -5,6 +5,8 @@ import {
   useOrderListData,
   useSuspendAllBuildData,
 } from "@opensystemslab/buildx-core";
+import { Suspense } from "react";
+import Loader from "../ui/Loader";
 import css from "./app.module.css";
 import CarbonEmissionsChart from "./ui/CarbonEmissionsChart";
 import ChassisCostChart from "./ui/ChassisCostChart";
@@ -13,10 +15,11 @@ import HousesPillsSelector, {
   useSelectedHouseIds,
 } from "./ui/HousePillsSelector";
 
-const AnalyseIndex = () => {
-  useSuspendAllBuildData();
+let outputsWorker: OutputsWorker | null = null;
+if (!outputsWorker) outputsWorker = new OutputsWorker();
 
-  new OutputsWorker();
+const SuspendedApp = () => {
+  useSuspendAllBuildData();
 
   const { orderListRows } = useOrderListData();
   const analysisData = useAnalysisData();
@@ -48,4 +51,10 @@ const AnalyseIndex = () => {
   );
 };
 
-export default AnalyseIndex;
+const App = () => (
+  <Suspense fallback={<Loader />}>
+    <SuspendedApp />
+  </Suspense>
+);
+
+export default App;
