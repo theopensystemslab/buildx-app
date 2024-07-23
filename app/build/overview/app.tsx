@@ -1,51 +1,52 @@
-"use client"
-import { ArrowDown } from "@carbon/icons-react"
+"use client";
+import { ArrowDown } from "@carbon/icons-react";
 import {
   useOrderListData,
   useProjectCurrency,
   useProjectData,
   useAnalysisData,
   SharingWorker,
-} from "@opensystemslab/buildx-core"
-import { pipe } from "fp-ts/lib/function"
-import { Fragment } from "react"
-import { A } from "~/utils/functions"
-import css from "./app.module.css"
-import useDownloads from "./useDownloads"
+} from "@opensystemslab/buildx-core";
+import { pipe } from "fp-ts/lib/function";
+import { Fragment } from "react";
+import { A } from "~/utils/functions";
+import css from "./app.module.css";
+import useDownloads from "./useDownloads";
 
-new SharingWorker()
+let sharingWorker: SharingWorker | null = null;
+if (!sharingWorker) sharingWorker = new SharingWorker();
 
 // const HousesView = dynamic(() => import("./HousesView"), { ssr: false })
 
 const OverviewIndex = () => {
-  const { format } = useProjectCurrency()
+  const { format } = useProjectCurrency();
 
-  const { projectName, shareUrlPayload } = useProjectData()
+  const { projectName, shareUrlPayload } = useProjectData();
 
-  const _typeformLink = `https://form.typeform.com/to/SVFFF12s?typeform-source=www.wikihouse.cc#source=configurator`
+  const _typeformLink = `https://form.typeform.com/to/SVFFF12s?typeform-source=www.wikihouse.cc#source=configurator`;
 
   const typeformLink =
     shareUrlPayload === null
       ? _typeformLink
-      : `${_typeformLink}#url=${shareUrlPayload}`
+      : `${_typeformLink}#url=${shareUrlPayload}`;
 
-  const _testLink = `https://form.typeform.com/to/zePfnP4K`
+  const _testLink = `https://form.typeform.com/to/zePfnP4K`;
 
   const testLink =
     shareUrlPayload === null
       ? _testLink
-      : `https://form.typeform.com/to/zePfnP4K#url=${shareUrlPayload}`
+      : `https://form.typeform.com/to/zePfnP4K#url=${shareUrlPayload}`;
 
   const {
     areas: { totalFloor },
     embodiedCo2,
     costs: { total },
-  } = useAnalysisData()
+  } = useAnalysisData();
 
-  const { totalTotalCost } = useOrderListData()
+  const { totalTotalCost } = useOrderListData();
 
   const { allFilesZipURL, materialsListCsvURL, modelsZipURL, orderListCsvURL } =
-    useDownloads()
+    useDownloads();
 
   const overviewFields = [
     {
@@ -71,7 +72,7 @@ const OverviewIndex = () => {
       label: "Total estimated carbon cost",
       value: `${(embodiedCo2.total / 1000).toFixed(2)} tCO₂e`,
     },
-  ]
+  ];
 
   return (
     <Fragment>
@@ -184,7 +185,7 @@ const OverviewIndex = () => {
         </div>
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
-export default OverviewIndex
+export default OverviewIndex;
