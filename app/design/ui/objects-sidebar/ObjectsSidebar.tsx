@@ -11,8 +11,6 @@ const HouseTypes = (props: { close: () => void }) => {
 
   const houseTypes = useSuspendHouseTypes();
 
-  console.log({ houseTypes });
-
   return (
     <Fragment>
       {pipe(

@@ -1,47 +1,45 @@
-import type { ReactNode } from "react"
-import { useState } from "react"
-import useMeasure from "react-use-measure"
-import { useWindowSize } from "usehooks-ts"
-import css from "./ContextMenuNested.module.css"
-import clsx from "clsx"
+import type { ReactNode } from "react";
+import { useState } from "react";
+import useMeasure from "react-use-measure";
+import { useWindowSize } from "usehooks-ts";
+import css from "./ContextMenuNested.module.css";
+import clsx from "clsx";
 
 export interface Props {
-  icon: ReactNode
-  label: string
-  children?: ReactNode
-  long?: boolean
-  unpaddedSvg?: boolean
+  icon: ReactNode;
+  label: string;
+  children?: ReactNode;
+  long?: boolean;
+  unpaddedSvg?: boolean;
 }
 
 export default function ContextMenuNested(props: Props) {
-  const [hovered, setHovered] = useState(false)
+  const [hovered, setHovered] = useState(false);
 
-  const [labelRef, labelDims] = useMeasure()
-  const [menuRef, menuDims] = useMeasure()
+  const [labelRef, labelDims] = useMeasure();
+  const [menuRef, menuDims] = useMeasure();
 
-  const windowSize = useWindowSize()
+  const windowSize = useWindowSize();
 
-  const flip = menuDims.right > windowSize.width + menuDims.width / 2
+  const flip = menuDims.right > windowSize.width + menuDims.width / 2;
 
-  const y0 = -labelDims.height
+  const y0 = -labelDims.height;
 
   const ty =
     menuDims.top < 0
       ? y0
       : menuDims.bottom > windowSize.height
       ? -(menuDims.bottom - windowSize.height - y0)
-      : y0
-
-  console.log({ children: props.children })
+      : y0;
 
   return (
     <div
       className={clsx(css.root, { ["text-grey-40"]: !props.children })}
       onMouseEnter={() => {
-        setHovered(true)
+        setHovered(true);
       }}
       onMouseLeave={() => {
-        setHovered(false)
+        setHovered(false);
       }}
       ref={labelRef}
     >
@@ -68,5 +66,5 @@ export default function ContextMenuNested(props: Props) {
         </div>
       ) : null}
     </div>
-  )
+  );
 }

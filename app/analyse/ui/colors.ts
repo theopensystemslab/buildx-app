@@ -19,7 +19,7 @@ export const buildingColorVariants: Record<number, string> = {
   17: "bg-building-18",
   18: "bg-building-19",
   19: "bg-building-20",
-}
+};
 
 export const staleColorVariants: Record<number, string> = {
   0: "bg-grey-50",
@@ -28,14 +28,13 @@ export const staleColorVariants: Record<number, string> = {
   3: "bg-grey-80",
   4: "bg-grey-70",
   5: "bg-grey-60",
-}
+};
 
 export const getColorClass = (
   houseIds: string[],
   houseId: string,
   stale: boolean = false
 ) => {
-  const index = houseIds.indexOf(houseId)
-  console.log({ houseIds, houseId, index })
-  return stale ? staleColorVariants[index] : buildingColorVariants[index]
-}
+  const index = houseIds.indexOf(houseId);
+  return stale ? staleColorVariants[index] : buildingColorVariants[index];
+};
