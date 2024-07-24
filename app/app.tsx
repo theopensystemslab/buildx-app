@@ -20,11 +20,12 @@ const App = () => {
 
     try {
       const { houses, polygon } = decodeShareUrlPayload(q);
-      if (houses) setHouses(houses);
-      if (polygon) updateLocatePolygon(polygon);
+
+      if (houses && houses.length > 0) setHouses(houses);
+      if (polygon !== null) updateLocatePolygon(polygon);
 
       switch (true) {
-        case polygon !== null && houses !== null:
+        case polygon !== null && houses && houses.length > 0:
           router.push("build");
           return;
         case polygon !== null:
