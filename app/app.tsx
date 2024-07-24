@@ -25,9 +25,9 @@ const App = () => {
       if (polygon !== null) updateLocatePolygon(polygon);
 
       switch (true) {
-        case polygon !== null && houses && houses.length > 0:
-          router.push("build");
-          return;
+        // case polygon !== null && houses && houses.length > 0:
+        //   router.push("build");
+        //   return;
         case polygon !== null:
           router.push("design");
           return;
