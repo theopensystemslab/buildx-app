@@ -5,6 +5,10 @@ import HtmlPortalContainer from "~/ui/HtmlPortalContainer";
 import GeocoderControl from "./GeocoderControl";
 import css from "./Locate.module.css";
 import PolygonControl from "./PolygonControl";
+import { SharingWorker } from "@opensystemslab/buildx-core";
+
+let sharingWorker: SharingWorker | null = null;
+if (!sharingWorker) sharingWorker = new SharingWorker();
 
 const gadheim = {
   longitude: 9.902056,

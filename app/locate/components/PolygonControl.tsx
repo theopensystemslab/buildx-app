@@ -166,6 +166,8 @@ const PolygonControl = (props: Props) => {
     pipe(
       polygonTE,
       TE.map((polygon) => {
+        draw.deleteAll();
+
         draw.add({
           type: "FeatureCollection",
           features: [
