@@ -9,7 +9,6 @@ import {
   defaultCachedHousesOps,
   houseGroupTE,
   localHousesTE,
-  SharingWorker,
   useSuspendAllBuildData,
 } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
@@ -22,6 +21,7 @@ import { A, TE } from "~/utils/functions";
 import Loader from "../ui/Loader";
 import BuildXContextMenu from "./menu/BuildXContextMenu";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
+import useSharingWorker from "../utils/workers/old/useSharingWorker";
 
 let scene: BuildXScene | null = null;
 
@@ -29,10 +29,9 @@ export const getBuildXScene = (): BuildXScene | null => {
   return scene;
 };
 
-let sharingWorker: SharingWorker | null = null;
-if (!sharingWorker) sharingWorker = new SharingWorker();
-
 const SuspendedApp = () => {
+  useSharingWorker();
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useSuspendAllBuildData();

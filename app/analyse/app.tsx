@@ -1,6 +1,5 @@
 "use client";
 import {
-  OutputsWorker,
   useAnalysisData,
   useOrderListData,
   useSuspendAllBuildData,
@@ -14,11 +13,10 @@ import FloorAreaChart from "./ui/FloorAreaChart";
 import HousesPillsSelector, {
   useSelectedHouseIds,
 } from "./ui/HousePillsSelector";
-
-let outputsWorker: OutputsWorker | null = null;
-if (!outputsWorker) outputsWorker = new OutputsWorker();
+import useOutputsWorker from "../utils/workers/old/useOutputsWorker";
 
 const SuspendedApp = () => {
+  useOutputsWorker();
   useSuspendAllBuildData();
 
   const { orderListRows } = useOrderListData();

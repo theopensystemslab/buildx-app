@@ -5,20 +5,21 @@ import {
   useProjectCurrency,
   useProjectData,
   useAnalysisData,
-  SharingWorker,
 } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
 import { Fragment } from "react";
 import { A } from "~/utils/functions";
 import css from "./app.module.css";
 import useDownloads from "./useDownloads";
-
-let sharingWorker: SharingWorker | null = null;
-if (!sharingWorker) sharingWorker = new SharingWorker();
+import useSharingWorker from "@/app/utils/workers/old/useSharingWorker";
+import useOutputsWorker from "@/app/utils/workers/old/useOutputsWorker";
 
 // const HousesView = dynamic(() => import("./HousesView"), { ssr: false })
 
 const OverviewIndex = () => {
+  useSharingWorker();
+  useOutputsWorker();
+
   const { format } = useProjectCurrency();
 
   const { projectName, shareUrlPayload } = useProjectData();
