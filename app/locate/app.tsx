@@ -2,19 +2,21 @@
 import "mapbox-gl/dist/mapbox-gl.css";
 import ReactMapGLMap from "react-map-gl";
 import HtmlPortalContainer from "~/ui/HtmlPortalContainer";
-import GeocoderControl from "./GeocoderControl";
-import css from "./Locate.module.css";
-import PolygonControl from "./PolygonControl";
-import { SharingWorker } from "@opensystemslab/buildx-core";
+import GeocoderControl from "./components/GeocoderControl";
+import css from "./app.module.css";
+import PolygonControl from "./components/PolygonControl";
+import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
 
-let sharingWorker: SharingWorker | null = null;
-if (!sharingWorker) sharingWorker = new SharingWorker();
+// comment for the sake of push
 
 const gadheim = {
   longitude: 9.902056,
   latitude: 49.843,
 };
+
 const Locate = () => {
+  useSharingWorker();
+
   const leftMenuContainerId = "left-menu-container";
   const topLeftContainerId = "top-left-container-id";
   const bottomRightContainerId = "bottom-right-container-id";

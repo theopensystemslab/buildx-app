@@ -1,9 +1,9 @@
-import dynamic from "next/dynamic"
+import dynamic from "next/dynamic";
 
-const Locate = dynamic(() => import("./components/Locate"), { ssr: false })
+const App = dynamic(() => import("./app"), { ssr: false });
 
 const LocatePage = () => {
-  return <Locate />
-}
+  return <App />;
+};
 
-export default LocatePage
+export default LocatePage;

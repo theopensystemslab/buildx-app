@@ -5,20 +5,21 @@ import {
   useProjectCurrency,
   useProjectData,
   useAnalysisData,
-  SharingWorker,
 } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
 import { Fragment } from "react";
 import { A } from "~/utils/functions";
 import css from "./app.module.css";
 import useDownloads from "./useDownloads";
-
-let sharingWorker: SharingWorker | null = null;
-if (!sharingWorker) sharingWorker = new SharingWorker();
+import useSharingWorker from "@/app/utils/workers/sharing/useSharingWorker";
+import useOutputsWorker from "@/app/utils/workers/outputs/useOutputsWorker";
 
 // const HousesView = dynamic(() => import("./HousesView"), { ssr: false })
 
 const OverviewIndex = () => {
+  useSharingWorker();
+  useOutputsWorker();
+
   const { format } = useProjectCurrency();
 
   const { projectName, shareUrlPayload } = useProjectData();
@@ -30,12 +31,10 @@ const OverviewIndex = () => {
       ? _typeformLink
       : `${_typeformLink}#url=${shareUrlPayload}`;
 
-  const _testLink = `https://form.typeform.com/to/zePfnP4K`;
+  const _testLink = window.location.protocol + "//" + window.location.host;
 
   const testLink =
-    shareUrlPayload === null
-      ? _testLink
-      : `https://form.typeform.com/to/zePfnP4K#url=${shareUrlPayload}`;
+    shareUrlPayload === null ? _testLink : `${_testLink}?q=${shareUrlPayload}`;
 
   const {
     areas: { totalFloor },
