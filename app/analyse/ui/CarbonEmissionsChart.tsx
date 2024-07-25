@@ -1,8 +1,8 @@
-"use client"
-import clsx from "clsx"
-import { pipe } from "fp-ts/lib/function"
-import { capitalizeFirstLetters, R, S } from "~/utils/functions"
-import ChartBar from "./ChartBar"
+"use client";
+import clsx from "clsx";
+import { pipe } from "fp-ts/lib/function";
+import { capitalizeFirstLetters, R, S } from "~/utils/functions";
+import ChartBar from "./ChartBar";
 import {
   ChartColumn,
   ChartContainer,
@@ -10,22 +10,22 @@ import {
   ChartTitles,
   HowIsItCalculated,
   WhatIsThis,
-} from "./chartComponents"
+} from "./chartComponents";
 import {
   useHouses,
   housesToRecord,
   AnalysisData,
-} from "@opensystemslab/buildx-core"
-import { getColorClass } from "./colors"
+} from "@opensystemslab/buildx-core";
+import { getColorClass } from "./colors";
 
 const CarbonEmissionsChart = ({
   selectedHouseIds,
   analysisData,
 }: {
-  selectedHouseIds: string[]
-  analysisData: AnalysisData
+  selectedHouseIds: string[];
+  analysisData: AnalysisData;
 }) => {
-  const houses = housesToRecord(useHouses())
+  const houses = housesToRecord(useHouses());
 
   return (
     <ChartColumn>
@@ -108,7 +108,7 @@ We use generic embodied carbon data of lifecycle stages A1-A3 from product EPDs 
         </p>
       </HowIsItCalculated>
     </ChartColumn>
-  )
-}
+  );
+};
 
-export default CarbonEmissionsChart
+export default CarbonEmissionsChart;
