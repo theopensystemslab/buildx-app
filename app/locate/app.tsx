@@ -7,8 +7,6 @@ import css from "./app.module.css";
 import PolygonControl from "./components/PolygonControl";
 import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
 
-// comment for the sake of push
-
 const gadheim = {
   longitude: 9.902056,
   latitude: 49.843,
