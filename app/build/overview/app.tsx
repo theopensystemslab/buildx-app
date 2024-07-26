@@ -31,12 +31,10 @@ const OverviewIndex = () => {
       ? _typeformLink
       : `${_typeformLink}#url=${shareUrlPayload}`;
 
-  const _testLink = `https://form.typeform.com/to/zePfnP4K`;
+  const _testLink = window.location.protocol + "//" + window.location.host;
 
   const testLink =
-    shareUrlPayload === null
-      ? _testLink
-      : `https://form.typeform.com/to/zePfnP4K#url=${shareUrlPayload}`;
+    shareUrlPayload === null ? _testLink : `${_testLink}?q=${shareUrlPayload}`;
 
   const {
     areas: { totalFloor },
