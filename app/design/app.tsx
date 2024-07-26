@@ -22,6 +22,7 @@ import Loader from "../ui/Loader";
 import BuildXContextMenu from "./menu/BuildXContextMenu";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
+import { SharingWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
 
 let scene: BuildXScene | null = null;
 
@@ -91,6 +92,11 @@ const SuspendedApp = () => {
       onModeChange: (_, next) => {
         setMode(next);
       },
+    });
+
+    SharingWorkerUtils.createPolygonSubscription((polygon) => {
+      console.log("polygon subscription", polygon);
+      scene?.updatePolygon(polygon);
     });
 
     pipe(
