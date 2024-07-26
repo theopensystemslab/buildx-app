@@ -21,7 +21,7 @@ import { A, TE } from "~/utils/functions";
 import Loader from "../ui/Loader";
 import BuildXContextMenu from "./menu/BuildXContextMenu";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
-import useSharingWorker from "../utils/workers/old/useSharingWorker";
+import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
 
 let scene: BuildXScene | null = null;
 

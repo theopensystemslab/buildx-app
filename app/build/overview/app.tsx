@@ -11,8 +11,8 @@ import { Fragment } from "react";
 import { A } from "~/utils/functions";
 import css from "./app.module.css";
 import useDownloads from "./useDownloads";
-import useSharingWorker from "@/app/utils/workers/old/useSharingWorker";
-import useOutputsWorker from "@/app/utils/workers/old/useOutputsWorker";
+import useSharingWorker from "@/app/utils/workers/sharing/useSharingWorker";
+import useOutputsWorker from "@/app/utils/workers/outputs/useOutputsWorker";
 
 // const HousesView = dynamic(() => import("./HousesView"), { ssr: false })
 

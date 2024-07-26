@@ -13,7 +13,7 @@ import FloorAreaChart from "./ui/FloorAreaChart";
 import HousesPillsSelector, {
   useSelectedHouseIds,
 } from "./ui/HousePillsSelector";
-import useOutputsWorker from "../utils/workers/old/useOutputsWorker";
+import useOutputsWorker from "../utils/workers/outputs/useOutputsWorker";
 
 const SuspendedApp = () => {
   useOutputsWorker();

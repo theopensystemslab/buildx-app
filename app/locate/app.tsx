@@ -5,7 +5,7 @@ import HtmlPortalContainer from "~/ui/HtmlPortalContainer";
 import GeocoderControl from "./components/GeocoderControl";
 import css from "./app.module.css";
 import PolygonControl from "./components/PolygonControl";
-import useSharingWorker from "../utils/workers/old/useSharingWorker";
+import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
 
 const gadheim = {
   longitude: 9.902056,
