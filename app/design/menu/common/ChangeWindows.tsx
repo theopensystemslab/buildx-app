@@ -1,34 +1,34 @@
-import { OpeningsChangeInfo, ScopeElement } from "@opensystemslab/buildx-core"
-import { pipe } from "fp-ts/lib/function"
-import { useEffect, useState } from "react"
-import Radio from "~/ui/Radio"
-import { Opening } from "~/ui/icons"
-import { O, TE } from "~/utils/functions"
-import ContextMenuNested from "./ContextMenuNested"
+import { OpeningsChangeInfo, ScopeElement } from "@opensystemslab/buildx-core";
+import { pipe } from "fp-ts/lib/function";
+import { useEffect, useState } from "react";
+import Radio from "~/ui/Radio";
+import { Opening } from "~/ui/icons";
+import { O, TE } from "~/utils/functions";
+import ContextMenuNested from "./ContextMenuNested";
 
 type Props = {
-  scopeElement: ScopeElement
-  close: () => void
-}
+  scopeElement: ScopeElement;
+  close: () => void;
+};
 
 const ChangeWindows = (props: Props) => {
-  const { scopeElement, close } = props
+  const { scopeElement, close } = props;
 
-  const houseGroup = scopeElement.elementGroup.houseGroup
+  const houseGroup = scopeElement.elementGroup.houseGroup;
 
   const [openingsChangeInfo, setOpeningsChangeInfo] =
-    useState<OpeningsChangeInfo | null>(null)
+    useState<OpeningsChangeInfo | null>(null);
 
   useEffect(() => {
     pipe(
-      houseGroup.openingsManager,
+      houseGroup.managers.openings,
       TE.fromNullable(Error(`houseGroup.openingsManager undefined`)),
       TE.chain((x) => x.createAlts(scopeElement)),
       TE.map((openingsChangeInfo) => {
-        setOpeningsChangeInfo(openingsChangeInfo)
+        setOpeningsChangeInfo(openingsChangeInfo);
       })
-    )()
-  }, [houseGroup, scopeElement])
+    )();
+  }, [houseGroup, scopeElement]);
 
   const children =
     openingsChangeInfo === null
@@ -49,25 +49,26 @@ const ChangeWindows = (props: Props) => {
                   O.fromNullable,
                   O.match(
                     () => {
-                      houseGroup.layoutsManager.previewLayoutGroup = O.none
+                      houseGroup.managers.layouts.previewLayoutGroup = O.none;
                     },
                     (value) => {
-                      houseGroup.layoutsManager.previewLayoutGroup = O.some(
+                      houseGroup.managers.layouts.previewLayoutGroup = O.some(
                         value.layoutGroup
-                      )
+                      );
                     }
                   )
-                )
+                );
               }}
               onChange={(value) => {
-                houseGroup.layoutsManager.activeLayoutGroup = value.layoutGroup
-                close()
+                houseGroup.managers.layouts.activeLayoutGroup =
+                  value.layoutGroup;
+                close();
               }}
               selected={openingsChangeInfo.currentOpt}
               compare={(a, b) => a.windowType.code === b.windowType.code}
             />
           )
-        )
+        );
 
   return (
     <ContextMenuNested
@@ -78,7 +79,7 @@ const ChangeWindows = (props: Props) => {
     >
       {children}
     </ContextMenuNested>
-  )
-}
+  );
+};
 
-export default ChangeWindows
+export default ChangeWindows;

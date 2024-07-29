@@ -1,37 +1,40 @@
-import { CachedHouseType, houseGroupTE } from "@opensystemslab/buildx-core"
-import clsx from "clsx"
-import { pipe } from "fp-ts/lib/function"
-import { getBuildXScene } from "~/design/app"
-import { TE } from "~/utils/functions"
+import {
+  CachedHouseType,
+  createHouseGroupTE,
+} from "@opensystemslab/buildx-core";
+import clsx from "clsx";
+import { pipe } from "fp-ts/lib/function";
+import { getBuildXScene } from "~/design/app";
+import { TE } from "~/utils/functions";
 
 const HouseThumbnailButton = ({
   houseType,
   close,
 }: {
-  houseType: CachedHouseType
-  close: () => void
+  houseType: CachedHouseType;
+  close: () => void;
 }) => {
-  const { dnas, id: houseTypeId, systemId } = houseType
+  const { dnas, id: houseTypeId, systemId } = houseType;
 
   const addHouse = () => {
-    const scene = getBuildXScene()
+    const scene = getBuildXScene();
 
-    if (!scene) return
+    if (!scene) return;
 
     pipe(
-      houseGroupTE({
+      createHouseGroupTE({
         systemId,
         dnas,
         houseTypeId,
       }),
       TE.map((houseGroup) => {
-        scene.addHouseGroup(houseGroup)
-        close()
+        scene.addHouseGroup(houseGroup);
+        close();
       })
-    )()
-  }
+    )();
+  };
 
-  const illuminate = true
+  const illuminate = true;
 
   return (
     <button
@@ -46,7 +49,7 @@ const HouseThumbnailButton = ({
     >
       Add to site
     </button>
-  )
-}
+  );
+};
 
-export default HouseThumbnailButton
+export default HouseThumbnailButton;
