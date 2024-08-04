@@ -18,8 +18,8 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2
       '@opensystemslab/buildx-core':
-        specifier: ^0.4.9
-        version: 0.4.9(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(@types/react@18.3.3)(graphql@16.9.0)(mixpanel@0.17.0)(monocle-ts@2.3.13(fp-ts@2.16.8))(newtype-ts@0.3.5(fp-ts@2.16.8)(monocle-ts@2.3.13(fp-ts@2.16.8)))(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.166.1)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))
+        specifier: ^0.4.10
+        version: 0.4.10(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(@types/react@18.3.3)(graphql@16.9.0)(mixpanel@0.17.0)(monocle-ts@2.3.13(fp-ts@2.16.8))(newtype-ts@0.3.5(fp-ts@2.16.8)(monocle-ts@2.3.13(fp-ts@2.16.8)))(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.166.1)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))
       '@tanstack/react-table':
         specifier: ^8.19.3
         version: 8.19.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -445,8 +445,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/buildx-core@0.4.9':
-    resolution: {integrity: sha512-Ikkf44NNMFUjuM9En7WM21qJUD+Zz9kF+gtyCYskkmS5P94Rf8buoFj0QX1NzwiiM1nwaB22XCXir9VFKKS7+g==}
+  '@opensystemslab/buildx-core@0.4.10':
+    resolution: {integrity: sha512-kpr3FhMVc+7aiR2FS8XOsOI3Q17S74CzRTi2z9N0G2sZNPjDa/RnCM742dKIWlXkCFJE1DphkKtMXeHeTKe1og==}
     peerDependencies:
       react: '>=18.3.1'
       react-dom: '>=18.3.1'
@@ -3835,7 +3835,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  '@opensystemslab/buildx-core@0.4.9(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(@types/react@18.3.3)(graphql@16.9.0)(mixpanel@0.17.0)(monocle-ts@2.3.13(fp-ts@2.16.8))(newtype-ts@0.3.5(fp-ts@2.16.8)(monocle-ts@2.3.13(fp-ts@2.16.8)))(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.166.1)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))':
+  '@opensystemslab/buildx-core@0.4.10(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(@types/react@18.3.3)(graphql@16.9.0)(mixpanel@0.17.0)(monocle-ts@2.3.13(fp-ts@2.16.8))(newtype-ts@0.3.5(fp-ts@2.16.8)(monocle-ts@2.3.13(fp-ts@2.16.8)))(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.166.1)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))':
     dependencies:
       '@speckle/objectloader': 2.20.1(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(mixpanel@0.17.0)(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))(zod@3.23.8)
       '@turf/turf': 7.0.0
