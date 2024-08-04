@@ -6,8 +6,8 @@ import type {
 } from "@opensystemslab/buildx-core";
 import {
   BuildXScene,
+  createHouseGroupTE,
   defaultCachedHousesOps,
-  houseGroupTE,
   localHousesTE,
   useSuspendAllBuildData,
 } from "@opensystemslab/buildx-core";
@@ -108,7 +108,6 @@ const SuspendedApp = () => {
         return pipe(
           houses,
           A.traverse(TE.ApplicativePar)(
-            // @ts-ignore
             ({
               houseId,
               systemId,
@@ -127,7 +126,7 @@ const SuspendedApp = () => {
                   houseTypeId,
                   dnas,
                 },
-                houseGroupTE,
+                createHouseGroupTE,
                 TE.map((houseGroup) => {
                   houseGroup.position.set(x, y, z);
                   houseGroup.rotation.set(0, rotation, 0);
