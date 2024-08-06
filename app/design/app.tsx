@@ -23,6 +23,7 @@ import BuildXContextMenu from "./menu/BuildXContextMenu";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
 import { SharingWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
+import ExitMode from "./ui/ExitMode";
 
 let scene: BuildXScene | null = null;
 
@@ -173,6 +174,13 @@ const SuspendedApp = () => {
           close={closeContextMenu}
         />
       )}
+
+      <ExitMode
+        mode={mode}
+        upMode={() => {
+          scene?.contextManager?.contextUp();
+        }}
+      />
     </FullScreenContainer>
   );
 };
