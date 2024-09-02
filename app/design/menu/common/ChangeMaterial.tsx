@@ -1,45 +1,40 @@
-// @ts-nocheck
-import { WatsonHealthSubVolume } from "@carbon/icons-react"
-import { invalidate } from "@react-three/fiber"
-import { pipe } from "fp-ts/lib/function"
-import { Fragment, useRef } from "react"
-import Radio from "../../../../ui/Radio"
-import { A, S } from "../../../../utils/functions"
-import { ScopeElement } from "../../../state/scope"
-import { getActiveHouseUserData } from "../../../ui-3d/fresh/helpers/sceneQueries"
-import { HouseTransformsGroup } from "../../../ui-3d/fresh/scene/userData"
-import ContextMenuHeading from "../common/ContextMenuHeading"
-import ContextMenuNested from "../common/ContextMenuNested"
+import Radio from "@/app/ui/Radio";
+import { WatsonHealthSubVolume } from "@carbon/icons-react";
+import { ScopeElement } from "@opensystemslab/buildx-core";
+import { useRef } from "react";
+import ContextMenuHeading from "../common/ContextMenuHeading";
+import ContextMenuNested from "../common/ContextMenuNested";
 
 type Props = {
-  scopeElement: ScopeElement
-  houseTransformsGroup: HouseTransformsGroup
-  close: () => void
-}
+  scopeElement: ScopeElement;
+  close: () => void;
+};
 
 const ChangeMaterial = (props: Props) => {
   const {
-    houseTransformsGroup,
-    scopeElement: { ifcTag },
+    scopeElement: {
+      elementGroup,
+      elementGroup: {
+        userData: { element },
+      },
+    },
     close,
-  } = props
+  } = props;
 
-  const { activeElementMaterials, elements, materials } =
-    getActiveHouseUserData(houseTransformsGroup)
+  const { ifcTag } = element;
 
-  const element = elements[ifcTag]
+  const closing = useRef(false);
 
-  const selectedMaterial = materials[activeElementMaterials[ifcTag]].material
+  const elementsManager = elementGroup.houseGroup.managers.elements;
 
-  const allMaterials = pipe(
-    [element.defaultMaterial, ...element.materialOptions],
-    A.uniq(S.Eq),
-    A.map((x) => materials[x].material)
-  )
+  if (!elementsManager) return null;
 
-  const closing = useRef(false)
+  const { currentMaterial, otherMaterials } =
+    elementsManager.getElementMaterialOptions(ifcTag);
 
-  return element.materialOptions.length > 1 ? (
+  const allMaterials = [currentMaterial, ...otherMaterials];
+
+  return otherMaterials.length > 0 ? (
     <ContextMenuNested
       long
       label={`Change material`}
@@ -47,45 +42,43 @@ const ChangeMaterial = (props: Props) => {
     >
       {/* <ChangeMaterialOptions {...props} /> */}
 
-      <ContextMenuHeading>{element?.name}</ContextMenuHeading>
+      <ContextMenuHeading>{element.name}</ContextMenuHeading>
       <Radio
         options={allMaterials.map((material) => ({
           label: material.specification,
           value: material,
-          thumbnail: material.imageUrl,
+          thumbnail: material.imageBlob
+            ? URL.createObjectURL(material.imageBlob)
+            : undefined,
         }))}
-        selected={selectedMaterial}
+        selected={currentMaterial}
         onChange={(newMaterial) => {
-          closing.current = true
+          closing.current = true;
 
-          houseTransformsGroup.userData.changeMaterial(
-            ifcTag,
-            newMaterial.specification
-          )
+          elementsManager.setElementMaterial(ifcTag, newMaterial.specification);
 
-          houseTransformsGroup.userData.updateDB()
+          // elementsManager.updateDB()
 
-          close()
+          close();
         }}
         onHoverChange={(hoveredMaterial) => {
-          if (closing.current) return
+          if (closing.current) return;
 
           if (hoveredMaterial) {
-            houseTransformsGroup.userData.changeMaterial(
+            elementsManager.setElementMaterial(
               ifcTag,
               hoveredMaterial.specification
-            )
+            );
           } else {
-            houseTransformsGroup.userData.changeMaterial(
+            elementsManager.setElementMaterial(
               ifcTag,
-              selectedMaterial.specification
-            )
+              currentMaterial.specification
+            );
           }
-          invalidate()
         }}
       />
     </ContextMenuNested>
-  ) : null
-}
+  ) : null;
+};
 
-export default ChangeMaterial
+export default ChangeMaterial;
