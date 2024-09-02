@@ -1,28 +1,15 @@
 import { ScopeElement } from "@opensystemslab/buildx-core";
 import { Fragment } from "react";
-import { Pencil } from "~/ui/icons";
-import ChangeWindows from "../common/ChangeWindows";
-import ContextMenuButton from "../common/ContextMenuButton";
 import ChangeMaterial from "../common/ChangeMaterial";
+import ChangeWindows from "../common/ChangeWindows";
 
 type Props = {
   scopeElement: ScopeElement;
   close: () => void;
 };
-const BuildingModeContextMenuItems = ({ scopeElement }: Props) => {
-  const { elementGroup } = scopeElement;
-
+const RowModeContextMenuItems = ({ scopeElement }: Props) => {
   return (
     <Fragment>
-      <ContextMenuButton
-        icon={<Pencil />}
-        text="Edit level"
-        unpaddedSvg
-        onClick={() => {
-          elementGroup.scene.contextManager?.contextDown(elementGroup);
-        }}
-      />
-
       <ChangeMaterial scopeElement={scopeElement} close={close} />
 
       <ChangeWindows scopeElement={scopeElement} close={close} />
@@ -46,4 +33,4 @@ const BuildingModeContextMenuItems = ({ scopeElement }: Props) => {
   );
 };
 
-export default BuildingModeContextMenuItems;
+export default RowModeContextMenuItems;
