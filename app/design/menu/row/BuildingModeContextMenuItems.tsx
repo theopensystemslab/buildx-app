@@ -1,7 +1,7 @@
 import { ScopeElement } from "@opensystemslab/buildx-core";
 import { Fragment } from "react";
 import ChangeMaterial from "../common/ChangeMaterial";
-import ChangeWindows from "../common/ChangeWindows";
+import ChangeOpenings from "../common/ChangeOpenings";
 
 type Props = {
   scopeElement: ScopeElement;
@@ -12,7 +12,7 @@ const RowModeContextMenuItems = ({ scopeElement }: Props) => {
     <Fragment>
       <ChangeMaterial scopeElement={scopeElement} close={close} />
 
-      <ChangeWindows scopeElement={scopeElement} close={close} />
+      <ChangeOpenings scopeElement={scopeElement} close={close} />
 
       {/* <ChangeLevelType
         close={close}

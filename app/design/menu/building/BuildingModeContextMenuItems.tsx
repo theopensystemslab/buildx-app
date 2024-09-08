@@ -1,9 +1,10 @@
 import { ScopeElement } from "@opensystemslab/buildx-core";
 import { Fragment } from "react";
 import { Pencil } from "~/ui/icons";
-import ChangeWindows from "../common/ChangeWindows";
+import ChangeOpenings from "../common/ChangeOpenings";
 import ContextMenuButton from "../common/ContextMenuButton";
 import ChangeMaterial from "../common/ChangeMaterial";
+import ChangeLevelType from "./ChangeLevelType";
 
 type Props = {
   scopeElement: ScopeElement;
@@ -25,13 +26,9 @@ const BuildingModeContextMenuItems = ({ scopeElement }: Props) => {
 
       <ChangeMaterial scopeElement={scopeElement} close={close} />
 
-      <ChangeWindows scopeElement={scopeElement} close={close} />
+      <ChangeOpenings scopeElement={scopeElement} close={close} />
 
-      {/* <ChangeLevelType
-        close={close}
-        houseTransformsGroup={houseGroup}
-        scopeElement={scopeElement}
-      /> */}
+      <ChangeLevelType scopeElement={scopeElement} close={close} />
 
       {/* <AddRemoveLevels
         {...{

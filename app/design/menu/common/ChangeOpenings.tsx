@@ -11,7 +11,7 @@ type Props = {
   close: () => void;
 };
 
-const ChangeWindows = (props: Props) => {
+const ChangeOpenings = (props: Props) => {
   const { scopeElement, close } = props;
 
   const houseGroup = scopeElement.elementGroup.houseGroup;
@@ -23,7 +23,7 @@ const ChangeWindows = (props: Props) => {
     pipe(
       houseGroup.managers.openings,
       TE.fromNullable(Error(`houseGroup.openingsManager undefined`)),
-      TE.chain((x) => x.createAlts(scopeElement)),
+      TE.chain((x) => x.getOpeningsChangeInfo(scopeElement)),
       TE.map((openingsChangeInfo) => {
         setOpeningsChangeInfo(openingsChangeInfo);
       })
@@ -82,4 +82,4 @@ const ChangeWindows = (props: Props) => {
   );
 };
 
-export default ChangeWindows;
+export default ChangeOpenings;
