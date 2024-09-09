@@ -7,7 +7,7 @@ type Props = {
   scopeElement: ScopeElement;
   close: () => void;
 };
-const RowModeContextMenuItems = ({ scopeElement }: Props) => {
+const RowModeContextMenuItems = ({ scopeElement, close }: Props) => {
   return (
     <Fragment>
       <ChangeMaterial scopeElement={scopeElement} close={close} />

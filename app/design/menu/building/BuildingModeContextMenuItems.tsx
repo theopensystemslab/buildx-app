@@ -10,7 +10,7 @@ type Props = {
   scopeElement: ScopeElement;
   close: () => void;
 };
-const BuildingModeContextMenuItems = ({ scopeElement }: Props) => {
+const BuildingModeContextMenuItems = ({ scopeElement, close }: Props) => {
   const { elementGroup } = scopeElement;
 
   return (

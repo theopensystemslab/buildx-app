@@ -6,7 +6,7 @@ import {
 import BuildingModeContextMenuItems from "./building/BuildingModeContextMenuItems";
 import ContextMenu from "./common/ContextMenu";
 import SiteModeContextMenuItems from "./site/SiteModeContextMenuItems";
-import RowModeContextMenuItems from "./row/BuildingModeContextMenuItems";
+import RowModeContextMenuItems from "./row/RowModeContextMenuItems";
 
 type Props = {
   scopeElement: ScopeElement;
