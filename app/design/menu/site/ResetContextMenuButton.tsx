@@ -1,17 +1,16 @@
-import { Reset } from "@carbon/icons-react"
-import { HouseGroup } from "@opensystemslab/buildx-core"
-import { useEffect } from "react"
-import ContextMenuButton from "../common/ContextMenuButton"
+import { Reset } from "@carbon/icons-react";
+import { HouseGroup, ScopeElement } from "@opensystemslab/buildx-core";
+import { useEffect } from "react";
+import ContextMenuButton from "../common/ContextMenuButton";
 
 type Props = {
-  houseGroup: HouseGroup
-  close: () => void
-}
-
-const ResetContextMenuButton = ({ houseGroup, close }: Props) => {
+  scopeElement: ScopeElement;
+  close: () => void;
+};
+const ResetContextMenuButton = ({ scopeElement, close }: Props) => {
   useEffect(() => {
     // houseGroup.refreshAltResetLayout()
-  }, [])
+  }, []);
 
   const resetHouse = async () => {
     // pipe(
@@ -25,9 +24,10 @@ const ResetContextMenuButton = ({ houseGroup, close }: Props) => {
     //     })
     //   })
     // )
+    scopeElement.elementGroup.houseGroup.managers.layouts.resetToHouseTypeLayoutGroup();
 
-    close()
-  }
+    close();
+  };
 
   return (
     <ContextMenuButton
@@ -35,7 +35,7 @@ const ResetContextMenuButton = ({ houseGroup, close }: Props) => {
       text="Reset"
       onClick={resetHouse}
     />
-  )
-}
+  );
+};
 
-export default ResetContextMenuButton
+export default ResetContextMenuButton;

@@ -1,26 +1,27 @@
-import { TrashCan } from "@carbon/icons-react"
-import { ScopeElement } from "@opensystemslab/buildx-core"
-import { Fragment, useState } from "react"
-import { Pencil, TextCursor } from "../../../ui/icons"
-import RenameForm from "../../ui/RenameForm"
-import ContextMenuButton from "../common/ContextMenuButton"
+import { TrashCan } from "@carbon/icons-react";
+import { ScopeElement } from "@opensystemslab/buildx-core";
+import { Fragment, useState } from "react";
+import { Pencil, TextCursor } from "../../../ui/icons";
+import RenameForm from "../../ui/RenameForm";
+import ContextMenuButton from "../common/ContextMenuButton";
+import ResetContextMenuButton from "./ResetContextMenuButton";
 
 type Props = {
-  scopeElement: ScopeElement
-  close: () => void
-}
+  scopeElement: ScopeElement;
+  close: () => void;
+};
 
 const SiteModeContextMenuItems = ({ scopeElement, close }: Props) => {
-  const { elementGroup } = scopeElement
+  const { elementGroup } = scopeElement;
 
-  const houseGroup = elementGroup.houseGroup
+  const houseGroup = elementGroup.houseGroup;
 
   const deleteHouse = () => {
-    houseGroup.delete()
-    close()
-  }
+    houseGroup.delete();
+    close();
+  };
 
-  const [renaming, setRenaming] = useState(false)
+  const [renaming, setRenaming] = useState(false);
 
   return (
     <Fragment>
@@ -30,7 +31,7 @@ const SiteModeContextMenuItems = ({ scopeElement, close }: Props) => {
           text="Edit building"
           unpaddedSvg
           onClick={() => {
-            houseGroup.editHouse()
+            houseGroup.editHouse();
             // dispatchModeChange({
             //   prev: SiteCtxModeEnum.Enum.SITE,
             //   next: SiteCtxModeEnum.Enum.BUILDING,
@@ -52,16 +53,14 @@ const SiteModeContextMenuItems = ({ scopeElement, close }: Props) => {
         <RenameForm
           currentName={houseGroup.userData.friendlyName}
           onNewName={(friendlyName) => {
-            houseGroup.friendlyName = friendlyName
-            setRenaming(false)
+            houseGroup.friendlyName = friendlyName;
+            setRenaming(false);
           }}
         />
       )}
       {!renaming && (
         <Fragment>
-          {/* <ResetContextMenuButton
-              {...{ houseTransformsGroup: houseGroup, close }}
-            /> */}
+          <ResetContextMenuButton scopeElement={scopeElement} close={close} />
           <ContextMenuButton
             icon={<TrashCan size={20} />}
             text="Delete"
@@ -71,7 +70,7 @@ const SiteModeContextMenuItems = ({ scopeElement, close }: Props) => {
       )}
       {/* <Exporters houseId={houseGroup.userData.houseId} close={close} /> */}
     </Fragment>
-  )
-}
+  );
+};
 
-export default SiteModeContextMenuItems
+export default SiteModeContextMenuItems;
