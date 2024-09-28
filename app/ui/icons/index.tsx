@@ -113,10 +113,10 @@ export const Design = () => (
 
 export const Analyse = () => (
   <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <line x1="1" y1="10.0586" x2="1" y2="17.8821" stroke="black" strokeWidth="2" />
-    <line x1="7" y1="4.37114e-08" x2="7" y2="15.6471" stroke="black" strokeWidth="2" />
-    <line x1="13" y1="3.35254" x2="13" y2="18.9996" stroke="black" strokeWidth="2" />
-    <path d="M19 5.58789L19 13.4114" stroke="black" strokeWidth="2" />
+    <line x1="1" y1="10.0586" x2="1" y2="17.8821" stroke="currentColor" strokeWidth="2" />
+    <line x1="7" y1="4.37114e-08" x2="7" y2="15.6471" stroke="currentColor" strokeWidth="2" />
+    <line x1="13" y1="3.35254" x2="13" y2="18.9996" stroke="currentColor" strokeWidth="2" />
+    <path d="M19 5.58789L19 13.4114" stroke="currentColor" strokeWidth="2" />
   </svg>
   // <svg
   //   width="21"
