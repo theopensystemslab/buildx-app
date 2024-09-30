@@ -24,6 +24,7 @@ import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
 import { SharingWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
 import ExitMode from "./ui/ExitMode";
+import MetricsWidget from "./ui/metrics/MetricsWidget";
 
 let scene: BuildXScene | null = null;
 
@@ -181,6 +182,8 @@ const SuspendedApp = () => {
           scene?.contextManager?.contextUp();
         }}
       />
+
+      <MetricsWidget mode={mode} />
     </FullScreenContainer>
   );
 };
