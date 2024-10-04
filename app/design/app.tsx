@@ -26,6 +26,9 @@ import { SharingWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
 import ExitMode from "./ui/ExitMode";
 import MetricsWidget from "./ui/metrics/MetricsWidget";
 import Breadcrumbs from "./ui/Breadcrumbs";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
+import { getModeUrl } from "./util";
 
 let scene: BuildXScene | null = null;
 
@@ -66,6 +69,8 @@ const SuspendedApp = () => {
     internalShowHide: false,
   });
 
+  const router = useRouter();
+
   useEffect(() => {
     if (!canvasRef.current || scene !== null) return;
 
@@ -94,6 +99,8 @@ const SuspendedApp = () => {
       onTapMissed: closeContextMenu,
       onModeChange: (_, next) => {
         setMode(next);
+        const url = getModeUrl(next);
+        router.push(url);
       },
     });
 
@@ -139,7 +146,7 @@ const SuspendedApp = () => {
         );
       })
     )();
-  }, []);
+  }, [router]);
 
   return (
     <FullScreenContainer>
@@ -147,7 +154,9 @@ const SuspendedApp = () => {
       <HeaderStartPortal>
         <Breadcrumbs
           mode={mode}
-          upMode={() => scene?.contextManager?.contextUp()}
+          upMode={() => {
+            scene?.contextManager?.contextUp();
+          }}
         />
       </HeaderStartPortal>
       <HeaderEndPortal>

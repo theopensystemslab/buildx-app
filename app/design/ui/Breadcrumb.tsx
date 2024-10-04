@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { MouseEvent } from "react";
 
@@ -9,8 +10,9 @@ type Props = {
 
 const Breadcrumb = ({ path, label, onClick }: Props) => {
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
     if (onClick) {
-      e.preventDefault();
       onClick();
     }
   };
