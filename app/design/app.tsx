@@ -9,6 +9,7 @@ import {
   createHouseGroupTE,
   defaultCachedHousesOps,
   localHousesTE,
+  useProjectData,
   useSuspendAllBuildData,
 } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
@@ -29,6 +30,7 @@ import Breadcrumbs from "./ui/Breadcrumbs";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 import { getModeUrl } from "./util";
+import { formatDistanceToNow } from "date-fns";
 
 let scene: BuildXScene | null = null;
 
@@ -148,6 +150,8 @@ const SuspendedApp = () => {
     )();
   }, [router]);
 
+  const { lastSaved } = useProjectData();
+
   return (
     <FullScreenContainer>
       <canvas ref={canvasRef} className="w-full h-full" />
@@ -161,10 +165,25 @@ const SuspendedApp = () => {
       </HeaderStartPortal>
       <HeaderEndPortal>
         <div className="flex items-center justify-end">
-          <IconButton onClick={() => setObjectsSidebar(true)}>
-            <div className="flex items-center justify-center">
-              <Add size={32} />
-            </div>
+          <div className="text-xs text-gray-600 mr-32">
+            {lastSaved ? (
+              <>
+                Last saved:{" "}
+                <time dateTime={new Date(lastSaved).toISOString()}>
+                  {formatDistanceToNow(new Date(lastSaved), {
+                    addSuffix: true,
+                  })}
+                </time>
+              </>
+            ) : (
+              "Not saved yet"
+            )}
+          </div>
+          <IconButton
+            onClick={() => setObjectsSidebar(true)}
+            aria-label="Add objects"
+          >
+            <Add size={24} />
           </IconButton>
           <IconButton onClick={() => setUniversalMenu(true)}>
             <Menu />
