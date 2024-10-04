@@ -145,7 +145,10 @@ const SuspendedApp = () => {
     <FullScreenContainer>
       <canvas ref={canvasRef} className="w-full h-full" />
       <HeaderStartPortal>
-        <Breadcrumbs mode={mode} upMode={scene?.contextManager?.contextUp} />
+        <Breadcrumbs
+          mode={mode}
+          upMode={() => scene?.contextManager?.contextUp()}
+        />
       </HeaderStartPortal>
       <HeaderEndPortal>
         <div className="flex items-center justify-end">

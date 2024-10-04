@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MouseEvent } from "react";
 
 type Props = {
   path: string;
@@ -6,14 +7,23 @@ type Props = {
   onClick?: () => void;
 };
 
-const Breadcrumb = ({ path, label, onClick }: Props) => (
-  <Link
-    href={path}
-    onClick={onClick}
-    className="mx-1 rounded-sm  p-1 text-lg font-normal"
-  >
-    {label}
-  </Link>
-);
+const Breadcrumb = ({ path, label, onClick }: Props) => {
+  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (onClick) {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
+  return (
+    <Link
+      href={path}
+      onClick={handleClick}
+      className="mx-1 rounded-sm p-1 text-lg font-normal"
+    >
+      {label}
+    </Link>
+  );
+};
 
 export default Breadcrumb;
