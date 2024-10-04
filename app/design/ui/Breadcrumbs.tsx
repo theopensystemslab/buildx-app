@@ -11,6 +11,7 @@ import Breadcrumb from "./Breadcrumb";
 import RenameForm from "./RenameForm";
 import { pipe } from "fp-ts/function";
 import * as O from "fp-ts/Option";
+import { getBuildingUrl, getLevelUrl, getProjectUrl } from "../util";
 
 const Breadcrumbs = ({
   mode,
@@ -30,7 +31,7 @@ const Breadcrumbs = ({
     breadcrumbs.push(
       <Fragment key="project">
         <Breadcrumb
-          path="/design"
+          path={getProjectUrl()}
           label={projectName || "New Project"}
           onClick={() => {
             if (mode?.label !== SceneContextModeLabel.Enum.SITE) {
@@ -64,7 +65,7 @@ const Breadcrumbs = ({
               <Fragment key="building">
                 <span>/</span>
                 <Breadcrumb
-                  path={`/design?houseId=${houseGroup.userData.houseId}`}
+                  path={getBuildingUrl(houseGroup.userData.houseId)}
                   label={houseGroup.friendlyName}
                   onClick={() => {
                     if (mode.label === SceneContextModeLabel.Enum.BUILDING) {
@@ -101,7 +102,10 @@ const Breadcrumbs = ({
                       <Fragment key="level">
                         <span>/</span>
                         <Breadcrumb
-                          path={`/design?houseId=${houseGroup.userData.houseId}&levelIndex=${levelIndex}`}
+                          path={getLevelUrl(
+                            houseGroup.userData.houseId,
+                            levelIndex
+                          )}
                           label={`Level ${levelIndex}`}
                         />
                       </Fragment>
