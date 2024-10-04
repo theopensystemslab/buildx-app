@@ -57,7 +57,7 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
 
   const hasHouseBeenAdded = useRef(false);
 
-  const [isOpen, setOpen] = useState(false);
+  const [isOpen, setOpen] = useState(true);
   const toggleOpen = () => setOpen(!isOpen);
 
   useEffect(() => {

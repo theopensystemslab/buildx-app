@@ -25,6 +25,7 @@ import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
 import { SharingWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
 import ExitMode from "./ui/ExitMode";
 import MetricsWidget from "./ui/metrics/MetricsWidget";
+import Breadcrumbs from "./ui/Breadcrumbs";
 
 let scene: BuildXScene | null = null;
 
@@ -97,7 +98,6 @@ const SuspendedApp = () => {
     });
 
     SharingWorkerUtils.createPolygonSubscription((polygon) => {
-      console.log("polygon subscription", polygon);
       scene?.updatePolygon(polygon);
     });
 
@@ -144,6 +144,9 @@ const SuspendedApp = () => {
   return (
     <FullScreenContainer>
       <canvas ref={canvasRef} className="w-full h-full" />
+      <HeaderStartPortal>
+        <Breadcrumbs mode={mode} upMode={scene?.contextManager?.contextUp} />
+      </HeaderStartPortal>
       <HeaderEndPortal>
         <div className="flex items-center justify-end">
           <IconButton onClick={() => setObjectsSidebar(true)}>
