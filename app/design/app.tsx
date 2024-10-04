@@ -9,6 +9,7 @@ import {
   createHouseGroupTE,
   defaultCachedHousesOps,
   localHousesTE,
+  useProjectData,
   useSuspendAllBuildData,
 } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
@@ -25,6 +26,11 @@ import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
 import { SharingWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
 import ExitMode from "./ui/ExitMode";
 import MetricsWidget from "./ui/metrics/MetricsWidget";
+import Breadcrumbs from "./ui/Breadcrumbs";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
+import { getModeUrl } from "./util";
+import { formatDistanceToNow } from "date-fns";
 
 let scene: BuildXScene | null = null;
 
@@ -65,6 +71,8 @@ const SuspendedApp = () => {
     internalShowHide: false,
   });
 
+  const router = useRouter();
+
   useEffect(() => {
     if (!canvasRef.current || scene !== null) return;
 
@@ -93,11 +101,12 @@ const SuspendedApp = () => {
       onTapMissed: closeContextMenu,
       onModeChange: (_, next) => {
         setMode(next);
+        const url = getModeUrl(next);
+        router.push(url);
       },
     });
 
     SharingWorkerUtils.createPolygonSubscription((polygon) => {
-      console.log("polygon subscription", polygon);
       scene?.updatePolygon(polygon);
     });
 
@@ -139,17 +148,42 @@ const SuspendedApp = () => {
         );
       })
     )();
-  }, []);
+  }, [router]);
+
+  const { lastSaved } = useProjectData();
 
   return (
     <FullScreenContainer>
       <canvas ref={canvasRef} className="w-full h-full" />
+      <HeaderStartPortal>
+        <Breadcrumbs
+          mode={mode}
+          upMode={() => {
+            scene?.contextManager?.contextUp();
+          }}
+        />
+      </HeaderStartPortal>
       <HeaderEndPortal>
         <div className="flex items-center justify-end">
-          <IconButton onClick={() => setObjectsSidebar(true)}>
-            <div className="flex items-center justify-center">
-              <Add size={32} />
-            </div>
+          <div className="text-xs text-gray-600 mr-32">
+            {lastSaved ? (
+              <>
+                Last saved:{" "}
+                <time dateTime={new Date(lastSaved).toISOString()}>
+                  {formatDistanceToNow(new Date(lastSaved), {
+                    addSuffix: true,
+                  })}
+                </time>
+              </>
+            ) : (
+              "Not saved yet"
+            )}
+          </div>
+          <IconButton
+            onClick={() => setObjectsSidebar(true)}
+            aria-label="Add objects"
+          >
+            <Add size={24} />
           </IconButton>
           <IconButton onClick={() => setUniversalMenu(true)}>
             <Menu />
