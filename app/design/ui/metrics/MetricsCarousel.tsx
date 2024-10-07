@@ -1,32 +1,47 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 
-export type Metric = {
-  label: string
-  value: number
-  unit?: string
-  displayFn?: (value: number, unit?: string) => string
-}
+export type Range = {
+  min: number;
+  max: number;
+};
 
-const MetricsCarousel = ({ metrics }: { metrics: Metric[] }) => {
-  const [currentIndex, setCurrentIndex] = useState(0)
+export type Metric<T extends number | Range> = {
+  label: string;
+  value: T;
+  unit?: string;
+  displayFn?: (value: T, unit?: string) => string;
+};
+
+const MetricsCarousel = <T extends number | Range>({
+  metrics,
+}: {
+  metrics: Metric<T>[];
+}) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextMetric = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % metrics.length)
-  }
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % metrics.length);
+  };
 
   const prevMetric = () => {
     setCurrentIndex(
       (prevIndex) => (prevIndex - 1 + metrics.length) % metrics.length
-    )
-  }
+    );
+  };
 
-  const { label, value, unit = "", displayFn } = metrics[currentIndex]
+  const { label, value, unit = "", displayFn } = metrics[currentIndex];
 
-  const defaultDisplayFn = (value: number, unit?: string) => {
-    return unit ? `${value} ${unit}` : `${value}`
-  }
+  const defaultDisplayFn = (value: T, unit?: string) => {
+    if (typeof value === "number") {
+      return unit ? `${value} ${unit}` : `${value}`;
+    } else {
+      return unit
+        ? `${value.min}-${value.max} ${unit}`
+        : `${value.min}-${value.max}`;
+    }
+  };
 
-  const displayValue = (displayFn || defaultDisplayFn)(value, unit)
+  const displayValue = (displayFn || defaultDisplayFn)(value, unit);
 
   return (
     <div className="flex flex-col items-center">
@@ -41,7 +56,7 @@ const MetricsCarousel = ({ metrics }: { metrics: Metric[] }) => {
       </div>
       <div className="font-bold text-lg">{displayValue}</div>
     </div>
-  )
-}
+  );
+};
 
-export default MetricsCarousel
+export default MetricsCarousel;

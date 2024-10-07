@@ -1,23 +1,24 @@
-"use client"
-import { ArrowUp } from "@carbon/icons-react"
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table"
-import { pipe } from "fp-ts/lib/function"
-import { memo, useEffect, useMemo } from "react"
-import { A, capitalizeFirstLetters } from "~/utils/functions"
-import PaginatedTable from "../PaginatedTable"
-import { csvFormatRows } from "d3-dsv"
+"use client";
+import { ArrowUp } from "@carbon/icons-react";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { pipe } from "fp-ts/lib/function";
+import { memo, useEffect, useMemo } from "react";
+import { A, capitalizeFirstLetters } from "~/utils/functions";
+import PaginatedTable from "../PaginatedTable";
+import { csvFormatRows } from "d3-dsv";
 import {
   MaterialsListRow,
   useHouses,
   useMaterialsListRows,
   useProjectCurrency,
-} from "@opensystemslab/buildx-core"
-import { useSelectedHouseIds } from "~/analyse/ui/HousePillsSelector"
-import { getColorClass } from "~/analyse/ui/colors"
+} from "@opensystemslab/buildx-core";
+import { getColorClass } from "~/analyse/ui/colors";
+import { useSelectedHouseIds } from "@/app/ui/HousesPillsSelector";
+import { round } from "@/app/utils/math";
 
 type Props = {
-  setCsvDownloadUrl: (s: string) => void
-}
+  setCsvDownloadUrl: (s: string) => void;
+};
 
 export const useMaterialsListDownload = (
   materialsListRows: MaterialsListRow[]
@@ -27,68 +28,83 @@ export const useMaterialsListDownload = (
       // Create a header row
       const headers = Object.keys(materialsListRows[0]).filter(
         (x) => !["houseId", "colorClass", "linkUrl"].includes(x)
-      ) as Array<keyof (typeof materialsListRows)[0]>
+      ) as Array<keyof (typeof materialsListRows)[0]>;
 
       // Map each object to an array of its values
       const rows = materialsListRows.map((row) =>
         headers.map((header) => row[header]?.toString() ?? "")
-      )
+      );
 
       // Combine header and rows
-      const csvData = [headers, ...rows]
+      const csvData = [headers, ...rows];
 
       // Format the 2D array into a CSV string
-      const csvContent = csvFormatRows(csvData)
+      const csvContent = csvFormatRows(csvData);
 
       // Create a Blob and URL for the CSV
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
-      return { url: URL.createObjectURL(blob), blob }
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      return { url: URL.createObjectURL(blob), blob };
     }
-  }, [materialsListRows])
+  }, [materialsListRows]);
 
 const MaterialsListTable = (props: Props) => {
-  const { setCsvDownloadUrl } = props
+  const { setCsvDownloadUrl } = props;
 
-  const selectedHouseIds = useSelectedHouseIds()
+  const selectedHouseIds = useSelectedHouseIds();
 
-  const houses = useHouses()
+  const houses = useHouses();
 
-  const allHouseIds = houses.map((x) => x.houseId)
+  const allHouseIds = houses.map((x) => x.houseId);
 
   const materialsListRows = useMaterialsListRows(selectedHouseIds).map((x) => ({
     ...x,
     colorClass: getColorClass(allHouseIds, x.houseId),
-  }))
+  }));
 
-  const materialsListDownload = useMaterialsListDownload(materialsListRows)
+  const materialsListDownload = useMaterialsListDownload(materialsListRows);
 
   useEffect(() => {
     if (materialsListDownload) {
-      setCsvDownloadUrl(materialsListDownload.url)
+      setCsvDownloadUrl(materialsListDownload.url);
     }
-  }, [materialsListDownload, setCsvDownloadUrl])
+  }, [materialsListDownload, setCsvDownloadUrl]);
 
   const { totalEstimatedCost, totalCarbonCost } = pipe(
     materialsListRows,
     A.reduce(
-      { totalEstimatedCost: 0, totalCarbonCost: 0 },
+      {
+        totalEstimatedCost: {
+          min: 0,
+          max: 0,
+        },
+        totalCarbonCost: {
+          min: 0,
+          max: 0,
+        },
+      },
       ({ totalEstimatedCost, totalCarbonCost }, row) => ({
-        totalEstimatedCost: totalEstimatedCost + row.cost,
-        totalCarbonCost: totalCarbonCost + row.embodiedCarbonCost,
+        totalEstimatedCost: {
+          min: totalEstimatedCost.min + row.cost.min,
+          max: totalEstimatedCost.max + row.cost.max,
+        },
+        totalCarbonCost: {
+          min: totalCarbonCost.min + row.embodiedCarbonCost.min,
+          max: totalCarbonCost.max + row.embodiedCarbonCost.max,
+        },
       })
     )
-  )
+  );
 
-  const { format } = useProjectCurrency()
+  const { symbol } = useProjectCurrency();
 
-  const columnHelper = createColumnHelper<MaterialsListRow>()
+  const columnHelper = createColumnHelper<MaterialsListRow>();
 
   const columns: ColumnDef<MaterialsListRow, any>[] = useMemo(
     () => [
       columnHelper.accessor("buildingName", {
         id: "Building Name",
         cell: (info) => {
-          return <div>{capitalizeFirstLetters(info.getValue())}</div>
+          return <div>{capitalizeFirstLetters(info.getValue())}</div>;
         },
         header: () => null,
       }),
@@ -99,15 +115,15 @@ const MaterialsListTable = (props: Props) => {
       columnHelper.accessor("category", {
         id: "Category",
         cell: (info) => {
-          return <div>{info.getValue()}</div>
+          return <div>{info.getValue()}</div>;
         },
         header: () => <span>Category</span>,
       }),
       columnHelper.accessor("quantity", {
         cell: (info) => {
-          const unit = info.row.original.unit
-          const value = info.getValue()
-          return <span>{unit ? `${value.toFixed(1)}${unit}` : value}</span>
+          const unit = info.row.original.unit;
+          const value = info.getValue();
+          return <span>{unit ? `${value.toFixed(1)}${unit}` : value}</span>;
         },
         header: () => <span>Quantity</span>,
       }),
@@ -117,21 +133,39 @@ const MaterialsListTable = (props: Props) => {
       }),
       columnHelper.accessor("costPerUnit", {
         cell: (info) => {
-          const unit = info.row.original.unit
+          const unit = info.row.original.unit;
+
+          console.log({ foo: info.getValue() });
 
           return (
             <span>
-              {format(info.getValue())}
+              {symbol + round(info.getValue().min)}
+              {unit !== null ? `/${unit}` : null}
+              {` - `}
+              {symbol + info.getValue().max}
               {unit !== null ? `/${unit}` : null}
             </span>
-          )
+          );
         },
         header: () => <span>Estimated cost per unit</span>,
       }),
       columnHelper.accessor("cost", {
-        cell: (info) => <span>{format(info.getValue().toFixed(0))}</span>,
+        cell: (info) => (
+          <span>
+            {`${symbol}${round(info.getValue().min)} - ${symbol}${round(
+              info.getValue().max
+            )}`}
+          </span>
+        ),
         header: () => <span>Estimated cost</span>,
-        footer: () => <span>{format(totalEstimatedCost)}</span>,
+        footer: () => {
+          return (
+            <span>
+              {symbol + round(totalEstimatedCost.min)} -{" "}
+              {symbol + round(totalEstimatedCost.max)}
+            </span>
+          );
+        },
       }),
       columnHelper.accessor("embodiedCarbonCost", {
         cell: (info) => (
@@ -140,14 +174,15 @@ const MaterialsListTable = (props: Props) => {
         header: () => <span>Carbon cost</span>,
         footer: () => (
           <span>
-            {totalCarbonCost.toFixed(0)}
-            {` T CO₂`}
+            {`${totalCarbonCost.min.toFixed(0)} - ${totalCarbonCost.max.toFixed(
+              0
+            )} T CO₂`}
           </span>
         ),
       }),
       columnHelper.accessor("linkUrl", {
         cell: (info) => {
-          const value = info.getValue()
+          const value = info.getValue();
           return value ? (
             <a href={value}>
               <div className="flex font-semibold items-center">
@@ -157,15 +192,21 @@ const MaterialsListTable = (props: Props) => {
                 </span>
               </div>
             </a>
-          ) : null
+          ) : null;
         },
         header: () => <span>Link</span>,
       }),
     ],
-    [columnHelper, format, totalCarbonCost, totalEstimatedCost]
-  )
+    [
+      columnHelper,
+      symbol,
+      totalCarbonCost,
+      totalEstimatedCost.max,
+      totalEstimatedCost.min,
+    ]
+  );
 
-  return <PaginatedTable data={materialsListRows} columns={columns} />
-}
+  return <PaginatedTable data={materialsListRows} columns={columns} />;
+};
 
-export default memo(MaterialsListTable)
+export default memo(MaterialsListTable);

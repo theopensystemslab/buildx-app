@@ -1,12 +1,12 @@
-"use client"
+"use client";
 import {
   AnalysisData,
   useHouses,
   useProjectCurrency,
-} from "@opensystemslab/buildx-core"
-import { pipe } from "fp-ts/lib/function"
-import { A, capitalizeFirstLetters, O, R } from "~/utils/functions"
-import ChartBar from "./ChartBar"
+} from "@opensystemslab/buildx-core";
+import { pipe } from "fp-ts/lib/function";
+import { A, capitalizeFirstLetters, O, R } from "~/utils/functions";
+import ChartBar from "./ChartBar";
 import {
   ChartColumn,
   ChartContainer,
@@ -14,30 +14,35 @@ import {
   ChartTitles,
   HowIsItCalculated,
   WhatIsThis,
-} from "./chartComponents"
-import { getColorClass } from "./colors"
-import { formatWithUnit } from "@opensystemslab/buildx-core"
+} from "./chartComponents";
+import { getColorClass } from "./colors";
+import { formatWithUnit } from "@opensystemslab/buildx-core";
+import { round } from "@/app/utils/math";
 
 const FloorAreaChart = ({
   analyseData,
   selectedHouseIds,
 }: {
-  analyseData: AnalysisData
-  selectedHouseIds: string[]
+  analyseData: AnalysisData;
+  selectedHouseIds: string[];
 }) => {
   const selectedHouses = useHouses().filter(({ houseId }) =>
     selectedHouseIds.includes(houseId)
-  )
+  );
 
-  const { format } = useProjectCurrency()
+  const { symbol } = useProjectCurrency();
 
-  const { areas, costs } = analyseData
+  const { areas, costs } = analyseData;
 
   const houseFloorAreas = pipe(
     analyseData.byHouse,
 
     R.map((x) => pipe(x.areas.totalFloor))
-  )
+  );
+
+  const formatFloorAreaCost = (v: number): string => {
+    return `${symbol}${round(v).toFixed(0)}/m²`;
+  };
 
   return (
     <ChartColumn>
@@ -90,9 +95,11 @@ const FloorAreaChart = ({
         </div>
         <div>
           <div>
-            <span className="text-3xl">{`${format(
-              costs.total / areas.totalFloor
-            )}/m²`}</span>
+            <span className="text-md">{`${formatFloorAreaCost(
+              costs.total.min / areas.totalFloor
+            )} - ${formatFloorAreaCost(
+              costs.total.max / areas.totalFloor
+            )}`}</span>
           </div>
           <div className="mt-4">
             <span>Estimated per floor area</span>
@@ -112,7 +119,7 @@ const FloorAreaChart = ({
         </p>
       </HowIsItCalculated>
     </ChartColumn>
-  )
-}
+  );
+};
 
-export default FloorAreaChart
+export default FloorAreaChart;

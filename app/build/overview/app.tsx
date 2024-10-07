@@ -65,11 +65,13 @@ const OverviewIndex = () => {
     },
     {
       label: "Total estimated build cost",
-      value: format(total),
+      value: `${format(total.min)} - ${format(total.max)}`,
     },
     {
       label: "Total estimated carbon cost",
-      value: `${(embodiedCo2.total / 1000).toFixed(2)} tCO₂e`,
+      value: `${(embodiedCo2.total.min / 1000).toFixed(2)} - ${(
+        embodiedCo2.total.max / 1000
+      ).toFixed(2)} tCO₂e`,
     },
   ];
 

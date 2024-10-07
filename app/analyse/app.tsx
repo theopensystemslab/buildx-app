@@ -10,10 +10,10 @@ import css from "./app.module.css";
 import CarbonEmissionsChart from "./ui/CarbonEmissionsChart";
 import ChassisCostChart from "./ui/ChassisCostChart";
 import FloorAreaChart from "./ui/FloorAreaChart";
+import useOutputsWorker from "../utils/workers/outputs/useOutputsWorker";
 import HousesPillsSelector, {
   useSelectedHouseIds,
-} from "./ui/HousePillsSelector";
-import useOutputsWorker from "../utils/workers/outputs/useOutputsWorker";
+} from "../ui/HousesPillsSelector";
 
 const SuspendedApp = () => {
   useOutputsWorker();

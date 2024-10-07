@@ -165,7 +165,7 @@ const SuspendedApp = () => {
       </HeaderStartPortal>
       <HeaderEndPortal>
         <div className="flex items-center justify-end">
-          <div className="text-xs text-gray-600 mr-32">
+          <div className="text-xs text-gray-600 mr-8 lg:mr-32">
             {lastSaved ? (
               <>
                 Last saved:{" "}

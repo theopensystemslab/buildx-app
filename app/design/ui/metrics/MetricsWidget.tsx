@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import IconButton from "../../../ui/IconButton";
 import { Analyse, Close } from "../../../ui/icons";
 import { A, NEA, O, R, S } from "../../../utils/functions";
-import MetricsCarousel, { Metric } from "./MetricsCarousel";
+import MetricsCarousel, { Metric, Range } from "./MetricsCarousel";
 import css from "./MetricsWidget.module.css";
 
 const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
@@ -70,48 +70,47 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
     }
   }, [houses]);
 
-  const topMetrics: Metric[] =
+  function formatNumberWithK(number: number): string {
+    if (number >= 1000) {
+      return (number / 1000).toFixed(0) + "k";
+    } else {
+      return number.toString();
+    }
+  }
+
+  function formatCurrencyWithK(number: number): string {
+    return `${currency.symbol}${formatNumberWithK(number)}`;
+  }
+
+  const topMetrics =
     buildingMode && houseId && houseId in byHouse
       ? [
           {
             label: "Estimated build cost",
             value: byHouse[houseId].costs.total,
-            displayFn: (value) =>
-              value.toLocaleString("en-GB", {
-                style: "currency",
-                currency: currency.code,
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              }),
+            displayFn: ({ min, max }: Range) =>
+              `${formatCurrencyWithK(min)} - ${formatCurrencyWithK(max)}`,
           },
           {
             label: "Estimated chassis cost",
             value: houseChassisCosts[houseId],
-            displayFn: (value) =>
-              value.toLocaleString("en-GB", {
-                style: "currency",
-                currency: currency.code,
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              }),
+            displayFn: (value: number) => formatCurrencyWithK(value),
           },
         ]
       : [
           {
             label: "Estimated build cost",
             value: costs.total,
-            displayFn: (value) =>
-              value.toLocaleString("en-GB", {
-                style: "currency",
-                currency: currency.code,
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              }),
+            displayFn: ({ min, max }: Range) =>
+              `${formatCurrencyWithK(min)} - ${formatCurrencyWithK(max)}`,
+          },
+          {
+            displayFn: (value: number) => formatCurrencyWithK(value),
           },
           {
             label: "Estimated chassis cost",
             value: totalChassisCost,
-            displayFn: (value) =>
+            displayFn: (value: number) =>
               value.toLocaleString("en-GB", {
                 style: "currency",
                 currency: currency.code,
@@ -121,37 +120,45 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
           },
         ];
 
-  const bottomMetrics: Metric[] =
+  const bottomMetrics =
     buildingMode && houseId && houseId in byHouse
       ? [
           {
             label: "Estimated carbon cost",
-            value: byHouse[houseId!].embodiedCo2.total / 1000,
+            value: {
+              min: byHouse[houseId!].embodiedCo2.total.min / 1000,
+              max: byHouse[houseId!].embodiedCo2.total.max / 1000,
+            },
             unit: "tCO₂e",
-            displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
-          },
+            displayFn: (value, unit) =>
+              `${value.min.toFixed(2)} to ${value.max.toFixed(2)} ${unit}`,
+          } as Metric<Range>,
           {
             label: "Internal floor area",
             value: byHouse[houseId!].areas.totalFloor,
             unit: "m²",
 
             displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
-          },
+          } as Metric<number>,
         ]
       : [
           {
             label: "Estimated carbon cost",
-            value: embodiedCo2.total / 1000,
+            value: {
+              min: embodiedCo2.total.min / 1000,
+              max: embodiedCo2.total.max / 1000,
+            },
             unit: "tCO₂e",
-            displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
-          },
+            displayFn: (value, unit) =>
+              `${value.min.toFixed(2)} to ${value.max.toFixed(2)} ${unit}`,
+          } as Metric<Range>,
           {
             label: "Internal floor area",
             value: areas.totalFloor,
             unit: "m²",
 
             displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
-          },
+          } as Metric<number>,
         ];
 
   return (
@@ -185,8 +192,10 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
             </IconButton> */}
           </div>
           <div className="pt-10 pb-6 pr-6">
-            <MetricsCarousel metrics={topMetrics} />
-            <MetricsCarousel metrics={bottomMetrics} />
+            <MetricsCarousel metrics={topMetrics as Metric<number | Range>[]} />
+            <MetricsCarousel
+              metrics={bottomMetrics as Metric<number | Range>[]}
+            />
           </div>
         </div>
       )}
