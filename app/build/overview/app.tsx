@@ -65,7 +65,7 @@ const OverviewIndex = () => {
     },
     {
       label: "Total estimated build cost",
-      value: format(total),
+      value: `${format(total.min)} - ${format(total.max)}`,
     },
     {
       label: "Total estimated carbon cost",

@@ -1,21 +1,21 @@
-"use client"
-import { useHouses } from "@opensystemslab/buildx-core"
-import { pipe } from "fp-ts/lib/function"
-import { useMemo } from "react"
-import { proxy, useSnapshot } from "valtio"
-import { Close } from "~/ui/icons"
-import { A } from "~/utils/functions"
+"use client";
+import { useHouses } from "@opensystemslab/buildx-core";
+import { pipe } from "fp-ts/lib/function";
+import { useMemo } from "react";
+import { proxy, useSnapshot } from "valtio";
+import { Close } from "~/ui/icons";
+import { A } from "~/utils/functions";
 
 const store = proxy<{
-  selectedHouseIds: string[]
+  selectedHouseIds: string[];
 }>({
   selectedHouseIds: [],
-})
+});
 
 export const useSelectedHouseIds = (): string[] => {
-  const { selectedHouseIds } = useSnapshot(store) as typeof store
+  const { selectedHouseIds } = useSnapshot(store) as typeof store;
 
-  return selectedHouseIds
+  return [...selectedHouseIds];
 
   // const pathname = usePathname()
 
@@ -25,11 +25,11 @@ export const useSelectedHouseIds = (): string[] => {
   //   if (mode !== SiteCtxModeEnum.Enum.SITE && houseId) return [houseId]
   //   else return houses.map((house) => house.houseId)
   // }
-}
+};
 
 export const useSelectedHouses = () => {
-  const houses = useHouses()
-  const selectedHouseIds = useSelectedHouseIds()
+  const houses = useHouses();
+  const selectedHouseIds = useSelectedHouseIds();
 
   return useMemo(
     () =>
@@ -38,19 +38,19 @@ export const useSelectedHouses = () => {
         A.filter(({ houseId }) => selectedHouseIds.includes(houseId))
       ),
     [houses, selectedHouseIds]
-  )
-}
+  );
+};
 
 export const setSelectedHouseIds = (newSelectedHouseIds: string[]) => {
-  store.selectedHouseIds = newSelectedHouseIds
-}
+  store.selectedHouseIds = newSelectedHouseIds;
+};
 
 export const removeSelectedHouseId = (houseId: string) => {
-  setSelectedHouseIds(store.selectedHouseIds.filter((x) => x !== houseId))
-}
+  setSelectedHouseIds(store.selectedHouseIds.filter((x) => x !== houseId));
+};
 
 const HousesPillsSelector = () => {
-  const selectedHouses = useSelectedHouses()
+  const selectedHouses = useSelectedHouses();
 
   // Render the component UI
   return (
@@ -64,7 +64,7 @@ const HousesPillsSelector = () => {
         </div>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default HousesPillsSelector
+export default HousesPillsSelector;

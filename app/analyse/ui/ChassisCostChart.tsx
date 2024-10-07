@@ -1,9 +1,9 @@
-"use client"
-import { ArrowUp } from "@carbon/icons-react"
-import { OrderListRow, useProjectCurrency } from "@opensystemslab/buildx-core"
-import { pipe } from "fp-ts/lib/function"
-import { A, capitalizeFirstLetters, O, R } from "~/utils/functions"
-import ChartBar from "./ChartBar"
+"use client";
+import { ArrowUp } from "@carbon/icons-react";
+import { OrderListRow, useProjectCurrency } from "@opensystemslab/buildx-core";
+import { pipe } from "fp-ts/lib/function";
+import { A, capitalizeFirstLetters, O, R } from "~/utils/functions";
+import ChartBar from "./ChartBar";
 import {
   ChartColumn,
   ChartContainer,
@@ -11,15 +11,15 @@ import {
   ChartTitles,
   HowIsItCalculated,
   WhatIsThis,
-} from "./chartComponents"
-import { getColorClass } from "./colors"
+} from "./chartComponents";
+import { getColorClass } from "./colors";
 
 const ChassisCostChart = ({
   orderListRows,
   selectedHouseIds,
 }: {
-  orderListRows: OrderListRow[]
-  selectedHouseIds: string[]
+  orderListRows: OrderListRow[];
+  selectedHouseIds: string[];
 }) => {
   const orderListByBuilding = pipe(
     orderListRows,
@@ -36,25 +36,25 @@ const ChassisCostChart = ({
         O.getOrElse(() => pipe(acc, R.upsertAt(x.buildingName, x)))
       )
     )
-  )
+  );
 
   const totalCost = Object.values(orderListByBuilding).reduce(
     (acc, v) => acc + v.totalCost,
     0
-  )
+  );
 
-  const currency = useProjectCurrency()
+  const currency = useProjectCurrency();
 
   function formatNumberWithK(number: number): string {
     if (number >= 1000) {
-      return (number / 1000).toFixed(1) + "k"
+      return (number / 1000).toFixed(1) + "k";
     } else {
-      return number.toString()
+      return number.toString();
     }
   }
 
   function formatCurrencyWithK(number: number): string {
-    return `${currency.symbol}${formatNumberWithK(number)}`
+    return `${currency.symbol}${formatNumberWithK(number)}`;
   }
 
   return (
@@ -118,6 +118,6 @@ const ChassisCostChart = ({
         </p>
       </HowIsItCalculated>
     </ChartColumn>
-  )
-}
-export default ChassisCostChart
+  );
+};
+export default ChassisCostChart;

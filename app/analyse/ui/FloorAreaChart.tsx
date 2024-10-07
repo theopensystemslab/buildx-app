@@ -1,12 +1,12 @@
-"use client"
+"use client";
 import {
   AnalysisData,
   useHouses,
   useProjectCurrency,
-} from "@opensystemslab/buildx-core"
-import { pipe } from "fp-ts/lib/function"
-import { A, capitalizeFirstLetters, O, R } from "~/utils/functions"
-import ChartBar from "./ChartBar"
+} from "@opensystemslab/buildx-core";
+import { pipe } from "fp-ts/lib/function";
+import { A, capitalizeFirstLetters, O, R } from "~/utils/functions";
+import ChartBar from "./ChartBar";
 import {
   ChartColumn,
   ChartContainer,
@@ -14,30 +14,30 @@ import {
   ChartTitles,
   HowIsItCalculated,
   WhatIsThis,
-} from "./chartComponents"
-import { getColorClass } from "./colors"
-import { formatWithUnit } from "@opensystemslab/buildx-core"
+} from "./chartComponents";
+import { getColorClass } from "./colors";
+import { formatWithUnit } from "@opensystemslab/buildx-core";
 
 const FloorAreaChart = ({
   analyseData,
   selectedHouseIds,
 }: {
-  analyseData: AnalysisData
-  selectedHouseIds: string[]
+  analyseData: AnalysisData;
+  selectedHouseIds: string[];
 }) => {
   const selectedHouses = useHouses().filter(({ houseId }) =>
     selectedHouseIds.includes(houseId)
-  )
+  );
 
-  const { format } = useProjectCurrency()
+  const { format } = useProjectCurrency();
 
-  const { areas, costs } = analyseData
+  const { areas, costs } = analyseData;
 
   const houseFloorAreas = pipe(
     analyseData.byHouse,
 
     R.map((x) => pipe(x.areas.totalFloor))
-  )
+  );
 
   return (
     <ChartColumn>
@@ -91,8 +91,8 @@ const FloorAreaChart = ({
         <div>
           <div>
             <span className="text-3xl">{`${format(
-              costs.total / areas.totalFloor
-            )}/m²`}</span>
+              costs.total.min / areas.totalFloor
+            )}/m² - ${format(costs.total.max / areas.totalFloor)}/m²`}</span>
           </div>
           <div className="mt-4">
             <span>Estimated per floor area</span>
@@ -112,7 +112,7 @@ const FloorAreaChart = ({
         </p>
       </HowIsItCalculated>
     </ChartColumn>
-  )
-}
+  );
+};
 
-export default FloorAreaChart
+export default FloorAreaChart;
