@@ -14,6 +14,7 @@ import {
 } from "@opensystemslab/buildx-core";
 import { getColorClass } from "~/analyse/ui/colors";
 import { useSelectedHouseIds } from "@/app/ui/HousesPillsSelector";
+import { round } from "@/app/utils/math";
 
 type Props = {
   setCsvDownloadUrl: (s: string) => void;
@@ -88,7 +89,7 @@ const MaterialsListTable = (props: Props) => {
     )
   );
 
-  const { format } = useProjectCurrency();
+  const { symbol } = useProjectCurrency();
 
   const columnHelper = createColumnHelper<MaterialsListRow>();
 
@@ -128,9 +129,14 @@ const MaterialsListTable = (props: Props) => {
         cell: (info) => {
           const unit = info.row.original.unit;
 
+          console.log({ foo: info.getValue() });
+
           return (
             <span>
-              {format(info.getValue())}
+              {symbol + round(info.getValue().min)}
+              {unit !== null ? `/${unit}` : null}
+              {` - `}
+              {symbol + info.getValue().max}
               {unit !== null ? `/${unit}` : null}
             </span>
           );
@@ -138,13 +144,22 @@ const MaterialsListTable = (props: Props) => {
         header: () => <span>Estimated cost per unit</span>,
       }),
       columnHelper.accessor("cost", {
-        cell: (info) => <span>{format(info.getValue().toFixed(0))}</span>,
-        header: () => <span>Estimated cost</span>,
-        footer: () => (
+        cell: (info) => (
           <span>
-            {format(totalEstimatedCost.min)} - {format(totalEstimatedCost.max)}
+            {`${symbol}${round(info.getValue().min)} - ${symbol}${round(
+              info.getValue().max
+            )}`}
           </span>
         ),
+        header: () => <span>Estimated cost</span>,
+        footer: () => {
+          return (
+            <span>
+              {symbol + round(totalEstimatedCost.min)} -{" "}
+              {symbol + round(totalEstimatedCost.max)}
+            </span>
+          );
+        },
       }),
       columnHelper.accessor("embodiedCarbonCost", {
         cell: (info) => (
@@ -175,7 +190,13 @@ const MaterialsListTable = (props: Props) => {
         header: () => <span>Link</span>,
       }),
     ],
-    [columnHelper, format, totalCarbonCost, totalEstimatedCost]
+    [
+      columnHelper,
+      symbol,
+      totalCarbonCost,
+      totalEstimatedCost.max,
+      totalEstimatedCost.min,
+    ]
   );
 
   return <PaginatedTable data={materialsListRows} columns={columns} />;
