@@ -12,8 +12,8 @@ import {
   useMaterialsListRows,
   useProjectCurrency,
 } from "@opensystemslab/buildx-core";
-import { useSelectedHouseIds } from "~/analyse/ui/HousePillsSelector";
 import { getColorClass } from "~/analyse/ui/colors";
+import { useSelectedHouseIds } from "@/app/ui/HousesPillsSelector";
 
 type Props = {
   setCsvDownloadUrl: (s: string) => void;
