@@ -74,7 +74,7 @@ const CarbonEmissionsChart = ({
         </div>
       </ChartContainer>
       <ChartMetrics2>
-        <div className="text-5xl font-normal">
+        <div className="text-4xl font-normal">
           {`${(analysisData.embodiedCo2.total.min / 1000).toFixed(2)} - ${(
             analysisData.embodiedCo2.total.max / 1000
           ).toFixed(2)} tCO₂e`}
