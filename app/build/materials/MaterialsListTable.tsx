@@ -77,14 +77,20 @@ const MaterialsListTable = (props: Props) => {
           min: 0,
           max: 0,
         },
-        totalCarbonCost: 0,
+        totalCarbonCost: {
+          min: 0,
+          max: 0,
+        },
       },
       ({ totalEstimatedCost, totalCarbonCost }, row) => ({
         totalEstimatedCost: {
           min: totalEstimatedCost.min + row.cost.min,
           max: totalEstimatedCost.max + row.cost.max,
         },
-        totalCarbonCost: totalCarbonCost + row.embodiedCarbonCost,
+        totalCarbonCost: {
+          min: totalCarbonCost.min + row.embodiedCarbonCost.min,
+          max: totalCarbonCost.max + row.embodiedCarbonCost.max,
+        },
       })
     )
   );
@@ -168,8 +174,9 @@ const MaterialsListTable = (props: Props) => {
         header: () => <span>Carbon cost</span>,
         footer: () => (
           <span>
-            {totalCarbonCost.toFixed(0)}
-            {` T CO₂`}
+            {`${totalCarbonCost.min.toFixed(0)} - ${totalCarbonCost.max.toFixed(
+              0
+            )} T CO₂`}
           </span>
         ),
       }),

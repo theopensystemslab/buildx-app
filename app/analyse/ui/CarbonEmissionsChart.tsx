@@ -17,6 +17,7 @@ import {
   AnalysisData,
 } from "@opensystemslab/buildx-core";
 import { getColorClass } from "./colors";
+import { mean } from "@/app/utils/math";
 
 const CarbonEmissionsChart = ({
   selectedHouseIds,
@@ -34,9 +35,9 @@ const CarbonEmissionsChart = ({
         <div
           className={clsx(
             "grid grid-cols-3 border-black h-full",
-            analysisData.embodiedCo2.total === 0
+            analysisData.embodiedCo2.total.max === 0
               ? "hidden"
-              : analysisData.embodiedCo2.total > 0
+              : analysisData.embodiedCo2.total.max > 0
               ? "border-b"
               : "border-t"
           )}
@@ -56,18 +57,14 @@ const CarbonEmissionsChart = ({
               itemToColorClass={(item) =>
                 getColorClass(selectedHouseIds, item.houseId)
               }
-              itemToValue={(item) => item.value}
+              itemToValue={(item) => mean([item.value.max, item.value.min])}
               itemToKey={(item) => item.houseId}
-              // renderItem={(item) => (
-              //   <div className="flex flex-col justify-center  items-center">
-              //     <div>{capitalizeFirstLetters(item.buildingName)}</div>
-              //     {/* <div>{formatCurrencyWithK(item.totalCost)}</div> */}
-              //   </div>
-              // )}
               renderItem={(item) => (
                 <div className="flex flex-col justify-center items-center flex-shrink">
                   <div>{capitalizeFirstLetters(item.buildingName)}</div>
-                  <div>{`${(item.value / 1000).toFixed(2)}t`}</div>
+                  <div>{`${(item.value.min / 1000).toFixed(2)}t - ${(
+                    item.value.max / 1000
+                  ).toFixed(2)}t`}</div>
                 </div>
               )}
               reverse
@@ -78,7 +75,9 @@ const CarbonEmissionsChart = ({
       </ChartContainer>
       <ChartMetrics2>
         <div className="text-5xl font-normal">
-          {`${(analysisData.embodiedCo2.total / 1000).toFixed(2)} tCO₂e`}
+          {`${(analysisData.embodiedCo2.total.min / 1000).toFixed(2)} - ${(
+            analysisData.embodiedCo2.total.max / 1000
+          ).toFixed(2)} tCO₂e`}
         </div>
         <div>Project will remove carbon dioxide from the atmosphere</div>
       </ChartMetrics2>

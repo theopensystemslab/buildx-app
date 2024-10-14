@@ -1,3 +1,4 @@
+import { flow } from "fp-ts/lib/function";
 import { A } from "./functions";
 
 export const {
@@ -24,4 +25,11 @@ export const hamming = (a: string, b: string) => {
   return A.zipWith(a.split(""), b.split(""), (a, b) =>
     abs(a.codePointAt(0)! - b.codePointAt(0)!)
   ).reduce((acc, v) => acc + v, 0);
+};
+
+export const mean = (values: number[]) => {
+  const filteredValues = values.filter((v) => v !== undefined && !isNaN(v));
+  return filteredValues.length > 0
+    ? filteredValues.reduce((a, b) => a + b, 0) / filteredValues.length
+    : 0;
 };

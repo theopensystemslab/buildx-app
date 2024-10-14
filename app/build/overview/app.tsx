@@ -69,7 +69,9 @@ const OverviewIndex = () => {
     },
     {
       label: "Total estimated carbon cost",
-      value: `${(embodiedCo2.total / 1000).toFixed(2)} tCO₂e`,
+      value: `${(embodiedCo2.total.min / 1000).toFixed(2)} - ${(
+        embodiedCo2.total.max / 1000
+      ).toFixed(2)} tCO₂e`,
     },
   ];
 

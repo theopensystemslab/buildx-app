@@ -120,37 +120,44 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
           },
         ];
 
-  const bottomMetrics: Metric<number>[] =
+  const bottomMetrics =
     buildingMode && houseId && houseId in byHouse
       ? [
           {
             label: "Estimated carbon cost",
-            value: byHouse[houseId!].embodiedCo2.total / 1000,
-            unit: "tCO₂e",
-            displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
-          },
+            value: {
+              min: byHouse[houseId!].embodiedCo2.total.min / 1000,
+              max: byHouse[houseId!].embodiedCo2.total.max / 1000,
+            },
+            displayFn: (value, unit) =>
+              `${value.min.toFixed(2)} - ${value.max.toFixed(2)} ${unit}`,
+          } as Metric<Range>,
           {
             label: "Internal floor area",
             value: byHouse[houseId!].areas.totalFloor,
             unit: "m²",
 
             displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
-          },
+          } as Metric<number>,
         ]
       : [
           {
             label: "Estimated carbon cost",
-            value: embodiedCo2.total / 1000,
+            value: {
+              min: embodiedCo2.total.min / 1000,
+              max: embodiedCo2.total.max / 1000,
+            },
             unit: "tCO₂e",
-            displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
-          },
+            displayFn: (value, unit) =>
+              `${value.min.toFixed(2)} - ${value.max.toFixed(2)} ${unit}`,
+          } as Metric<Range>,
           {
             label: "Internal floor area",
             value: areas.totalFloor,
             unit: "m²",
 
             displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
-          },
+          } as Metric<number>,
         ];
 
   return (
@@ -185,7 +192,9 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
           </div>
           <div className="pt-10 pb-6 pr-6">
             <MetricsCarousel metrics={topMetrics as Metric<number | Range>[]} />
-            <MetricsCarousel metrics={bottomMetrics} />
+            <MetricsCarousel
+              metrics={bottomMetrics as Metric<number | Range>[]}
+            />
           </div>
         </div>
       )}
