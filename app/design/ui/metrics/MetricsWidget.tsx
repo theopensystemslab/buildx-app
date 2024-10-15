@@ -129,8 +129,9 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
               min: byHouse[houseId!].embodiedCo2.total.min / 1000,
               max: byHouse[houseId!].embodiedCo2.total.max / 1000,
             },
+            unit: "tCO₂e",
             displayFn: (value, unit) =>
-              `${value.min.toFixed(2)} - ${value.max.toFixed(2)} ${unit}`,
+              `${value.min.toFixed(2)} to ${value.max.toFixed(2)} ${unit}`,
           } as Metric<Range>,
           {
             label: "Internal floor area",
@@ -149,7 +150,7 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
             },
             unit: "tCO₂e",
             displayFn: (value, unit) =>
-              `${value.min.toFixed(2)} - ${value.max.toFixed(2)} ${unit}`,
+              `${value.min.toFixed(2)} to ${value.max.toFixed(2)} ${unit}`,
           } as Metric<Range>,
           {
             label: "Internal floor area",

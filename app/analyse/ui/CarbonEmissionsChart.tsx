@@ -62,7 +62,7 @@ const CarbonEmissionsChart = ({
               renderItem={(item) => (
                 <div className="flex flex-col justify-center items-center flex-shrink">
                   <div>{capitalizeFirstLetters(item.buildingName)}</div>
-                  <div>{`${(item.value.min / 1000).toFixed(2)}t - ${(
+                  <div>{`${(item.value.min / 1000).toFixed(2)}t to ${(
                     item.value.max / 1000
                   ).toFixed(2)}t`}</div>
                 </div>
@@ -75,7 +75,7 @@ const CarbonEmissionsChart = ({
       </ChartContainer>
       <ChartMetrics2>
         <div className="text-4xl font-normal">
-          {`${(analysisData.embodiedCo2.total.min / 1000).toFixed(2)} - ${(
+          {`${(analysisData.embodiedCo2.total.min / 1000).toFixed(2)} to ${(
             analysisData.embodiedCo2.total.max / 1000
           ).toFixed(2)} tCO₂e`}
         </div>
