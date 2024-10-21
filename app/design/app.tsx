@@ -1,4 +1,5 @@
 "use client";
+import { useUserAgent } from "@oieduardorabelo/use-user-agent";
 import { Add, Reset, View, WatsonHealthSubVolume } from "@carbon/icons-react";
 import type {
   SceneContextMode,
@@ -61,6 +62,9 @@ const SuspendedApp = () => {
 
   const [universalMenu, setUniversalMenu] = useState(false);
 
+  const [orthographic, setOrthographic] = useState(false);
+
+  const userAgent = useUserAgent();
   const { Portal: HeaderEndPortal } = usePortal({
     containerId: "headerEnd",
     autoRemoveContainer: false,
@@ -106,6 +110,10 @@ const SuspendedApp = () => {
         const url = getModeUrl(next);
         router.push(url);
       },
+      cameraOpts: {
+        invertDolly:
+          userAgent?.os?.name && ["Mac OS"].includes(String(userAgent.os.name)),
+      },
     });
 
     SharingWorkerUtils.createPolygonSubscription((polygon) => {
@@ -150,7 +158,7 @@ const SuspendedApp = () => {
         );
       })
     )();
-  }, [router]);
+  }, [router, userAgent?.os?.name]);
 
   const { lastSaved } = useProjectData();
 
@@ -229,13 +237,13 @@ const SuspendedApp = () => {
             selected={orthographic}
             onChange={setOrthographic}
           />
-          <IconButton onClick={cameraReset}>
+          <IconButton onClick={() => scene?.resetCamera()}>
             <Reset size={24} className="m-auto" />
           </IconButton>
         </IconMenu>
 
         <IconMenu icon={SectionCuts}>
-          <Checklist
+          {/* <Checklist
             label="Vertical cuts"
             options={[
               { value: "width", label: "Width" },
@@ -247,8 +255,8 @@ const SuspendedApp = () => {
               keys
             )}
             onChange={setVerticalCuts}
-          />
-          <Radio
+          /> */}
+          {/* <Radio
             id="ground-plane"
             label="Ground Plane"
             options={[
@@ -259,12 +267,12 @@ const SuspendedApp = () => {
             onChange={(newValue) => {
               setGroundPlaneEnabled(newValue);
             }}
-          />
+          /> */}
         </IconMenu>
         <IconMenu
           icon={() => <WatsonHealthSubVolume size={24} className="m-auto" />}
         >
-          <Checklist
+          {/* <Checklist
             label="Building elements"
             options={pipe(
               categories,
@@ -287,7 +295,7 @@ const SuspendedApp = () => {
                 })
               )
             }
-          />
+          /> */}
         </IconMenu>
       </div>
 

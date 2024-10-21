@@ -89,7 +89,7 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
             label: "Estimated build cost",
             value: byHouse[houseId].costs.total,
             displayFn: ({ min, max }: Range) =>
-              `${formatCurrencyWithK(min)} - ${formatCurrencyWithK(max)}`,
+              `${formatCurrencyWithK(min)} to ${formatCurrencyWithK(max)}`,
           },
           {
             label: "Estimated chassis cost",
@@ -102,7 +102,7 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
             label: "Estimated build cost",
             value: costs.total,
             displayFn: ({ min, max }: Range) =>
-              `${formatCurrencyWithK(min)} - ${formatCurrencyWithK(max)}`,
+              `${formatCurrencyWithK(min)} to ${formatCurrencyWithK(max)}`,
           },
           {
             displayFn: (value: number) => formatCurrencyWithK(value),
