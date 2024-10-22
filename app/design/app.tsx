@@ -22,7 +22,7 @@ import usePortal from "react-cool-portal";
 import FullScreenContainer from "~/ui/FullScreenContainer";
 import IconButton from "~/ui/IconButton";
 import { Menu, SectionCuts } from "~/ui/icons";
-import { A, R, TE } from "~/utils/functions";
+import { A, O, R, S, TE } from "~/utils/functions";
 import Loader from "../ui/Loader";
 import Radio from "../ui/Radio";
 import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
@@ -58,9 +58,13 @@ const SuspendedApp = () => {
 
   const [mode, setMode] = useState<SceneContextMode | null>(null);
 
+  const [elementCategories, setElementCategories] = useState<
+    Map<string, boolean>
+  >(new Map());
+
   const [objectsSidebar, setObjectsSidebar] = useState(false);
 
-  const [universalMenu, setUniversalMenu] = useState(false);
+  const [_universalMenu, setUniversalMenu] = useState(false);
 
   const [orthographic, setOrthographic] = useState(false);
 
@@ -105,10 +109,31 @@ const SuspendedApp = () => {
       onLongTapBuildElement: contextMenu,
       onRightClickBuildElement: contextMenu,
       onTapMissed: closeContextMenu,
-      onModeChange: (_, next) => {
+      onModeChange: (prev, next) => {
         setMode(next);
         const url = getModeUrl(next);
         router.push(url);
+
+        if (O.isNone(next.buildingHouseGroup)) {
+          setElementCategories(new Map());
+
+          if (O.isSome(prev.buildingHouseGroup)) {
+            prev.buildingHouseGroup.value.managers.elements?.setAllElementsVisibility(
+              true
+            );
+          }
+        }
+
+        if (O.isNone(prev.buildingHouseGroup)) {
+          pipe(
+            next.buildingHouseGroup,
+            O.map((houseGroup) => {
+              setElementCategories(
+                houseGroup.managers.elements?.getCategoriesMap() ?? new Map()
+              );
+            })
+          );
+        }
       },
       cameraOpts: {
         invertDolly:
@@ -269,34 +294,41 @@ const SuspendedApp = () => {
             }}
           /> */}
         </IconMenu>
-        <IconMenu
-          icon={() => <WatsonHealthSubVolume size={24} className="m-auto" />}
-        >
-          {/* <Checklist
-            label="Building elements"
-            options={pipe(
-              categories,
-              R.collect(S.Ord)((label, value) => ({ label, value: label }))
-            )}
-            selected={pipe(
-              categories,
-              R.filter((x) => x),
-              R.collect(S.Ord)((value) => value)
-            )}
-            onChange={(selectedCategories) =>
-              pipe(
-                elementCategories,
-                R.collect(S.Ord)((k, b) => {
-                  if (selectedCategories.includes(k)) {
-                    if (!elementCategories[k]) elementCategories[k] = true;
-                  } else {
-                    if (elementCategories[k]) elementCategories[k] = false;
-                  }
+        {O.isSome(O.fromNullable(mode?.buildingHouseGroup)) && (
+          <IconMenu
+            icon={() => <WatsonHealthSubVolume size={24} className="m-auto" />}
+          >
+            <Checklist
+              label="Building elements"
+              options={Array.from(elementCategories.entries()).map(
+                ([label]) => ({
+                  label,
+                  value: label,
                 })
-              )
-            }
-          /> */}
-        </IconMenu>
+              )}
+              selected={Array.from(elementCategories.entries())
+                .filter(([_, value]) => value)
+                .map(([key]) => key)}
+              onChange={(selectedCategories) => {
+                const updatedCategories = new Map(elementCategories);
+                elementCategories.forEach((_, key) => {
+                  updatedCategories.set(key, selectedCategories.includes(key));
+                });
+                setElementCategories(updatedCategories);
+                pipe(
+                  mode,
+                  O.fromNullable,
+                  O.chain((mode) => mode.buildingHouseGroup),
+                  O.map((houseGroup) => {
+                    houseGroup.managers?.elements?.setCategories(
+                      updatedCategories
+                    );
+                  })
+                );
+              }}
+            />
+          </IconMenu>
+        )}
       </div>
 
       <ObjectsSidebar
