@@ -58,9 +58,46 @@ const SuspendedApp = () => {
 
   const [mode, setMode] = useState<SceneContextMode | null>(null);
 
+  const buildingHouseGroupNullable = pipe(
+    mode,
+    O.fromNullable,
+    O.chain((mode) => mode.buildingHouseGroup),
+    O.toNullable
+  );
+
   const [elementCategories, setElementCategories] = useState<
     Map<string, boolean>
   >(new Map());
+
+  const [verticalCuts, setVerticalCuts] = useState({
+    width: false,
+    depth: false,
+  });
+
+  useEffect(() => {
+    pipe(
+      mode,
+      O.fromNullable,
+      O.chain((mode) => mode.buildingHouseGroup),
+      O.map((houseGroup) => {
+        houseGroup.managers.cuts?.setXCut(verticalCuts.width);
+        houseGroup.managers.cuts?.setZCut(verticalCuts.depth);
+        houseGroup.managers.cuts?.showAppropriateBrushes(
+          houseGroup.unsafeActiveLayoutGroup
+        );
+      })
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [verticalCuts]);
+
+  useEffect(() => {
+    if (mode === null || O.isNone(mode.buildingHouseGroup)) {
+      setVerticalCuts({
+        width: false,
+        depth: false,
+      });
+    }
+  }, [mode]);
 
   const [objectsSidebar, setObjectsSidebar] = useState(false);
 
@@ -98,7 +135,7 @@ const SuspendedApp = () => {
         y,
       });
 
-      setMode(scopeElement.elementGroup.scene.contextManager?.mode ?? null);
+      setMode(scopeElement.elementGroup.scene?.contextManager?.mode ?? null);
       // setSelected(scopeElement)
       // openMenu(x, y)
     };
@@ -120,6 +157,15 @@ const SuspendedApp = () => {
           if (O.isSome(prev.buildingHouseGroup)) {
             prev.buildingHouseGroup.value.managers.elements?.setAllElementsVisibility(
               true
+            );
+
+            prev.buildingHouseGroup.value.managers.cuts?.setXCut(false);
+            prev.buildingHouseGroup.value.managers.cuts?.setZCut(false);
+            prev.buildingHouseGroup.value.managers.cuts?.createObjectCuts(
+              prev.buildingHouseGroup.value
+            );
+            prev.buildingHouseGroup.value.managers.cuts?.showAppropriateBrushes(
+              prev.buildingHouseGroup.value.unsafeActiveLayoutGroup
             );
           }
         }
@@ -183,7 +229,8 @@ const SuspendedApp = () => {
         );
       })
     )();
-  }, [router, userAgent?.os?.name]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { lastSaved } = useProjectData();
 
@@ -267,21 +314,29 @@ const SuspendedApp = () => {
           </IconButton>
         </IconMenu>
 
-        <IconMenu icon={SectionCuts}>
-          {/* <Checklist
-            label="Vertical cuts"
-            options={[
-              { value: "width", label: "Width" },
-              { value: "length", label: "Length" },
-            ]}
-            selected={pipe(
-              verticalCuts,
-              R.filter((x) => x),
-              keys
-            )}
-            onChange={setVerticalCuts}
-          /> */}
-          {/* <Radio
+        {buildingHouseGroupNullable && (
+          <IconMenu icon={SectionCuts}>
+            <Checklist
+              label="Vertical cuts"
+              options={[
+                { value: "width", label: "Width" },
+                { value: "depth", label: "Depth" },
+              ]}
+              selected={pipe(
+                verticalCuts,
+                R.filter((x) => x),
+                R.keys
+              )}
+              onChange={(selected) => {
+                const vcuts = {
+                  width: selected.includes("width"),
+                  depth: selected.includes("depth"),
+                };
+                setVerticalCuts(vcuts);
+                console.log("vcuts", vcuts);
+              }}
+            />
+            {/* <Radio
             id="ground-plane"
             label="Ground Plane"
             options={[
@@ -292,9 +347,10 @@ const SuspendedApp = () => {
             onChange={(newValue) => {
               setGroundPlaneEnabled(newValue);
             }}
-          /> */}
-        </IconMenu>
-        {O.isSome(O.fromNullable(mode?.buildingHouseGroup)) && (
+            /> */}
+          </IconMenu>
+        )}
+        {buildingHouseGroupNullable && (
           <IconMenu
             icon={() => <WatsonHealthSubVolume size={24} className="m-auto" />}
           >
@@ -320,7 +376,7 @@ const SuspendedApp = () => {
                   O.fromNullable,
                   O.chain((mode) => mode.buildingHouseGroup),
                   O.map((houseGroup) => {
-                    houseGroup.managers?.elements?.setCategories(
+                    houseGroup.managers.elements?.setCategories(
                       updatedCategories
                     );
                   })
