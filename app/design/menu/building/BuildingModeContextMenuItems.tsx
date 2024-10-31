@@ -20,7 +20,7 @@ const BuildingModeContextMenuItems = ({ scopeElement, close }: Props) => {
         text="Edit level"
         unpaddedSvg
         onClick={() => {
-          elementGroup.scene.contextManager?.contextDown(elementGroup);
+          elementGroup.scene?.contextManager?.contextDown(elementGroup);
         }}
       />
 

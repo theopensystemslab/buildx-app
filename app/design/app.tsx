@@ -1,6 +1,6 @@
 "use client";
-import { useUserAgent } from "@oieduardorabelo/use-user-agent";
 import { Add, Reset, View, WatsonHealthSubVolume } from "@carbon/icons-react";
+import { useUserAgent } from "@oieduardorabelo/use-user-agent";
 import type {
   SceneContextMode,
   ScopeElement,
@@ -22,11 +22,12 @@ import usePortal from "react-cool-portal";
 import FullScreenContainer from "~/ui/FullScreenContainer";
 import IconButton from "~/ui/IconButton";
 import { Menu, SectionCuts } from "~/ui/icons";
-import { A, O, R, S, TE } from "~/utils/functions";
+import { A, O, R, TE } from "~/utils/functions";
 import Loader from "../ui/Loader";
 import Radio from "../ui/Radio";
 import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
 import BuildXContextMenu from "./menu/BuildXContextMenu";
+import { sceneState, setBuildXScene } from "./sceneState";
 import Breadcrumbs from "./ui/Breadcrumbs";
 import Checklist from "./ui/Checklist";
 import ExitMode from "./ui/ExitMode";
@@ -34,12 +35,6 @@ import IconMenu from "./ui/IconMenu";
 import MetricsWidget from "./ui/metrics/MetricsWidget";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import { getModeUrl } from "./util";
-
-let scene: BuildXScene | null = null;
-
-export const getBuildXScene = (): BuildXScene | null => {
-  return scene;
-};
 
 const SuspendedApp = () => {
   useSharingWorker();
@@ -121,26 +116,18 @@ const SuspendedApp = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!canvasRef.current || scene !== null) return;
+    if (!canvasRef.current || sceneState.scene !== null) return;
 
     const contextMenu = (
       scopeElement: ScopeElement,
       xy: { x: number; y: number }
     ): void => {
       const { x, y } = xy;
-
-      setContextMenu({
-        scopeElement,
-        x,
-        y,
-      });
-
+      setContextMenu({ scopeElement, x, y });
       setMode(scopeElement.elementGroup.scene?.contextManager?.mode ?? null);
-      // setSelected(scopeElement)
-      // openMenu(x, y)
     };
 
-    scene = new BuildXScene({
+    const scene = new BuildXScene({
       canvas: canvasRef.current,
       ...defaultCachedHousesOps,
       onLongTapBuildElement: contextMenu,
@@ -187,8 +174,10 @@ const SuspendedApp = () => {
       },
     });
 
+    setBuildXScene(scene);
+
     SharingWorkerUtils.createPolygonSubscription((polygon) => {
-      scene?.updatePolygon(polygon);
+      sceneState.scene?.updatePolygon(polygon);
     });
 
     pipe(
@@ -200,6 +189,7 @@ const SuspendedApp = () => {
         return pipe(
           houses,
           A.traverse(TE.ApplicativePar)(
+            // @ts-ignore
             ({
               houseId,
               systemId,
@@ -222,7 +212,7 @@ const SuspendedApp = () => {
                 TE.map((houseGroup) => {
                   houseGroup.position.set(x, y, z);
                   houseGroup.rotation.set(0, rotation, 0);
-                  scene?.addHouseGroup(houseGroup);
+                  sceneState.scene?.addHouseGroup(houseGroup);
                 })
               )
           )
@@ -234,6 +224,9 @@ const SuspendedApp = () => {
 
   const { lastSaved } = useProjectData();
 
+  const resetCamera = () => sceneState.scene?.resetCamera();
+  const contextUp = () => sceneState.scene?.contextManager?.contextUp();
+
   return (
     <FullScreenContainer>
       <canvas ref={canvasRef} className="w-full h-full" />
@@ -241,7 +234,7 @@ const SuspendedApp = () => {
         <Breadcrumbs
           mode={mode}
           upMode={() => {
-            scene?.contextManager?.contextUp();
+            sceneState.scene?.contextManager?.contextUp();
           }}
         />
       </HeaderStartPortal>
@@ -309,7 +302,7 @@ const SuspendedApp = () => {
             selected={orthographic}
             onChange={setOrthographic}
           />
-          <IconButton onClick={() => scene?.resetCamera()}>
+          <IconButton onClick={resetCamera}>
             <Reset size={24} className="m-auto" />
           </IconButton>
         </IconMenu>
@@ -406,12 +399,7 @@ const SuspendedApp = () => {
         />
       )}
 
-      <ExitMode
-        mode={mode}
-        upMode={() => {
-          scene?.contextManager?.contextUp();
-        }}
-      />
+      <ExitMode mode={mode} upMode={contextUp} />
 
       <MetricsWidget mode={mode} />
     </FullScreenContainer>

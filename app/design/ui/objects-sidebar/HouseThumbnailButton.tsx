@@ -4,7 +4,7 @@ import {
 } from "@opensystemslab/buildx-core";
 import clsx from "clsx";
 import { pipe } from "fp-ts/lib/function";
-import { getBuildXScene } from "~/design/app";
+import { getBuildXScene } from "~/design/sceneState";
 import { TE } from "~/utils/functions";
 
 const HouseThumbnailButton = ({
