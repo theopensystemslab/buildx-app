@@ -97,7 +97,7 @@ const FloorAreaChart = ({
           <div>
             <span className="text-md">{`${formatFloorAreaCost(
               costs.total.min / areas.totalFloor
-            )} - ${formatFloorAreaCost(
+            )} to ${formatFloorAreaCost(
               costs.total.max / areas.totalFloor
             )}`}</span>
           </div>

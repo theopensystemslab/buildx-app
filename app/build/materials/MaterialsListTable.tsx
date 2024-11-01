@@ -95,7 +95,7 @@ const MaterialsListTable = (props: Props) => {
     )
   );
 
-  const { symbol } = useProjectCurrency();
+  const { symbol, format } = useProjectCurrency();
 
   const columnHelper = createColumnHelper<MaterialsListRow>();
 
@@ -141,7 +141,7 @@ const MaterialsListTable = (props: Props) => {
             <span>
               {symbol + round(info.getValue().min)}
               {unit !== null ? `/${unit}` : null}
-              {` - `}
+              {` to `}
               {symbol + info.getValue().max}
               {unit !== null ? `/${unit}` : null}
             </span>
@@ -161,22 +161,25 @@ const MaterialsListTable = (props: Props) => {
         footer: () => {
           return (
             <span>
-              {symbol + round(totalEstimatedCost.min)} -{" "}
-              {symbol + round(totalEstimatedCost.max)}
+              {`${format(round(totalEstimatedCost.min))} to ${format(
+                round(totalEstimatedCost.max)
+              )}`}
             </span>
           );
         },
       }),
       columnHelper.accessor("embodiedCarbonCost", {
         cell: (info) => (
-          <span>{`${Number(info.getValue()).toFixed(0)} kgCO₂`}</span>
+          <span>{`${Number(info.getValue().min).toFixed(0)} to ${Number(
+            info.getValue().max
+          ).toFixed(0)} kgCO₂`}</span>
         ),
         header: () => <span>Carbon cost</span>,
         footer: () => (
           <span>
-            {`${totalCarbonCost.min.toFixed(0)} - ${totalCarbonCost.max.toFixed(
+            {`${totalCarbonCost.min.toFixed(
               0
-            )} T CO₂`}
+            )} to ${totalCarbonCost.max.toFixed(0)} T CO₂`}
           </span>
         ),
       }),
@@ -199,8 +202,10 @@ const MaterialsListTable = (props: Props) => {
     ],
     [
       columnHelper,
+      format,
       symbol,
-      totalCarbonCost,
+      totalCarbonCost.max,
+      totalCarbonCost.min,
       totalEstimatedCost.max,
       totalEstimatedCost.min,
     ]
