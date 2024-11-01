@@ -1,5 +1,6 @@
 "use client";
-import { Add } from "@carbon/icons-react";
+import { useUserAgent } from "@oieduardorabelo/use-user-agent";
+import { Add, Reset, View, WatsonHealthSubVolume } from "@carbon/icons-react";
 import type {
   SceneContextMode,
   ScopeElement,
@@ -12,25 +13,27 @@ import {
   useProjectData,
   useSuspendAllBuildData,
 } from "@opensystemslab/buildx-core";
+import { SharingWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
+import { formatDistanceToNow } from "date-fns";
 import { pipe } from "fp-ts/lib/function";
+import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import usePortal from "react-cool-portal";
 import FullScreenContainer from "~/ui/FullScreenContainer";
 import IconButton from "~/ui/IconButton";
-import { Menu } from "~/ui/icons";
-import { A, TE } from "~/utils/functions";
+import { Menu, SectionCuts } from "~/ui/icons";
+import { A, O, R, S, TE } from "~/utils/functions";
 import Loader from "../ui/Loader";
-import BuildXContextMenu from "./menu/BuildXContextMenu";
-import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
+import Radio from "../ui/Radio";
 import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
-import { SharingWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
-import ExitMode from "./ui/ExitMode";
-import MetricsWidget from "./ui/metrics/MetricsWidget";
+import BuildXContextMenu from "./menu/BuildXContextMenu";
 import Breadcrumbs from "./ui/Breadcrumbs";
-import { Router } from "next/router";
-import { useRouter } from "next/navigation";
+import Checklist from "./ui/Checklist";
+import ExitMode from "./ui/ExitMode";
+import IconMenu from "./ui/IconMenu";
+import MetricsWidget from "./ui/metrics/MetricsWidget";
+import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import { getModeUrl } from "./util";
-import { formatDistanceToNow } from "date-fns";
 
 let scene: BuildXScene | null = null;
 
@@ -55,10 +58,54 @@ const SuspendedApp = () => {
 
   const [mode, setMode] = useState<SceneContextMode | null>(null);
 
+  const buildingHouseGroupNullable = pipe(
+    mode,
+    O.fromNullable,
+    O.chain((mode) => mode.buildingHouseGroup),
+    O.toNullable
+  );
+
+  const [elementCategories, setElementCategories] = useState<
+    Map<string, boolean>
+  >(new Map());
+
+  const [verticalCuts, setVerticalCuts] = useState({
+    width: false,
+    depth: false,
+  });
+
+  useEffect(() => {
+    pipe(
+      mode,
+      O.fromNullable,
+      O.chain((mode) => mode.buildingHouseGroup),
+      O.map((houseGroup) => {
+        houseGroup.managers.cuts?.setXCut(verticalCuts.width);
+        houseGroup.managers.cuts?.setZCut(verticalCuts.depth);
+        houseGroup.managers.cuts?.showAppropriateBrushes(
+          houseGroup.unsafeActiveLayoutGroup
+        );
+      })
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [verticalCuts]);
+
+  useEffect(() => {
+    if (mode === null || O.isNone(mode.buildingHouseGroup)) {
+      setVerticalCuts({
+        width: false,
+        depth: false,
+      });
+    }
+  }, [mode]);
+
   const [objectsSidebar, setObjectsSidebar] = useState(false);
 
-  const [universalMenu, setUniversalMenu] = useState(false);
+  const [_universalMenu, setUniversalMenu] = useState(false);
 
+  const [orthographic, setOrthographic] = useState(false);
+
+  const userAgent = useUserAgent();
   const { Portal: HeaderEndPortal } = usePortal({
     containerId: "headerEnd",
     autoRemoveContainer: false,
@@ -88,7 +135,7 @@ const SuspendedApp = () => {
         y,
       });
 
-      setMode(scopeElement.elementGroup.scene.contextManager?.mode ?? null);
+      setMode(scopeElement.elementGroup.scene?.contextManager?.mode ?? null);
       // setSelected(scopeElement)
       // openMenu(x, y)
     };
@@ -99,10 +146,44 @@ const SuspendedApp = () => {
       onLongTapBuildElement: contextMenu,
       onRightClickBuildElement: contextMenu,
       onTapMissed: closeContextMenu,
-      onModeChange: (_, next) => {
+      onModeChange: (prev, next) => {
         setMode(next);
         const url = getModeUrl(next);
         router.push(url);
+
+        if (O.isNone(next.buildingHouseGroup)) {
+          setElementCategories(new Map());
+
+          if (O.isSome(prev.buildingHouseGroup)) {
+            prev.buildingHouseGroup.value.managers.elements?.setAllElementsVisibility(
+              true
+            );
+
+            prev.buildingHouseGroup.value.managers.cuts?.setXCut(false);
+            prev.buildingHouseGroup.value.managers.cuts?.setZCut(false);
+            prev.buildingHouseGroup.value.managers.cuts?.createObjectCuts(
+              prev.buildingHouseGroup.value
+            );
+            prev.buildingHouseGroup.value.managers.cuts?.showAppropriateBrushes(
+              prev.buildingHouseGroup.value.unsafeActiveLayoutGroup
+            );
+          }
+        }
+
+        if (O.isNone(prev.buildingHouseGroup)) {
+          pipe(
+            next.buildingHouseGroup,
+            O.map((houseGroup) => {
+              setElementCategories(
+                houseGroup.managers.elements?.getCategoriesMap() ?? new Map()
+              );
+            })
+          );
+        }
+      },
+      cameraOpts: {
+        invertDolly:
+          userAgent?.os?.name && ["Mac OS"].includes(String(userAgent.os.name)),
       },
     });
 
@@ -148,7 +229,8 @@ const SuspendedApp = () => {
         );
       })
     )();
-  }, [router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { lastSaved } = useProjectData();
 
@@ -190,6 +272,120 @@ const SuspendedApp = () => {
           </IconButton>
         </div>
       </HeaderEndPortal>
+
+      <div className="absolute left-0 top-1/2 z-10 flex -translate-y-1/2 transform flex-col justify-center bg-white shadow">
+        {/* <IconMenu icon={() => <ChoroplethMap size={24} className="m-auto" />}>
+          <Radio
+            id="map"
+            label="Map"
+            options={[
+              {
+                label: "Disabled",
+                value: false,
+              },
+              {
+                label: "Enabled",
+                value: true,
+              },
+            ]}
+            selected={mapboxEnabled}
+            onChange={setMapboxEnabled}
+          />
+        </IconMenu> */}
+        <IconMenu icon={() => <View size={24} className="m-auto" />}>
+          <Radio
+            id="camera"
+            label="Camera"
+            options={[
+              {
+                label: "Perspective",
+                value: false,
+              },
+              {
+                label: "Orthographic",
+                value: true,
+              },
+            ]}
+            selected={orthographic}
+            onChange={setOrthographic}
+          />
+          <IconButton onClick={() => scene?.resetCamera()}>
+            <Reset size={24} className="m-auto" />
+          </IconButton>
+        </IconMenu>
+
+        {buildingHouseGroupNullable && (
+          <IconMenu icon={SectionCuts}>
+            <Checklist
+              label="Vertical cuts"
+              options={[
+                { value: "width", label: "Width" },
+                { value: "depth", label: "Depth" },
+              ]}
+              selected={pipe(
+                verticalCuts,
+                R.filter((x) => x),
+                R.keys
+              )}
+              onChange={(selected) => {
+                const vcuts = {
+                  width: selected.includes("width"),
+                  depth: selected.includes("depth"),
+                };
+                setVerticalCuts(vcuts);
+                console.log("vcuts", vcuts);
+              }}
+            />
+            {/* <Radio
+            id="ground-plane"
+            label="Ground Plane"
+            options={[
+              { value: false, label: "None" },
+              { value: true, label: "Regular" },
+            ]}
+            selected={groundPlane}
+            onChange={(newValue) => {
+              setGroundPlaneEnabled(newValue);
+            }}
+            /> */}
+          </IconMenu>
+        )}
+        {buildingHouseGroupNullable && (
+          <IconMenu
+            icon={() => <WatsonHealthSubVolume size={24} className="m-auto" />}
+          >
+            <Checklist
+              label="Building elements"
+              options={Array.from(elementCategories.entries()).map(
+                ([label]) => ({
+                  label,
+                  value: label,
+                })
+              )}
+              selected={Array.from(elementCategories.entries())
+                .filter(([_, value]) => value)
+                .map(([key]) => key)}
+              onChange={(selectedCategories) => {
+                const updatedCategories = new Map(elementCategories);
+                elementCategories.forEach((_, key) => {
+                  updatedCategories.set(key, selectedCategories.includes(key));
+                });
+                setElementCategories(updatedCategories);
+                pipe(
+                  mode,
+                  O.fromNullable,
+                  O.chain((mode) => mode.buildingHouseGroup),
+                  O.map((houseGroup) => {
+                    houseGroup.managers.elements?.setCategories(
+                      updatedCategories
+                    );
+                  })
+                );
+              }}
+            />
+          </IconMenu>
+        )}
+      </div>
 
       <ObjectsSidebar
         expanded={objectsSidebar}
