@@ -1,6 +1,13 @@
 "use client";
-import { BuildXScene } from "@opensystemslab/buildx-core";
-import { useEffect, useRef } from "react";
+import { A } from "@/app/utils/functions";
+import { TE } from "@/app/utils/functions";
+import {
+  BuildXScene,
+  createHouseGroupTE,
+  localHousesTE,
+} from "@opensystemslab/buildx-core";
+import { pipe } from "fp-ts/lib/function";
+import { memo, useEffect, useRef } from "react";
 
 let sceneInstanceCount = 0;
 
@@ -27,6 +34,51 @@ const MinimalBuildXScene = () => {
       canvas: canvasRef.current,
       container: containerRef.current!,
     });
+
+    pipe(
+      localHousesTE,
+      TE.chain((houses) => {
+        if (houses.length === 0) {
+          // setObjectsSidebar(true);
+          return TE.right(null);
+        }
+
+        return pipe(
+          houses,
+          A.traverse(TE.ApplicativePar)(
+            // @ts-ignore
+            ({
+              houseId,
+              systemId,
+              friendlyName,
+              houseTypeId,
+              dnas,
+              position: { x, y, z },
+              activeElementMaterials,
+              rotation,
+            }) =>
+              pipe(
+                {
+                  houseId,
+                  systemId,
+                  friendlyName,
+                  houseTypeId,
+                  dnas,
+                },
+                createHouseGroupTE,
+                TE.map((houseGroup) => {
+                  houseGroup.position.set(x, y, z);
+                  houseGroup.rotation.set(0, rotation, 0);
+                  scene.addHouseGroup(houseGroup);
+
+                  console.log(`scene: ${scene.id}`);
+                  console.log(`houseGroup: ${houseGroup.id}`);
+                })
+              )
+          )
+        );
+      })
+    )();
 
     // Set size with exact dimensions
     // renderer.setSize(width, height, true); // true to update style
@@ -102,6 +154,7 @@ const MinimalBuildXScene = () => {
       // geometry.dispose();
       // material.dispose();
       // renderer.dispose();
+      console.log("dispose");
       scene.dispose();
 
       // console.log(
@@ -139,4 +192,4 @@ const MinimalBuildXScene = () => {
   );
 };
 
-export default MinimalBuildXScene;
+export default memo(MinimalBuildXScene);
