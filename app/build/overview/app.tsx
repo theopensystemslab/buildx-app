@@ -13,6 +13,7 @@ import css from "./app.module.css";
 import useDownloads from "./useDownloads";
 import useSharingWorker from "@/app/utils/workers/sharing/useSharingWorker";
 import useOutputsWorker from "@/app/utils/workers/outputs/useOutputsWorker";
+import MinimalBuildXScene from "./MinimalBuildXScene";
 
 // const HousesView = dynamic(() => import("./HousesView"), { ssr: false })
 
@@ -77,9 +78,10 @@ const OverviewIndex = () => {
 
   return (
     <Fragment>
-      {/* <div className="relative w-full h-96">
-        <HousesView />
-      </div> */}
+      <div className="relative w-full h-96">
+        <MinimalBuildXScene />
+        {/* <HousesView /> */}
+      </div>
       <div className={css.markupGrid}>
         <div className="border-r border-grey-20">
           <h2 className="p-4">Overview</h2>
