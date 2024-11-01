@@ -9,6 +9,7 @@ import {
   BuildXScene,
   createHouseGroupTE,
   defaultCachedHousesOps,
+  HouseGroup,
   localHousesTE,
   useProjectData,
   useSuspendAllBuildData,
@@ -35,8 +36,11 @@ import IconMenu from "./ui/IconMenu";
 import MetricsWidget from "./ui/metrics/MetricsWidget";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import { getModeUrl } from "./util";
+import { subscribe } from "valtio";
+import { subscribeKey } from "valtio/utils";
 
 const SuspendedApp = () => {
+  console.log("suspended app");
   useSharingWorker();
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -114,10 +118,26 @@ const SuspendedApp = () => {
   });
 
   const router = useRouter();
-
-  useEffect(() => {
-    if (!canvasRef.current || sceneState.scene !== null) return;
-
+  const initializeScene = (
+    canvas: HTMLCanvasElement,
+    {
+      setContextMenu,
+      setMode,
+      setElementCategories,
+      router,
+      userAgent,
+      setObjectsSidebar,
+    }: {
+      setContextMenu: (
+        menu: { scopeElement: ScopeElement; x: number; y: number } | null
+      ) => void;
+      setMode: (mode: SceneContextMode | null) => void;
+      setElementCategories: (categories: Map<string, boolean>) => void;
+      router: any;
+      userAgent: any;
+      setObjectsSidebar: (open: boolean) => void;
+    }
+  ) => {
     const contextMenu = (
       scopeElement: ScopeElement,
       xy: { x: number; y: number }
@@ -127,8 +147,12 @@ const SuspendedApp = () => {
       setMode(scopeElement.elementGroup.scene?.contextManager?.mode ?? null);
     };
 
+    const closeContextMenu = () => setContextMenu(null);
+
+    console.log("initializing scene");
+
     const scene = new BuildXScene({
-      canvas: canvasRef.current,
+      canvas,
       ...defaultCachedHousesOps,
       onLongTapBuildElement: contextMenu,
       onRightClickBuildElement: contextMenu,
@@ -179,46 +203,99 @@ const SuspendedApp = () => {
     SharingWorkerUtils.createPolygonSubscription((polygon) => {
       sceneState.scene?.updatePolygon(polygon);
     });
+  };
 
-    pipe(
-      localHousesTE,
-      TE.chain((houses) => {
-        // this is new
-        if (houses.length === 0) setObjectsSidebar(true);
+  const isLoadingHousesRef = useRef(false);
 
-        return pipe(
-          houses,
-          A.traverse(TE.ApplicativePar)(
-            // @ts-ignore
-            ({
-              houseId,
-              systemId,
-              friendlyName,
-              houseTypeId,
-              dnas,
-              position: { x, y, z },
-              activeElementMaterials,
-              rotation,
-            }) =>
-              pipe(
-                {
+  useEffect(() => {
+    const unsubscribe = subscribeKey(sceneState, "scene", (scene) => {
+      if (!scene) return;
+
+      if (isLoadingHousesRef.current) return;
+
+      if (!scene.children.some((x) => x instanceof HouseGroup)) {
+        isLoadingHousesRef.current = true;
+
+        pipe(
+          localHousesTE,
+          TE.chain((houses) => {
+            if (houses.length === 0) {
+              setObjectsSidebar(true);
+              return TE.right(null);
+            }
+
+            return pipe(
+              houses,
+              A.traverse(TE.ApplicativePar)(
+                // @ts-ignore
+                ({
                   houseId,
                   systemId,
                   friendlyName,
                   houseTypeId,
                   dnas,
-                },
-                createHouseGroupTE,
-                TE.map((houseGroup) => {
-                  houseGroup.position.set(x, y, z);
-                  houseGroup.rotation.set(0, rotation, 0);
-                  sceneState.scene?.addHouseGroup(houseGroup);
-                })
+                  position: { x, y, z },
+                  activeElementMaterials,
+                  rotation,
+                }) =>
+                  pipe(
+                    {
+                      houseId,
+                      systemId,
+                      friendlyName,
+                      houseTypeId,
+                      dnas,
+                    },
+                    createHouseGroupTE,
+                    TE.map((houseGroup) => {
+                      houseGroup.position.set(x, y, z);
+                      houseGroup.rotation.set(0, rotation, 0);
+                      sceneState.scene?.addHouseGroup(houseGroup);
+
+                      console.log(`scene: ${sceneState.scene?.uuid}`);
+                      console.log(`houseGroup: ${houseGroup.uuid}`);
+                    })
+                  )
               )
-          )
-        );
-      })
-    )();
+            );
+          })
+        )().finally(() => {
+          isLoadingHousesRef.current = false;
+        });
+      }
+    });
+
+    return () => {
+      unsubscribe();
+      isLoadingHousesRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+
+    function cleanup() {
+      if (sceneState.scene !== null) {
+        sceneState.scene.dispose();
+        setBuildXScene(null);
+      }
+    }
+
+    cleanup();
+
+    if (sceneState.scene === null) {
+      initializeScene(canvasRef.current, {
+        setContextMenu,
+        setMode,
+        setElementCategories,
+        router,
+        userAgent,
+        setObjectsSidebar,
+      });
+    }
+
+    return cleanup;
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
