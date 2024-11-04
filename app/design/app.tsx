@@ -40,10 +40,10 @@ import { subscribe } from "valtio";
 import { subscribeKey } from "valtio/utils";
 
 const SuspendedApp = () => {
-  console.log("suspended app");
   useSharingWorker();
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useSuspendAllBuildData();
 
@@ -53,7 +53,9 @@ const SuspendedApp = () => {
     y: number;
   } | null>(null);
 
-  const closeContextMenu = () => setContextMenu(null);
+  const closeContextMenu = () => {
+    setContextMenu(null);
+  };
 
   const [mode, setMode] = useState<SceneContextMode | null>(null);
 
@@ -81,6 +83,7 @@ const SuspendedApp = () => {
       O.map((houseGroup) => {
         houseGroup.managers.cuts?.setXCut(verticalCuts.width);
         houseGroup.managers.cuts?.setZCut(verticalCuts.depth);
+        houseGroup.managers.cuts?.createClippedBrushes(houseGroup);
         houseGroup.managers.cuts?.showAppropriateBrushes(
           houseGroup.unsafeActiveLayoutGroup
         );
@@ -118,8 +121,10 @@ const SuspendedApp = () => {
   });
 
   const router = useRouter();
+
   const initializeScene = (
     canvas: HTMLCanvasElement,
+    container: HTMLDivElement,
     {
       setContextMenu,
       setMode,
@@ -147,12 +152,9 @@ const SuspendedApp = () => {
       setMode(scopeElement.elementGroup.scene?.contextManager?.mode ?? null);
     };
 
-    const closeContextMenu = () => setContextMenu(null);
-
-    console.log("initializing scene");
-
     const scene = new BuildXScene({
       canvas,
+      container,
       ...defaultCachedHousesOps,
       onLongTapBuildElement: contextMenu,
       onRightClickBuildElement: contextMenu,
@@ -172,7 +174,7 @@ const SuspendedApp = () => {
 
             prev.buildingHouseGroup.value.managers.cuts?.setXCut(false);
             prev.buildingHouseGroup.value.managers.cuts?.setZCut(false);
-            prev.buildingHouseGroup.value.managers.cuts?.createObjectCuts(
+            prev.buildingHouseGroup.value.managers.cuts?.createClippedBrushes(
               prev.buildingHouseGroup.value
             );
             prev.buildingHouseGroup.value.managers.cuts?.showAppropriateBrushes(
@@ -251,9 +253,6 @@ const SuspendedApp = () => {
                       houseGroup.position.set(x, y, z);
                       houseGroup.rotation.set(0, rotation, 0);
                       sceneState.scene?.addHouseGroup(houseGroup);
-
-                      console.log(`scene: ${sceneState.scene?.uuid}`);
-                      console.log(`houseGroup: ${houseGroup.uuid}`);
                     })
                   )
               )
@@ -272,7 +271,7 @@ const SuspendedApp = () => {
   }, []);
 
   useEffect(() => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current || !containerRef.current) return;
 
     function cleanup() {
       if (sceneState.scene !== null) {
@@ -284,7 +283,7 @@ const SuspendedApp = () => {
     cleanup();
 
     if (sceneState.scene === null) {
-      initializeScene(canvasRef.current, {
+      initializeScene(canvasRef.current, containerRef.current, {
         setContextMenu,
         setMode,
         setElementCategories,
@@ -306,7 +305,9 @@ const SuspendedApp = () => {
 
   return (
     <FullScreenContainer>
-      <canvas ref={canvasRef} className="w-full h-full" />
+      <div ref={containerRef} className="w-full h-full">
+        <canvas ref={canvasRef} />
+      </div>
       <HeaderStartPortal>
         <Breadcrumbs
           mode={mode}
@@ -403,7 +404,6 @@ const SuspendedApp = () => {
                   depth: selected.includes("depth"),
                 };
                 setVerticalCuts(vcuts);
-                console.log("vcuts", vcuts);
               }}
             />
             {/* <Radio

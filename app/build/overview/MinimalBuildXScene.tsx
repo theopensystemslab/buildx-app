@@ -154,7 +154,6 @@ const MinimalBuildXScene = () => {
       // geometry.dispose();
       // material.dispose();
       // renderer.dispose();
-      console.log("dispose");
       scene.dispose();
 
       // console.log(
