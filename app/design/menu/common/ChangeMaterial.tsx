@@ -1,7 +1,9 @@
 import Radio from "@/app/ui/Radio";
+import { A, EQ, Ord, S } from "@/app/utils/functions";
 import { WatsonHealthSubVolume } from "@carbon/icons-react";
-import { ScopeElement } from "@opensystemslab/buildx-core";
-import { useRef } from "react";
+import { BuildMaterial, ScopeElement } from "@opensystemslab/buildx-core";
+import { pipe } from "fp-ts/lib/function";
+import { memo, useRef } from "react";
 import ContextMenuHeading from "../common/ContextMenuHeading";
 import ContextMenuNested from "../common/ContextMenuNested";
 
@@ -32,7 +34,21 @@ const ChangeMaterial = (props: Props) => {
   const { currentMaterial, otherMaterials } =
     elementsManager.getElementMaterialOptions(ifcTag);
 
-  const allMaterials = [currentMaterial, ...otherMaterials];
+  const allMaterials = pipe(
+    [currentMaterial, ...otherMaterials],
+    A.uniq(
+      pipe(
+        S.Eq,
+        EQ.contramap((m: Omit<BuildMaterial, "imageUrl">) => m.specification)
+      )
+    ),
+    A.sort(
+      pipe(
+        S.Ord,
+        Ord.contramap((m: Omit<BuildMaterial, "imageUrl">) => m.specification)
+      )
+    )
+  );
 
   return otherMaterials.length > 0 ? (
     <ContextMenuNested
@@ -47,8 +63,10 @@ const ChangeMaterial = (props: Props) => {
         options={allMaterials.map((material) => ({
           label: material.specification,
           value: material,
+          // @ts-ignore
           thumbnail: material.imageBlob
-            ? URL.createObjectURL(material.imageBlob)
+            ? // @ts-ignore
+              URL.createObjectURL(material.imageBlob)
             : undefined,
         }))}
         selected={currentMaterial}
@@ -81,4 +99,4 @@ const ChangeMaterial = (props: Props) => {
   ) : null;
 };
 
-export default ChangeMaterial;
+export default memo(ChangeMaterial);

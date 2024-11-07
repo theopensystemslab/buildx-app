@@ -131,7 +131,6 @@ const SuspendedApp = () => {
       setElementCategories,
       router,
       userAgent,
-      setObjectsSidebar,
     }: {
       setContextMenu: (
         menu: { scopeElement: ScopeElement; x: number; y: number } | null
@@ -140,7 +139,6 @@ const SuspendedApp = () => {
       setElementCategories: (categories: Map<string, boolean>) => void;
       router: any;
       userAgent: any;
-      setObjectsSidebar: (open: boolean) => void;
     }
   ) => {
     const contextMenu = (
@@ -247,6 +245,7 @@ const SuspendedApp = () => {
                       friendlyName,
                       houseTypeId,
                       dnas,
+                      activeElementMaterials,
                     },
                     createHouseGroupTE,
                     TE.map((houseGroup) => {
@@ -289,7 +288,6 @@ const SuspendedApp = () => {
         setElementCategories,
         router,
         userAgent,
-        setObjectsSidebar,
       });
     }
 
