@@ -1,4 +1,5 @@
 import Modal from "@/app/ui/Modal";
+import { Link } from "@/app/ui/icons";
 import { useState } from "react";
 
 type Props = {
@@ -11,11 +12,10 @@ const ShareModal = ({ open, onClose }: Props) => {
 
   const copyLink = async () => {
     try {
-      // You'll need to implement or import a function to get the share URL
       const shareUrl = window.location.href;
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy:", err);
     }
@@ -32,24 +32,29 @@ const ShareModal = ({ open, onClose }: Props) => {
           <li>Share a copy of your project with someone else</li>
         </ul>
 
-        <div className="flex items-center space-x-2 bg-grey-10 p-2 rounded">
-          <div className="flex-1 truncate text-sm">{window.location.href}</div>
+        <div className="flex items-center rounded border border-grey-20">
+          <div className="flex-1 flex items-center bg-grey-10 px-2 py-1">
+            <Link />
+            <div className="truncate text-sm ml-2">{window.location.href}</div>
+          </div>
           <button
             onClick={copyLink}
-            className="px-4 py-1 text-sm bg-black text-white hover:bg-grey-80"
+            className={`px-4 py-1 text-sm ${
+              copied
+                ? "bg-grey-20 text-grey-50"
+                : "bg-black text-white hover:bg-grey-80"
+            }`}
           >
             {copied ? "Link copied" : "Copy link"}
           </button>
         </div>
 
-        <div className="flex justify-end pt-2">
-          <button
-            onClick={onClose}
-            className="px-4 py-1 text-sm bg-grey-10 hover:bg-grey-20"
-          >
-            Done
-          </button>
-        </div>
+        <button
+          onClick={onClose}
+          className="w-full text-center py-3 mt-4 hover:bg-grey-10"
+        >
+          Done
+        </button>
       </div>
     </Modal>
   );

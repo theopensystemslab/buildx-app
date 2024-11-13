@@ -422,3 +422,18 @@ export const Share = () => (
     <path d="M17 24V35H33V24" stroke="currentColor" strokeWidth="2" />
   </svg>
 );
+
+export const Link = () => (
+  <svg
+    width="50"
+    height="50"
+    viewBox="0 0 50 50"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M30 20H26V22H30C31.65 22 33 23.35 33 25C33 26.65 31.65 28 30 28H26V30H30C32.76 30 35 27.76 35 25C35 22.24 32.76 20 30 20ZM24 28H20C18.35 28 17 26.65 17 25C17 23.35 18.35 22 20 22H24V20H20C17.24 20 15 22.24 15 25C15 27.76 17.24 30 20 30H24V28ZM21 24H29V26H21V24Z"
+      fill="currentColor"
+    />
+  </svg>
+);
