@@ -105,9 +105,6 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
               `${formatCurrencyWithK(min)} to ${formatCurrencyWithK(max)}`,
           },
           {
-            displayFn: (value: number) => formatCurrencyWithK(value),
-          },
-          {
             label: "Estimated chassis cost",
             value: totalChassisCost,
             displayFn: (value: number) =>
