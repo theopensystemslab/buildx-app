@@ -1,5 +1,13 @@
-import { Analyse, Build, Design, Locate } from "./icons"
-import NavIconButton from "./NavIconButton"
+import dynamic from "next/dynamic";
+import { Analyse, Build, Design, Locate } from "./icons";
+import NavIconButton from "./NavIconButton";
+
+const UniversalClientSideNav = dynamic(
+  () => import("./UniversalClientSideNav"),
+  {
+    ssr: false,
+  }
+);
 
 const Nav = () => {
   return (
@@ -34,8 +42,9 @@ const Nav = () => {
         />
       </div>
       <div id="headerEnd" className="flex-1" />
+      <UniversalClientSideNav />
     </div>
-  )
-}
+  );
+};
 
-export default Nav
+export default Nav;

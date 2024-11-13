@@ -1,0 +1,4 @@
+.root {
+  @apply absolute top-[40%] right-0;
+  @apply flex flex-col gap-2;
+} 
