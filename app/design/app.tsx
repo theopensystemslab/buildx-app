@@ -22,7 +22,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import usePortal from "react-cool-portal";
 import FullScreenContainer from "~/ui/FullScreenContainer";
 import IconButton from "~/ui/IconButton";
-import { Menu, SectionCuts } from "~/ui/icons";
+import { Menu, SectionCuts, Share } from "~/ui/icons";
 import { A, O, R, TE } from "~/utils/functions";
 import Loader from "../ui/Loader";
 import Radio from "../ui/Radio";
@@ -38,6 +38,7 @@ import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import { getModeUrl } from "./util";
 import { subscribe } from "valtio";
 import { subscribeKey } from "valtio/utils";
+import DeleteProjectMenu from "./ui/DeleteProjectMenu";
 
 const SuspendedApp = () => {
   useSharingWorker();
@@ -103,7 +104,7 @@ const SuspendedApp = () => {
 
   const [objectsSidebar, setObjectsSidebar] = useState(false);
 
-  const [_universalMenu, setUniversalMenu] = useState(false);
+  const [deleteProjectMenuOpen, setDeleteProjectMenuOpen] = useState(false);
 
   const [orthographic, setOrthographic] = useState(false);
 
@@ -334,9 +335,9 @@ const SuspendedApp = () => {
             onClick={() => setObjectsSidebar(true)}
             aria-label="Add objects"
           >
-            <Add size={24} />
+            <Share />
           </IconButton>
-          <IconButton onClick={() => setUniversalMenu(true)}>
+          <IconButton onClick={() => setDeleteProjectMenuOpen(true)}>
             <Menu />
           </IconButton>
         </div>
@@ -460,10 +461,10 @@ const SuspendedApp = () => {
         close={() => setObjectsSidebar(false)}
       />
 
-      {/* <UniversalMenu
-        open={universalMenu}
-        close={() => setUniversalMenu(false)}
-      /> */}
+      <DeleteProjectMenu
+        open={deleteProjectMenuOpen}
+        close={() => setDeleteProjectMenuOpen(false)}
+      />
 
       {contextMenu && (
         <BuildXContextMenu
