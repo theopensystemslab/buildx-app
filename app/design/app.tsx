@@ -39,6 +39,7 @@ import RightSideContainer from "./ui/layout/RightSideContainer";
 import MetricsWidget from "./ui/metrics/MetricsWidget";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import { getModeUrl } from "./util";
+import ShareModal from "./ui/ShareModal";
 
 const SuspendedApp = () => {
   useSharingWorker();
@@ -303,6 +304,7 @@ const SuspendedApp = () => {
   const contextUp = () => sceneState.scene?.contextManager?.contextUp();
 
   const [metricsOpen, setMetricsOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   return (
     <FullScreenContainer>
@@ -334,8 +336,8 @@ const SuspendedApp = () => {
             )}
           </div>
           <IconButton
-            // onClick={() => setObjectsSidebar(true)}
-            aria-label="Add objects"
+            onClick={() => setShareModalOpen(true)}
+            aria-label="Share project"
           >
             <Share />
           </IconButton>
@@ -494,6 +496,11 @@ const SuspendedApp = () => {
           setOpen={setMetricsOpen}
         />
       </RightSideContainer>
+
+      <ShareModal
+        open={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+      />
     </FullScreenContainer>
   );
 };
