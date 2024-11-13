@@ -413,11 +413,11 @@ export const Share = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M24.8889 14.9346V29.7123" stroke="black" stroke-width="2" />
+    <path d="M24.8889 14.9346V29.7123" stroke="currentColor" strokeWidth="2" />
     <path
       d="M19 20.2961L24.8889 14.4072L30.7778 20.2961"
-      stroke="black"
-      stroke-width="2"
+      stroke="currentColor"
+      strokeWidth="2"
     />
     <path d="M17 24V35H33V24" stroke="currentColor" strokeWidth="2" />
   </svg>
