@@ -15,7 +15,13 @@ import { A, NEA, O, R, S } from "../../../utils/functions";
 import MetricsCarousel, { Metric, Range } from "./MetricsCarousel";
 import css from "./MetricsWidget.module.css";
 
-const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
+interface MetricsWidgetProps {
+  mode: SceneContextMode | null;
+  isOpen: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+const MetricsWidget = ({ mode, isOpen, setOpen }: MetricsWidgetProps) => {
   const buildingMode = mode?.label === SceneContextModeLabel.Enum.BUILDING;
 
   const houseId =
@@ -57,9 +63,6 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
 
   const hasHouseBeenAdded = useRef(false);
 
-  const [isOpen, setOpen] = useState(true);
-  const toggleOpen = () => setOpen(!isOpen);
-
   useEffect(() => {
     if (houses.length === 1 && !hasHouseBeenAdded.current) {
       setOpen(true);
@@ -68,7 +71,7 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
     if (houses.length === 0 && hasHouseBeenAdded.current) {
       hasHouseBeenAdded.current = false;
     }
-  }, [houses]);
+  }, [houses, setOpen]);
 
   function formatNumberWithK(number: number): string {
     if (number >= 1000) {
@@ -159,12 +162,9 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
         ];
 
   return (
-    <div className={css.root}>
+    <div className={css.container}>
       {!isOpen && (
-        <IconButton
-          onClick={toggleOpen}
-          // className={clsx(iconButtonStyles, "bg-white hover:bg-white")}
-        >
+        <IconButton onClick={() => setOpen(true)}>
           <div className="flex items-center justify-center">
             <Analyse />
           </div>
@@ -172,21 +172,11 @@ const MetricsWidget = ({ mode }: { mode: SceneContextMode | null }) => {
       )}
 
       {isOpen && (
-        <div className="relative">
-          {/* <button
-            className="absolute top-0 right-0 px-3 py-2 bg-red-200 rounded"
-            onClick={toggleOpen}
-          >
-            {"X"}
-          </button> */}
-
+        <div className={css.overlay}>
           <div className="absolute top-0 right-0 flex items-center mt-1 justify-end">
-            <button className="w-8" onClick={toggleOpen}>
+            <button className="w-8" onClick={() => setOpen(false)}>
               <Close />
             </button>
-            {/* <IconButton onClick={toggleOpen}>
-              <Close />
-            </IconButton> */}
           </div>
           <div className="pt-10 pb-6 pr-6">
             <MetricsCarousel metrics={topMetrics as Metric<number | Range>[]} />

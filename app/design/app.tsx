@@ -20,6 +20,7 @@ import { pipe } from "fp-ts/lib/function";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import usePortal from "react-cool-portal";
+import { subscribeKey } from "valtio/utils";
 import FullScreenContainer from "~/ui/FullScreenContainer";
 import IconButton from "~/ui/IconButton";
 import { Menu, SectionCuts, Share } from "~/ui/icons";
@@ -31,14 +32,13 @@ import BuildXContextMenu from "./menu/BuildXContextMenu";
 import { sceneState, setBuildXScene } from "./sceneState";
 import Breadcrumbs from "./ui/Breadcrumbs";
 import Checklist from "./ui/Checklist";
+import DeleteProjectMenu from "./ui/DeleteProjectMenu";
 import ExitMode from "./ui/ExitMode";
 import IconMenu from "./ui/IconMenu";
+import RightSideContainer from "./ui/layout/RightSideContainer";
 import MetricsWidget from "./ui/metrics/MetricsWidget";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import { getModeUrl } from "./util";
-import { subscribe } from "valtio";
-import { subscribeKey } from "valtio/utils";
-import DeleteProjectMenu from "./ui/DeleteProjectMenu";
 
 const SuspendedApp = () => {
   useSharingWorker();
@@ -302,6 +302,8 @@ const SuspendedApp = () => {
   const resetCamera = () => sceneState.scene?.resetCamera();
   const contextUp = () => sceneState.scene?.contextManager?.contextUp();
 
+  const [metricsOpen, setMetricsOpen] = useState(false);
+
   return (
     <FullScreenContainer>
       <div ref={containerRef} className="w-full h-full">
@@ -332,7 +334,7 @@ const SuspendedApp = () => {
             )}
           </div>
           <IconButton
-            onClick={() => setObjectsSidebar(true)}
+            // onClick={() => setObjectsSidebar(true)}
             aria-label="Add objects"
           >
             <Share />
@@ -477,7 +479,21 @@ const SuspendedApp = () => {
 
       <ExitMode mode={mode} upMode={contextUp} />
 
-      <MetricsWidget mode={mode} />
+      <RightSideContainer>
+        {!metricsOpen && (
+          <IconButton
+            onClick={() => setObjectsSidebar(true)}
+            className="bg-black py-2"
+          >
+            <Add size={32} className="m-auto scale-125" color="white" />
+          </IconButton>
+        )}
+        <MetricsWidget
+          mode={mode}
+          isOpen={metricsOpen}
+          setOpen={setMetricsOpen}
+        />
+      </RightSideContainer>
     </FullScreenContainer>
   );
 };
