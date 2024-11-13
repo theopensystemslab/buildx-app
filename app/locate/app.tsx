@@ -2,10 +2,9 @@
 import "mapbox-gl/dist/mapbox-gl.css";
 import ReactMapGLMap from "react-map-gl";
 import HtmlPortalContainer from "~/ui/HtmlPortalContainer";
-import GeocoderControl from "./components/GeocoderControl";
 import css from "./app.module.css";
+import GeocoderControl from "./components/GeocoderControl";
 import PolygonControl from "./components/PolygonControl";
-import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
 
 const gadheim = {
   longitude: 9.902056,
@@ -13,8 +12,6 @@ const gadheim = {
 };
 
 const Locate = () => {
-  useSharingWorker();
-
   const leftMenuContainerId = "left-menu-container";
   const topLeftContainerId = "top-left-container-id";
   const bottomRightContainerId = "bottom-right-container-id";

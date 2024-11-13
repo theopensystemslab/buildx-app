@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 
 export const Pencil = () => (
   <svg
@@ -7,14 +7,14 @@ export const Pencil = () => (
     viewBox="0 0 13 13"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-  // preserveAspectRatio="xMidYMid meet"
+    // preserveAspectRatio="xMidYMid meet"
   >
     <path
       d="M4.24254 10.8745L1.05588 11.921L2.13067 8.74373L9.94332 1.00019L12.0552 3.13092L4.24254 10.8745Z"
       stroke="currentColor"
     />
   </svg>
-)
+);
 
 export const TextCursor = () => (
   <svg
@@ -23,7 +23,7 @@ export const TextCursor = () => (
     viewBox="0 0 7 12"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-  // preserveAspectRatio="xMidYMid meet"
+    // preserveAspectRatio="xMidYMid meet"
   >
     <g stroke="currentColor">
       <line x1="3.61108" y1="2.81002e-08" x2="3.61108" y2="12" />
@@ -31,7 +31,7 @@ export const TextCursor = () => (
       <line y1="0.5" x2="7" y2="0.5" />
     </g>
   </svg>
-)
+);
 
 export const Bom = () => (
   <svg viewBox="0 0 50 50" fill="none">
@@ -60,7 +60,7 @@ export const Bom = () => (
       strokeWidth="2"
     />
   </svg>
-)
+);
 
 export const Files = () => (
   <svg viewBox="0 0 50 50" fill="none">
@@ -70,7 +70,7 @@ export const Files = () => (
       strokeWidth="2"
     />
   </svg>
-)
+);
 
 export const Data = () => (
   <svg viewBox="0 0 50 50" fill="none">
@@ -99,7 +99,7 @@ export const Data = () => (
       strokeWidth="2"
     />
   </svg>
-)
+);
 
 export const Design = () => (
   <svg viewBox="0 0 50 50" fill="none">
@@ -109,13 +109,40 @@ export const Design = () => (
       strokeWidth="3"
     />
   </svg>
-)
+);
 
 export const Analyse = () => (
-  <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <line x1="1" y1="10.0586" x2="1" y2="17.8821" stroke="currentColor" strokeWidth="2" />
-    <line x1="7" y1="4.37114e-08" x2="7" y2="15.6471" stroke="currentColor" strokeWidth="2" />
-    <line x1="13" y1="3.35254" x2="13" y2="18.9996" stroke="currentColor" strokeWidth="2" />
+  <svg
+    width="20"
+    height="19"
+    viewBox="0 0 20 19"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <line
+      x1="1"
+      y1="10.0586"
+      x2="1"
+      y2="17.8821"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+    <line
+      x1="7"
+      y1="4.37114e-08"
+      x2="7"
+      y2="15.6471"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+    <line
+      x1="13"
+      y1="3.35254"
+      x2="13"
+      y2="18.9996"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
     <path d="M19 5.58789L19 13.4114" stroke="currentColor" strokeWidth="2" />
   </svg>
   // <svg
@@ -132,7 +159,7 @@ export const Analyse = () => (
   //     fill="black"
   //   />
   // </svg>
-)
+);
 
 // export const Analyse = () => (
 //   <svg viewBox="0 0 21 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -153,7 +180,7 @@ export const Locate = () => (
       strokeWidth="3"
     />
   </svg>
-)
+);
 export const Build = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
@@ -167,7 +194,7 @@ export const Build = () => (
       strokeWidth="2"
     />
   </svg>
-)
+);
 
 export const Environment = () => (
   <svg viewBox="0 0 50 50" fill="none">
@@ -176,7 +203,7 @@ export const Environment = () => (
       fill="currentColor"
     />
   </svg>
-)
+);
 
 export const Layers = () => (
   <svg viewBox="0 0 50 50" fill="none">
@@ -191,7 +218,7 @@ export const Layers = () => (
       strokeWidth="2"
     />
   </svg>
-)
+);
 
 export const SectionCuts = () => (
   <svg viewBox="0 0 50 50" fill="none">
@@ -206,7 +233,7 @@ export const SectionCuts = () => (
       strokeWidth="2"
     />
   </svg>
-)
+);
 
 export const Search = () => (
   <svg viewBox="0 0 50 50" fill="none">
@@ -224,7 +251,7 @@ export const Search = () => (
       strokeWidth="2"
     />
   </svg>
-)
+);
 
 export const Menu = () => (
   <svg viewBox="0 0 50 50" fill="none">
@@ -232,7 +259,7 @@ export const Menu = () => (
     <circle cx="25.5" cy="24.5" r="1.5" fill="currentColor" />
     <circle cx="25.5" cy="31.5" r="1.5" fill="currentColor" />
   </svg>
-)
+);
 
 export const Bookmark = () => (
   <svg viewBox="0 0 50 50" fill="none">
@@ -242,7 +269,7 @@ export const Bookmark = () => (
       strokeWidth="2"
     />
   </svg>
-)
+);
 
 export const Close = () => (
   <svg viewBox="0 0 50 50" fill="none">
@@ -263,7 +290,7 @@ export const Close = () => (
       strokeWidth="2"
     />
   </svg>
-)
+);
 
 export const Info = () => (
   <svg
@@ -280,7 +307,7 @@ export const Info = () => (
       fill="currentColor"
     />
   </svg>
-)
+);
 
 export const Check = () => (
   <svg
@@ -293,7 +320,7 @@ export const Check = () => (
   >
     <polyline points="20 6 9 17 4 12"></polyline>
   </svg>
-)
+);
 
 export const AlertTriangle = () => (
   <svg
@@ -308,7 +335,7 @@ export const AlertTriangle = () => (
     <line x1="12" y1="9" x2="12" y2="13"></line>
     <line x1="12" y1="17" x2="12.01" y2="17"></line>
   </svg>
-)
+);
 
 export const Crosshair = () => (
   <svg
@@ -325,7 +352,7 @@ export const Crosshair = () => (
     <line x1="12" y1="6" x2="12" y2="2"></line>
     <line x1="12" y1="22" x2="12" y2="18"></line>
   </svg>
-)
+);
 
 export const Opening = () => (
   <svg
@@ -337,7 +364,7 @@ export const Opening = () => (
     <rect x="0.5" y="0.5" width="8" height="10" />
     <path d="M0.5 10.6396V0.693713L7 2.86038V12.8063L0.5 10.6396Z" />
   </svg>
-)
+);
 
 export const AddLevel = () => (
   <svg
@@ -350,7 +377,7 @@ export const AddLevel = () => (
     <line x1="5.5" y1="-2.18557e-08" x2="5.5" y2="7" />
     <line x1="9" y1="3.5" x2="2" y2="3.5" />
   </svg>
-)
+);
 
 export const RemoveLevel = () => (
   <svg
@@ -362,7 +389,7 @@ export const RemoveLevel = () => (
     <line x1="9" y1="0.5" x2="2" y2="0.499999" />
     <rect x="0.5" y="5.5" width="11" height="6" />
   </svg>
-)
+);
 
 export const ChangeLevel = () => (
   <svg
@@ -376,4 +403,37 @@ export const ChangeLevel = () => (
     <rect x="0.5" y="3.5" width="11" height="6" />
     <rect x="0.5" y="0.5" width="11" height="9" strokeDasharray="2 1" />
   </svg>
-)
+);
+
+export const Share = () => (
+  <svg
+    width="50"
+    height="50"
+    viewBox="0 0 50 50"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M24.8889 14.9346V29.7123" stroke="currentColor" strokeWidth="2" />
+    <path
+      d="M19 20.2961L24.8889 14.4072L30.7778 20.2961"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+    <path d="M17 24V35H33V24" stroke="currentColor" strokeWidth="2" />
+  </svg>
+);
+
+export const Link = () => (
+  <svg
+    width="50"
+    height="50"
+    viewBox="0 0 50 50"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M30 20H26V22H30C31.65 22 33 23.35 33 25C33 26.65 31.65 28 30 28H26V30H30C32.76 30 35 27.76 35 25C35 22.24 32.76 20 30 20ZM24 28H20C18.35 28 17 26.65 17 25C17 23.35 18.35 22 20 22H24V20H20C17.24 20 15 22.24 15 25C15 27.76 17.24 30 20 30H24V28ZM21 24H29V26H21V24Z"
+      fill="currentColor"
+    />
+  </svg>
+);

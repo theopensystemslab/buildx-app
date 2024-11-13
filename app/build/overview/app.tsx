@@ -1,24 +1,22 @@
 "use client";
+import useOutputsWorker from "@/app/utils/workers/outputs/useOutputsWorker";
 import { ArrowDown } from "@carbon/icons-react";
 import {
+  useAnalysisData,
   useOrderListData,
   useProjectCurrency,
   useProjectData,
-  useAnalysisData,
 } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
 import { Fragment } from "react";
 import { A } from "~/utils/functions";
 import css from "./app.module.css";
-import useDownloads from "./useDownloads";
-import useSharingWorker from "@/app/utils/workers/sharing/useSharingWorker";
-import useOutputsWorker from "@/app/utils/workers/outputs/useOutputsWorker";
 import MinimalBuildXScene from "./MinimalBuildXScene";
+import useDownloads from "./useDownloads";
 
 // const HousesView = dynamic(() => import("./HousesView"), { ssr: false })
 
 const OverviewIndex = () => {
-  useSharingWorker();
   useOutputsWorker();
 
   const { format } = useProjectCurrency();

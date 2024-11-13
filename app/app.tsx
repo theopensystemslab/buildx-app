@@ -3,6 +3,7 @@ import {
   decodeShareUrlPayload,
   setHouses,
   updateLocatePolygon,
+  updateProjectData,
 } from "@opensystemslab/buildx-core";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -19,8 +20,9 @@ const App = () => {
     }
 
     try {
-      const { houses, polygon } = decodeShareUrlPayload(q);
+      const { houses, polygon, projectName } = decodeShareUrlPayload(q);
 
+      updateProjectData({ projectName });
       if (houses && houses.length > 0) setHouses(houses);
       if (polygon !== null) updateLocatePolygon(polygon);
 

@@ -11,37 +11,33 @@ import {
   defaultCachedHousesOps,
   HouseGroup,
   localHousesTE,
-  useProjectData,
   useSuspendAllBuildData,
 } from "@opensystemslab/buildx-core";
 import { SharingWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
-import { formatDistanceToNow } from "date-fns";
 import { pipe } from "fp-ts/lib/function";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import usePortal from "react-cool-portal";
+import { subscribeKey } from "valtio/utils";
 import FullScreenContainer from "~/ui/FullScreenContainer";
 import IconButton from "~/ui/IconButton";
-import { Menu, SectionCuts } from "~/ui/icons";
+import { SectionCuts } from "~/ui/icons";
 import { A, O, R, TE } from "~/utils/functions";
 import Loader from "../ui/Loader";
 import Radio from "../ui/Radio";
-import useSharingWorker from "../utils/workers/sharing/useSharingWorker";
 import BuildXContextMenu from "./menu/BuildXContextMenu";
 import { sceneState, setBuildXScene } from "./sceneState";
 import Breadcrumbs from "./ui/Breadcrumbs";
 import Checklist from "./ui/Checklist";
+import DeleteProjectMenu from "./ui/DeleteProjectMenu";
 import ExitMode from "./ui/ExitMode";
 import IconMenu from "./ui/IconMenu";
+import RightSideContainer from "./ui/layout/RightSideContainer";
 import MetricsWidget from "./ui/metrics/MetricsWidget";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import { getModeUrl } from "./util";
-import { subscribe } from "valtio";
-import { subscribeKey } from "valtio/utils";
 
 const SuspendedApp = () => {
-  useSharingWorker();
-
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -102,8 +98,6 @@ const SuspendedApp = () => {
   }, [mode]);
 
   const [objectsSidebar, setObjectsSidebar] = useState(false);
-
-  const [_universalMenu, setUniversalMenu] = useState(false);
 
   const [orthographic, setOrthographic] = useState(false);
 
@@ -296,10 +290,10 @@ const SuspendedApp = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { lastSaved } = useProjectData();
-
   const resetCamera = () => sceneState.scene?.resetCamera();
   const contextUp = () => sceneState.scene?.contextManager?.contextUp();
+
+  const [metricsOpen, setMetricsOpen] = useState(false);
 
   return (
     <FullScreenContainer>
@@ -314,33 +308,6 @@ const SuspendedApp = () => {
           }}
         />
       </HeaderStartPortal>
-      <HeaderEndPortal>
-        <div className="flex items-center justify-end">
-          <div className="text-xs text-gray-600 mr-8 lg:mr-32">
-            {lastSaved ? (
-              <>
-                Last saved:{" "}
-                <time dateTime={new Date(lastSaved).toISOString()}>
-                  {formatDistanceToNow(new Date(lastSaved), {
-                    addSuffix: true,
-                  })}
-                </time>
-              </>
-            ) : (
-              "Not saved yet"
-            )}
-          </div>
-          <IconButton
-            onClick={() => setObjectsSidebar(true)}
-            aria-label="Add objects"
-          >
-            <Add size={24} />
-          </IconButton>
-          <IconButton onClick={() => setUniversalMenu(true)}>
-            <Menu />
-          </IconButton>
-        </div>
-      </HeaderEndPortal>
 
       <div className="absolute left-0 top-1/2 z-10 flex -translate-y-1/2 transform flex-col justify-center bg-white shadow">
         {/* <IconMenu icon={() => <ChoroplethMap size={24} className="m-auto" />}>
@@ -460,11 +427,6 @@ const SuspendedApp = () => {
         close={() => setObjectsSidebar(false)}
       />
 
-      {/* <UniversalMenu
-        open={universalMenu}
-        close={() => setUniversalMenu(false)}
-      /> */}
-
       {contextMenu && (
         <BuildXContextMenu
           {...contextMenu}
@@ -476,7 +438,21 @@ const SuspendedApp = () => {
 
       <ExitMode mode={mode} upMode={contextUp} />
 
-      <MetricsWidget mode={mode} />
+      <RightSideContainer>
+        {!metricsOpen && (
+          <IconButton
+            onClick={() => setObjectsSidebar(true)}
+            className="bg-black py-2"
+          >
+            <Add size={32} className="m-auto scale-125" color="white" />
+          </IconButton>
+        )}
+        <MetricsWidget
+          mode={mode}
+          isOpen={metricsOpen}
+          setOpen={setMetricsOpen}
+        />
+      </RightSideContainer>
     </FullScreenContainer>
   );
 };
