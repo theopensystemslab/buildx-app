@@ -1,3 +1,4 @@
+"use client";
 import Modal from "@/app/ui/Modal";
 import { Link } from "@/app/ui/icons";
 import { Close } from "@carbon/icons-react";
@@ -16,8 +17,8 @@ const ShareModal = ({ open, onClose }: Props) => {
 
   const shareUrl =
     shareUrlPayload === null
-      ? window.location.href
-      : `${window.location.href}?q=${shareUrlPayload}`;
+      ? window.location.origin
+      : `${window.location.origin}/?q=${shareUrlPayload}`;
 
   const copyLink = async () => {
     try {
