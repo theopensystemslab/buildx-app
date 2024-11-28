@@ -30,7 +30,8 @@ const OverviewIndex = () => {
       ? _loopbackLink
       : `${_loopbackLink}?q=${shareUrlPayload}`;
 
-  const _typeformLink = `https://form.typeform.com/to/SVFFF12s?typeform-source=www.wikihouse.cc#source=configurator`;
+  // const ____typeformLink = `https://form.typeform.com/to/SVFFF12s?typeform-source=www.wikihouse.cc#source=configurator`;
+  const _typeformLink = `https://form.typeform.com/to/zePfnP4K?typeform-source=www.wikihouse.cc#source=configurator`;
 
   const typeformLink =
     shareUrlPayload === null
