@@ -441,14 +441,14 @@ const SuspendedApp = () => {
       <ExitMode mode={mode} upMode={contextUp} />
 
       <RightSideContainer>
-        {!metricsOpen && (
+        <div className="flex justify-end">
           <IconButton
             onClick={() => setObjectsSidebar(true)}
             className="bg-black py-2"
           >
-            <Add size={32} className="m-auto scale-125" color="white" />
+            <Add size={32} className="m-auto scale-125 mx-2" color="white" />
           </IconButton>
-        )}
+        </div>
         <MetricsWidget
           mode={mode}
           isOpen={metricsOpen}
