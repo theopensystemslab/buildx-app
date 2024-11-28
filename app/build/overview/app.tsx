@@ -31,12 +31,12 @@ const OverviewIndex = () => {
       : `${_loopbackLink}?q=${shareUrlPayload}`;
 
   // const ____typeformLink = `https://form.typeform.com/to/SVFFF12s?typeform-source=www.wikihouse.cc#source=configurator`;
-  const _typeformLink = `https://form.typeform.com/to/zePfnP4K?typeform-source=www.wikihouse.cc#source=configurator`;
+  const _typeformLink = `https://form.typeform.com/to/zePfnP4K?url=${encodeURIComponent(
+    loopbackLink
+  )}`;
 
-  const typeformLink =
-    shareUrlPayload === null
-      ? _typeformLink
-      : `${_typeformLink}#url=${loopbackLink}`;
+  // const typeformLink =
+  //   shareUrlPayload === null ? _typeformLink : `${_typeformLink}#url=foo`;
 
   const {
     areas: { totalFloor },
@@ -180,7 +180,7 @@ const OverviewIndex = () => {
           </p>
         </div>
         <div className="relative">
-          <a href={typeformLink} target="_blank" rel="noopener noreferrer">
+          <a href={_typeformLink} target="_blank" rel="noopener noreferrer">
             <div className="absolute bottom-0 right-0 w-full bg-grey-90 text-white px-5 py-3 font-semibold flex justify-between pb-12 tracking-wide">
               <div>Contact us about your project</div>
               <ArrowDown size="20" className="ml-8 rotate-[225deg]" />
