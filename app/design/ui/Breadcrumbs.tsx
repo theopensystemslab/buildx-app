@@ -1,17 +1,16 @@
 "use client";
-import { Fragment, useState } from "react";
 import {
   SceneContextMode,
   SceneContextModeLabel,
-  useProjectData,
   updateProjectData,
-  updateCachedHouse,
+  useProjectData,
 } from "@opensystemslab/buildx-core";
-import Breadcrumb from "./Breadcrumb";
-import RenameForm from "./RenameForm";
 import { pipe } from "fp-ts/function";
 import * as O from "fp-ts/Option";
+import { Fragment, useState } from "react";
 import { getBuildingUrl, getLevelUrl, getProjectUrl } from "../util";
+import Breadcrumb from "./Breadcrumb";
+import RenameForm from "./RenameForm";
 
 const Breadcrumbs = ({
   mode,
@@ -80,9 +79,7 @@ const Breadcrumbs = ({
                     currentName={houseGroup.friendlyName}
                     onNewName={(newName) => {
                       if (newName.length > 0) {
-                        updateCachedHouse(houseGroup.userData.houseId, {
-                          friendlyName: newName,
-                        });
+                        houseGroup.friendlyName = newName;
                       }
                       setRenamingBuilding(false);
                     }}

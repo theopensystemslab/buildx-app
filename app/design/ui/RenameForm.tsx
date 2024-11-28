@@ -1,17 +1,17 @@
-import { Fragment } from "react"
-import { useForm } from "react-hook-form"
+import { Fragment } from "react";
+import { useForm } from "react-hook-form";
 
 type Props = {
-  currentName: string
-  onNewName: (s: string) => void
-}
+  currentName: string;
+  onNewName: (s: string) => void;
+};
 
 const RenameForm = (props: Props) => {
-  const { currentName, onNewName } = props
-  const { register, handleSubmit } = useForm()
+  const { currentName, onNewName } = props;
+  const { register, handleSubmit } = useForm();
   const onSubmit = ({ newName }: any) => {
-    onNewName(newName)
-  }
+    onNewName(newName);
+  };
 
   return (
     <Fragment>
@@ -26,7 +26,7 @@ const RenameForm = (props: Props) => {
         />
       </form>
     </Fragment>
-  )
-}
+  );
+};
 
-export default RenameForm
+export default RenameForm;

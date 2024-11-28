@@ -197,6 +197,8 @@ const SuspendedApp = () => {
     SharingWorkerUtils.createPolygonSubscription((polygon) => {
       sceneState.scene?.updatePolygon(polygon);
     });
+
+    setMode(scene.contextManager?.mode ?? null);
   };
 
   const isLoadingHousesRef = useRef(false);
