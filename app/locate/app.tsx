@@ -5,6 +5,9 @@ import HtmlPortalContainer from "~/ui/HtmlPortalContainer";
 import css from "./app.module.css";
 import GeocoderControl from "./components/GeocoderControl";
 import PolygonControl from "./components/PolygonControl";
+import { cachedModelsTE } from "@opensystemslab/buildx-core";
+
+cachedModelsTE();
 
 const gadheim = {
   longitude: 9.902056,

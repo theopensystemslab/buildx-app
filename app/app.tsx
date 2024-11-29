@@ -1,5 +1,6 @@
 "use client";
 import {
+  cachedModelsTE,
   decodeShareUrlPayload,
   setHouses,
   updateLocatePolygon,
@@ -7,6 +8,8 @@ import {
 } from "@opensystemslab/buildx-core";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+
+cachedModelsTE();
 
 const App = () => {
   const router = useRouter();
