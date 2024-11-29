@@ -14,8 +14,6 @@ import css from "./app.module.css";
 import MinimalBuildXScene from "./MinimalBuildXScene";
 import useDownloads from "./useDownloads";
 
-// const HousesView = dynamic(() => import("./HousesView"), { ssr: false })
-
 const OverviewIndex = () => {
   useOutputsWorker();
 
@@ -23,17 +21,14 @@ const OverviewIndex = () => {
 
   const { projectName, shareUrlPayload } = useProjectData();
 
-  const _typeformLink = `https://form.typeform.com/to/SVFFF12s?typeform-source=www.wikihouse.cc#source=configurator`;
+  const origin = window.location.protocol + "//" + window.location.host;
 
-  const typeformLink =
-    shareUrlPayload === null
-      ? _typeformLink
-      : `${_typeformLink}#url=${shareUrlPayload}`;
+  const shareUrl =
+    shareUrlPayload === null ? origin : `${origin}?q=${shareUrlPayload}`;
 
-  const _testLink = window.location.protocol + "//" + window.location.host;
-
-  const testLink =
-    shareUrlPayload === null ? _testLink : `${_testLink}?q=${shareUrlPayload}`;
+  const typeformUrl = `https://form.typeform.com/to/zePfnP4K?url=${encodeURIComponent(
+    shareUrl
+  )}`;
 
   const {
     areas: { totalFloor },
@@ -78,7 +73,6 @@ const OverviewIndex = () => {
     <Fragment>
       <div className="relative w-full h-96">
         <MinimalBuildXScene />
-        {/* <HousesView /> */}
       </div>
       <div className={css.markupGrid}>
         <div className="border-r border-grey-20">
@@ -177,7 +171,7 @@ const OverviewIndex = () => {
           </p>
         </div>
         <div className="relative">
-          <a href={testLink} target="_blank" rel="noopener noreferrer">
+          <a href={typeformUrl} target="_blank" rel="noopener noreferrer">
             <div className="absolute bottom-0 right-0 w-full bg-grey-90 text-white px-5 py-3 font-semibold flex justify-between pb-12 tracking-wide">
               <div>Contact us about your project</div>
               <ArrowDown size="20" className="ml-8 rotate-[225deg]" />
