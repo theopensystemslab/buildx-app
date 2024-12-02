@@ -1,8 +1,21 @@
-import React from "react";
+"use client";
+import { useState, useEffect } from "react";
 
 const Loader = () => {
+  console.log(`Loader`);
+
+  const [showRefreshMessage, setShowRefreshMessage] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowRefreshMessage(true);
+    }, 15000); // 15 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="absolute z-50 top-0 w-full h-full flex justify-center items-center pointer-events-none">
+    <div className="absolute z-50 top-0 w-full h-full flex flex-col gap-4 justify-center items-center pointer-events-none">
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -21,6 +34,11 @@ const Loader = () => {
         <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
         <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
       </svg>
+      {showRefreshMessage && (
+        <p className="text-grey-60 text-sm">
+          Taking longer than usual? Try refreshing the page.
+        </p>
+      )}
     </div>
   );
 };

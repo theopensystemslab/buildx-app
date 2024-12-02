@@ -1,23 +1,21 @@
 "use client";
 import {
+  useAllBuildSystemsDataLiveQuery,
   useAnalysisData,
   useOrderListData,
-  useSuspendAllBuildData,
 } from "@opensystemslab/buildx-core";
-import { Suspense } from "react";
+import HousesPillsSelector, {
+  useSelectedHouseIds,
+} from "../ui/HousesPillsSelector";
 import Loader from "../ui/Loader";
+import useOutputsWorker from "../utils/workers/outputs/useOutputsWorker";
 import css from "./app.module.css";
 import CarbonEmissionsChart from "./ui/CarbonEmissionsChart";
 import ChassisCostChart from "./ui/ChassisCostChart";
 import FloorAreaChart from "./ui/FloorAreaChart";
-import useOutputsWorker from "../utils/workers/outputs/useOutputsWorker";
-import HousesPillsSelector, {
-  useSelectedHouseIds,
-} from "../ui/HousesPillsSelector";
 
-const SuspendedApp = () => {
+const AnalyseAppMain = () => {
   useOutputsWorker();
-  useSuspendAllBuildData();
 
   const { orderListRows } = useOrderListData();
   const analysisData = useAnalysisData();
@@ -49,10 +47,24 @@ const SuspendedApp = () => {
   );
 };
 
-const App = () => (
-  <Suspense fallback={<Loader />}>
-    <SuspendedApp />
-  </Suspense>
-);
+const AnalyseApp = () => {
+  const systemsData = useAllBuildSystemsDataLiveQuery();
+  if (!systemsData) return <Loader />;
 
-export default App;
+  const hasEmptyArray = Object.entries(systemsData).reduce(
+    (acc, [key, value]) => {
+      if (key === "models") return acc;
+      return acc || (Array.isArray(value) && value.length === 0);
+    },
+    false
+  );
+
+  if (hasEmptyArray) {
+    console.warn("At least one array is empty.");
+    return <Loader />;
+  }
+
+  return <AnalyseAppMain />;
+};
+
+export default AnalyseApp;

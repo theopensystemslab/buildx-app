@@ -2,6 +2,7 @@
 import { Add, Reset, View, WatsonHealthSubVolume } from "@carbon/icons-react";
 import { useUserAgent } from "@oieduardorabelo/use-user-agent";
 import type {
+  AllBuildSystemsData,
   SceneContextMode,
   ScopeElement,
 } from "@opensystemslab/buildx-core";
@@ -11,12 +12,12 @@ import {
   defaultCachedHousesOps,
   HouseGroup,
   localHousesTE,
-  useSuspendAllBuildData,
+  useAllBuildSystemsDataLiveQuery,
 } from "@opensystemslab/buildx-core";
 import { SharingWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
 import { pipe } from "fp-ts/lib/function";
 import { useRouter } from "next/navigation";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import usePortal from "react-cool-portal";
 import { subscribeKey } from "valtio/utils";
 import FullScreenContainer from "~/ui/FullScreenContainer";
@@ -29,7 +30,6 @@ import BuildXContextMenu from "./menu/BuildXContextMenu";
 import { sceneState, setBuildXScene } from "./sceneState";
 import Breadcrumbs from "./ui/Breadcrumbs";
 import Checklist from "./ui/Checklist";
-import DeleteProjectMenu from "./ui/DeleteProjectMenu";
 import ExitMode from "./ui/ExitMode";
 import IconMenu from "./ui/IconMenu";
 import RightSideContainer from "./ui/layout/RightSideContainer";
@@ -37,11 +37,13 @@ import MetricsWidget from "./ui/metrics/MetricsWidget";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import { getModeUrl } from "./util";
 
-const SuspendedApp = () => {
+const DesignAppMain = ({
+  systemsData: { houseTypes },
+}: {
+  systemsData: AllBuildSystemsData;
+}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-
-  useSuspendAllBuildData();
 
   const [contextMenu, setContextMenu] = useState<{
     scopeElement: ScopeElement;
@@ -427,6 +429,7 @@ const SuspendedApp = () => {
       <ObjectsSidebar
         expanded={objectsSidebar}
         close={() => setObjectsSidebar(false)}
+        houseTypes={houseTypes}
       />
 
       {contextMenu && (
@@ -459,10 +462,20 @@ const SuspendedApp = () => {
   );
 };
 
-const App = () => (
-  <Suspense fallback={<Loader />}>
-    <SuspendedApp />
-  </Suspense>
-);
+const DesignApp = () => {
+  const systemsData = useAllBuildSystemsDataLiveQuery();
+  if (!systemsData) return <Loader />;
 
-export default App;
+  const hasEmptyArray = Object.values(systemsData).reduce((acc, value) => {
+    return acc || (Array.isArray(value) && value.length === 0);
+  }, false);
+
+  if (hasEmptyArray) {
+    console.warn("At least one array is empty.");
+    return <Loader />;
+  }
+
+  return <DesignAppMain systemsData={systemsData} />;
+};
+
+export default DesignApp;

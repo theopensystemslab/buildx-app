@@ -11,7 +11,9 @@ const gadheim = {
   latitude: 49.843,
 };
 
-const Locate = () => {
+const LocateApp = () => {
+  // useSystemsWorker();
+
   const leftMenuContainerId = "left-menu-container";
   const topLeftContainerId = "top-left-container-id";
   const bottomRightContainerId = "bottom-right-container-id";
@@ -54,4 +56,4 @@ const Locate = () => {
   );
 };
 
-export default Locate;
+export default LocateApp;

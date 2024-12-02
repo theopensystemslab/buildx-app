@@ -1,48 +1,64 @@
-import { useSuspendHouseTypes } from "@opensystemslab/buildx-core";
+import { buildSystems, CachedHouseType } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
-import { Fragment, Suspense } from "react";
-import Loader from "~/ui/Loader";
+import { Fragment } from "react";
 import Sidebar from "~/ui/Sidebar";
-import { A } from "~/utils/functions";
+import { A, NEA } from "~/utils/functions";
 import HouseThumbnail from "./HouseThumbnail";
 
-const HouseTypes = (props: { close: () => void }) => {
-  const { close } = props;
+const HouseTypes = (props: {
+  close: () => void;
+  houseTypes: CachedHouseType[];
+}) => {
+  const { close, houseTypes } = props;
 
-  const houseTypes = useSuspendHouseTypes();
+  const houseTypesBySystem = pipe(
+    houseTypes,
+    NEA.groupBy((houseType) => houseType.systemId)
+  );
 
   return (
-    <Fragment>
-      {pipe(
-        houseTypes,
-        A.map((houseType) => (
-          <HouseThumbnail
-            key={houseType.id}
-            houseType={houseType}
-            close={close}
-          />
-        ))
-      )}
-    </Fragment>
+    <div className="divide-y divide-grey-40">
+      {buildSystems.map((system) => (
+        <Fragment key={system.id}>
+          {houseTypesBySystem[system.id] && (
+            <div className="py-3">
+              <h3 className="px-4 mb-3 text-xl font-bold text-gray-900">
+                {system.name}
+              </h3>
+              <div className="space-y-2 divide-y">
+                {pipe(
+                  houseTypesBySystem[system.id],
+                  A.map((houseType) => (
+                    <HouseThumbnail
+                      key={houseType.id}
+                      houseType={houseType}
+                      close={close}
+                    />
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+        </Fragment>
+      ))}
+    </div>
   );
 };
 
 type Props = {
   expanded: boolean;
   close: () => void;
+  houseTypes: CachedHouseType[];
 };
 
 const ObjectsSidebar = (props: Props) => {
-  const { expanded, close } = props;
+  const { expanded, close, houseTypes } = props;
 
-  // NOTE see old sidebar if multi-systeming
-  // SiteSidebar in commit older than blame this
+  console.log(houseTypes);
 
   return (
     <Sidebar expanded={expanded} onClose={close}>
-      <Suspense fallback={<Loader />}>
-        <HouseTypes close={close} />
-      </Suspense>
+      <HouseTypes houseTypes={houseTypes} close={close} />
     </Sidebar>
   );
 };
