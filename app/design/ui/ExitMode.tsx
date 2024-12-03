@@ -25,7 +25,11 @@ const ExitMode = ({
           onClick={upMode}
           className="flex justify-between items-center h-12 rounded-full bg-white p-2 shadow-lg hover:bg-grey-10"
         >
-          <span className="ml-6 mr-2">{`Exit ${mode.label.toLowerCase()}`}</span>
+          <span className="ml-6 mr-2">{`Exit ${
+            mode.label === SceneContextModeLabel.Enum.ROW
+              ? "level"
+              : mode.label.toLowerCase()
+          }`}</span>
           <span className="w-8 p-1">
             <Close size="24" />
           </span>
