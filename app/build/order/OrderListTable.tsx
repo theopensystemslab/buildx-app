@@ -12,6 +12,7 @@ import {
   useProjectCurrency,
 } from "@opensystemslab/buildx-core";
 import { getColorClass } from "~/analyse/ui/colors";
+import config from "@/buildx-app.config.json";
 
 type Props = {
   setCsvDownloadUrl: (s: string) => void;
@@ -66,80 +67,83 @@ const OrderListTable = (props: Props) => {
   const columnHelper = createColumnHelper<OrderListRow>();
 
   const columns: ColumnDef<OrderListRow, any>[] = useMemo(
-    () => [
-      columnHelper.accessor("buildingName", {
-        id: "Building Name",
-        cell: (info) => {
-          return <div>{capitalizeFirstLetters(info.getValue())}</div>;
-        },
-        header: () => null,
-      }),
-      columnHelper.accessor("blockName", {
-        id: "Block Name",
-        cell: (info) => <span>{info.getValue()}</span>,
-        header: () => <span>Block type</span>,
-        footer: () => <span>Total</span>,
-      }),
-      columnHelper.accessor("thumbnailBlob", {
-        id: "Block Thumbnail",
-        cell: (info) => {
-          const thumbnailBlob = info.getValue();
-          return thumbnailBlob ? (
-            <div
-              className="h-20 w-20 flex-none rounded-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url(${URL.createObjectURL(thumbnailBlob)})`,
-              }}
-            ></div>
-          ) : (
-            <div className="h-20 w-20 flex-none rounded-full bg-grey-20"></div>
-          );
-        },
-        header: () => <span>Image</span>,
-      }),
-      columnHelper.accessor("count", {
-        id: "Count",
-        cell: (info) => <span>{info.getValue()}</span>,
-        header: () => <span>Number</span>,
-      }),
-      columnHelper.accessor("costPerBlock", {
-        id: "Cost Per Block",
-        cell: (info) => <span>{fmt(info.getValue())}</span>,
-        header: () => <span>Cost per Block</span>,
-      }),
-      columnHelper.accessor("materialsCost", {
-        id: "Materials Cost",
-        cell: (info) => <span>{fmt(info.getValue())}</span>,
-        header: () => <span>Material Cost</span>,
-        footer: () => <span>{format(totalMaterialCost)}</span>,
-      }),
-      columnHelper.accessor("manufacturingCost", {
-        id: "Manufacturing Cost",
-        cell: (info) => <span>{fmt(info.getValue())}</span>,
-        header: () => <span>Manufacturing Cost</span>,
-        footer: () => <span>{format(totalManufacturingCost)}</span>,
-      }),
-      columnHelper.accessor("cuttingFileUrl", {
-        id: "Cutting File URL",
-        cell: (info) => (
-          <a href={info.getValue()}>
-            <div className="flex font-semibold items-center">
-              <span>{`Download`}</span>
-              <span>
-                <ArrowDown size="20" className="ml-1" />
-              </span>
-            </div>
-          </a>
-        ),
-        header: () => <span>Cutting File</span>,
-      }),
-      columnHelper.accessor("totalCost", {
-        id: "Total Cost",
-        cell: (info) => <span>{fmt(info.getValue())}</span>,
-        header: () => <span>Total cost</span>,
-        footer: () => <span>{`${format(totalTotalCost)} + VAT`}</span>,
-      }),
-    ],
+    () =>
+      [
+        columnHelper.accessor("buildingName", {
+          id: "Building Name",
+          cell: (info) => {
+            return <div>{capitalizeFirstLetters(info.getValue())}</div>;
+          },
+          header: () => null,
+        }),
+        columnHelper.accessor("blockName", {
+          id: "Block Name",
+          cell: (info) => <span>{info.getValue()}</span>,
+          header: () => <span>Block type</span>,
+          footer: () => <span>Total</span>,
+        }),
+        columnHelper.accessor("thumbnailBlob", {
+          id: "Block Thumbnail",
+          cell: (info) => {
+            const thumbnailBlob = info.getValue();
+            return thumbnailBlob ? (
+              <div
+                className="h-20 w-20 flex-none rounded-full bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${URL.createObjectURL(thumbnailBlob)})`,
+                }}
+              ></div>
+            ) : (
+              <div className="h-20 w-20 flex-none rounded-full bg-transparent"></div>
+            );
+          },
+          header: () => <span>Image</span>,
+        }),
+        columnHelper.accessor("count", {
+          id: "Count",
+          cell: (info) => <span>{info.getValue()}</span>,
+          header: () => <span>Number</span>,
+        }),
+        columnHelper.accessor("costPerBlock", {
+          id: "Cost Per Block",
+          cell: (info) => <span>{fmt(info.getValue())}</span>,
+          header: () => <span>Cost per Block</span>,
+        }),
+        columnHelper.accessor("materialsCost", {
+          id: "Materials Cost",
+          cell: (info) => <span>{fmt(info.getValue())}</span>,
+          header: () => <span>Material Cost</span>,
+          footer: () => <span>{format(totalMaterialCost)}</span>,
+        }),
+        columnHelper.accessor("manufacturingCost", {
+          id: "Manufacturing Cost",
+          cell: (info) => <span>{fmt(info.getValue())}</span>,
+          header: () => <span>Manufacturing Cost</span>,
+          footer: () => <span>{format(totalManufacturingCost)}</span>,
+        }),
+        config.cuttingFiles !== "false"
+          ? columnHelper.accessor("cuttingFileUrl", {
+              id: "Cutting File URL",
+              cell: (info) => (
+                <a href={info.getValue()}>
+                  <div className="flex font-semibold items-center">
+                    <span>Download</span>
+                    <span>
+                      <ArrowDown size="20" className="ml-1" />
+                    </span>
+                  </div>
+                </a>
+              ),
+              header: () => <span>Cutting File</span>,
+            })
+          : null,
+        columnHelper.accessor("totalCost", {
+          id: "Total Cost",
+          cell: (info) => <span>{fmt(info.getValue())}</span>,
+          header: () => <span>Total cost</span>,
+          footer: () => <span>{`${format(totalTotalCost)} + VAT`}</span>,
+        }),
+      ].filter(Boolean) as ColumnDef<OrderListRow, any>[],
     [
       columnHelper,
       fmt,

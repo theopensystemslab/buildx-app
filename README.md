@@ -29,3 +29,18 @@ pnpm dev
 ```
 
 Navigate to `localhost:3000`
+
+## Configuration
+
+The application can be configured via [buildx-app.config.json](buildx-app.config.json):
+
+```json
+{
+  "takedown": "false", // Display takedown message instead of main site
+  "cuttingFiles": "true" // Show/hide cutting file downloads in orders
+}
+```
+
+The takedown message can be customized in [app/layout.tsx](app/layout.tsx)
+
+To update configuration, either edit [buildx-app.config.json](buildx-app.config.json) locally and deploy, or modify directly through GitHub's interface. Changes take effect after deployment.
