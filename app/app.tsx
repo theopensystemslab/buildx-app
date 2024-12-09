@@ -15,9 +15,7 @@ const App = () => {
 
   useEffect(() => {
     if (!q) {
-      if (process.env.ENABLE_TAKEDOWN !== "true") {
-        router.push("/locate");
-      }
+      router.push("/locate");
       return;
     }
 

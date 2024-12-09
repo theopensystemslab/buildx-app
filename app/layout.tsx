@@ -7,14 +7,14 @@ import GlobalClientSideEffects from "./GlobalClientSideEffects";
 import Footer from "./ui/Footer";
 import Nav from "./ui/Nav";
 import Fathom from "./utils/Fathom";
-import { getTakedownStatus } from "./utils/takedown";
+import config from "@/buildx-app.config.json";
 
 const inter = Inter({
   subsets: ["latin"],
 });
 
 const Layout = async ({ children }: PropsWithChildren<{}>) => {
-  const isTakedownEnabled = await getTakedownStatus();
+  const isTakedownEnabled = config.takedown === "true";
 
   return (
     <Fragment>
