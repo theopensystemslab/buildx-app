@@ -13,6 +13,19 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const TakedownMessage = () => {
+  return (
+    <div className="takedown-message flex-auto flex items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold mb-2">
+          Sorry, this page is currently unavailable.
+        </h1>
+        <p>We are working on it. Please check back soon.</p>
+      </div>
+    </div>
+  );
+};
+
 const Layout = async ({ children }: PropsWithChildren<{}>) => {
   const isTakedownEnabled = config.takedown === "true";
 
@@ -23,12 +36,7 @@ const Layout = async ({ children }: PropsWithChildren<{}>) => {
         <body className="w-full h-full flex flex-col overflow-hidden">
           <Fathom />
           {isTakedownEnabled ? (
-            <div className="takedown-message flex-auto flex items-center justify-center">
-              <div className="text-center">
-                <h1 className="text-2xl font-bold mb-2">Takedown</h1>
-                <p>This site is currently unavailable.</p>
-              </div>
-            </div>
+            <TakedownMessage />
           ) : (
             <>
               <div className="flex-1 flex-grow-0">
