@@ -135,8 +135,6 @@ const MaterialsListTable = (props: Props) => {
         cell: (info) => {
           const unit = info.row.original.unit;
 
-          console.log({ foo: info.getValue() });
-
           return (
             <span>
               {symbol + round(info.getValue().min)}

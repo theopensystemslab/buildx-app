@@ -2,8 +2,6 @@
 import { useState, useEffect } from "react";
 
 const Loader = () => {
-  console.log(`Loader`);
-
   const [showWarning, setShowWarning] = useState(false);
 
   useEffect(() => {

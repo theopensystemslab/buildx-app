@@ -1,5 +1,4 @@
 "use client";
-import useOutputsWorker from "@/app/utils/workers/outputs/useOutputsWorker";
 import { ArrowDown } from "@carbon/icons-react";
 import {
   useAnalysisData,
@@ -15,8 +14,6 @@ import MinimalBuildXScene from "./MinimalBuildXScene";
 import useDownloads from "./useDownloads";
 
 const OverviewIndex = () => {
-  useOutputsWorker();
-
   const { format } = useProjectCurrency();
 
   const { projectName, shareUrlPayload } = useProjectData();
