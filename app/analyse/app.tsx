@@ -8,15 +8,12 @@ import HousesPillsSelector, {
   useSelectedHouseIds,
 } from "../ui/HousesPillsSelector";
 import Loader from "../ui/Loader";
-import useOutputsWorker from "../utils/workers/outputs/useOutputsWorker";
 import css from "./app.module.css";
 import CarbonEmissionsChart from "./ui/CarbonEmissionsChart";
 import ChassisCostChart from "./ui/ChassisCostChart";
 import FloorAreaChart from "./ui/FloorAreaChart";
 
 const AnalyseAppMain = () => {
-  useOutputsWorker();
-
   const { orderListRows } = useOrderListData();
   const analysisData = useAnalysisData();
 

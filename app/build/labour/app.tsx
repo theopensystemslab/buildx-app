@@ -1,23 +1,21 @@
 "use client";
-import { Download } from "@carbon/icons-react";
-import dynamic from "next/dynamic";
 import { useState } from "react";
+import LabourTable from "./LabourTable";
+import { Download } from "@carbon/icons-react";
 
-const MaterialsListTable = dynamic(() => import("./MaterialsListTable"), {
-  ssr: false,
-});
-
-const MaterialsListIndexPage = () => {
+const LabourApp = () => {
   const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null);
 
   return (
     <div>
       <div className="flex justify-between px-3 py-5">
         <div>
-          <h1>Materials list</h1>
+          <h1>Labour</h1>
           <p className="max-w-3xl mt-2">
-            A list of the other materials you will need to find and purchase
-            from other manufacturers. All prices are estimated.
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab illum
+            vel sapiente placeat obcaecati laudantium officia tenetur eum, quod,
+            animi rem accusantium culpa doloribus voluptatum autem at recusandae
+            molestias deleniti.
           </p>
         </div>
         <div>
@@ -35,9 +33,9 @@ const MaterialsListIndexPage = () => {
           )}
         </div>
       </div>
-      <MaterialsListTable setCsvDownloadUrl={setCsvDownloadUrl} />
+      <LabourTable setCsvDownloadUrl={setCsvDownloadUrl} />
     </div>
   );
 };
 
-export default MaterialsListIndexPage;
+export default LabourApp;

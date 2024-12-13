@@ -1,5 +1,4 @@
 "use client";
-import useOutputsWorker from "@/app/utils/workers/outputs/useOutputsWorker";
 import { ArrowDown } from "@carbon/icons-react";
 import {
   useAnalysisData,
@@ -16,8 +15,6 @@ import useDownloads from "./useDownloads";
 import { useSelectedHouseIds } from "@/app/ui/HousesPillsSelector";
 
 const OverviewIndex = () => {
-  useOutputsWorker();
-
   const { format } = useProjectCurrency();
 
   const { projectName, shareUrlPayload } = useProjectData();

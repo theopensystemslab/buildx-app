@@ -1,17 +1,18 @@
-"use client"
-import clsx from "clsx"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import React from "react"
+"use client";
+import clsx from "clsx";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
 
 const links = [
   { href: "/build/overview", label: "Overview" },
   { href: "/build/order", label: "Order list" },
   { href: "/build/materials", label: "Materials list" },
-]
+  { href: "/build/labour", label: "Labour" },
+];
 
 const BuildNav = () => {
-  const pathname = usePathname()
+  const pathname = usePathname();
   return (
     <div className="h-full w-60">
       {links.map(({ href, label }) => (
@@ -27,7 +28,7 @@ const BuildNav = () => {
         </Link>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default BuildNav
+export default BuildNav;
