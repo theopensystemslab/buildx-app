@@ -54,8 +54,6 @@ type Props = {
 const ObjectsSidebar = (props: Props) => {
   const { expanded, close, houseTypes } = props;
 
-  console.log(houseTypes);
-
   return (
     <Sidebar expanded={expanded} onClose={close}>
       <HouseTypes houseTypes={houseTypes} close={close} />

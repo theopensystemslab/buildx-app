@@ -36,6 +36,8 @@ import RightSideContainer from "./ui/layout/RightSideContainer";
 import MetricsWidget from "./ui/metrics/MetricsWidget";
 import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import { getModeUrl } from "./util";
+import usePngSnapshotsWorker from "../utils/workers/png-snapshots/usePngSnapshotsWorker";
+import { useExportersWorker } from "../utils/workers/exporters/useExportersWorker";
 
 const DesignAppMain = ({
   systemsData: { houseTypes },
@@ -118,6 +120,9 @@ const DesignAppMain = ({
 
   const router = useRouter();
 
+  const snapshot = usePngSnapshotsWorker();
+  const updateModels = useExportersWorker();
+
   const initializeScene = (
     canvas: HTMLCanvasElement,
     container: HTMLDivElement,
@@ -191,6 +196,27 @@ const DesignAppMain = ({
       cameraOpts: {
         invertDolly:
           userAgent?.os?.name && ["Mac OS"].includes(String(userAgent.os.name)),
+      },
+      onHouseUpdate: (houseId, changes) => {
+        pipe(
+          scene.children,
+          A.findFirst((x): x is HouseGroup => x.userData.houseId === houseId),
+          O.map((house) => {
+            const objectJson = house.toJSON();
+            const halfSize =
+              house.unsafeActiveLayoutGroup.obb.halfSize.toArray();
+
+            snapshot({
+              houseId,
+              objectJson,
+              halfSize,
+            });
+            updateModels({
+              houseId,
+              objectJson,
+            });
+          })
+        );
       },
     });
 

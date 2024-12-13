@@ -1,5 +1,6 @@
+// usePngSnapshotsWorker.ts
 import { PngSnapshotsWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
-import { useRef, useEffect, useCallback } from "react";
+import { useEffect, useRef } from "react";
 
 const usePngSnapshotsWorker = () => {
   const workerRef = useRef<Worker>();
@@ -14,12 +15,11 @@ const usePngSnapshotsWorker = () => {
     };
   }, []);
 
-  return useCallback(
-    async (v: Parameters<typeof PngSnapshotsWorkerUtils.onHouseUpdate>[0]) => {
-      workerRef.current?.postMessage(v);
-    },
-    []
-  );
+  return (
+    v: Parameters<typeof PngSnapshotsWorkerUtils.onHouseUpdate>[0]["data"]
+  ) => {
+    workerRef.current?.postMessage(v);
+  };
 };
 
 export default usePngSnapshotsWorker;
