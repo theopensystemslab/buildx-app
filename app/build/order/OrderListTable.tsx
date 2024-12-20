@@ -13,6 +13,7 @@ import {
 } from "@opensystemslab/buildx-core";
 import { getColorClass } from "~/analyse/ui/colors";
 import config from "@/buildx-app.config.json";
+import { useSelectedHouseIds } from "@/app/ui/HousesPillsSelector";
 
 type Props = {
   setCsvDownloadUrl: (s: string) => void;
@@ -46,15 +47,15 @@ export const useOrderListDownload = (orderListRows: OrderListRow[]) =>
 const OrderListTable = (props: Props) => {
   const { setCsvDownloadUrl } = props;
 
+  const selectedHouseIds = useSelectedHouseIds();
+
   const {
     orderListRows,
     totalMaterialCost,
     totalManufacturingCost,
     totalTotalCost,
     fmt,
-  } = useOrderListData();
-
-  console.log(orderListRows);
+  } = useOrderListData(selectedHouseIds);
 
   const orderListDownload = useOrderListDownload(orderListRows);
 

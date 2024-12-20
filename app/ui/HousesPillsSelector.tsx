@@ -7,9 +7,11 @@ import { useClickAway } from "react-use";
 import { proxy, useSnapshot } from "valtio";
 import {
   buildingColorVariants,
+  getColorClass,
   staleColorVariants,
 } from "../analyse/ui/colors";
 import { A, Ord, R, S } from "../utils/functions";
+import { subscribeKey } from "valtio/utils";
 
 const store = proxy<{
   selectedHouseIds: string[];
@@ -20,6 +22,12 @@ const store = proxy<{
 export const useSelectedHouseIds = (): string[] => {
   const { selectedHouseIds } = useSnapshot(store) as typeof store;
   return selectedHouseIds;
+};
+
+export const subscribeSelectedHouseIds = (
+  fn: (selectedHouseIds: string[]) => void
+) => {
+  return subscribeKey(store, "selectedHouseIds", fn);
 };
 
 export const useSelectedHouses = () => {
@@ -45,17 +53,20 @@ const sortHousesByFriendlyName = A.sort(
 
 const Level2 = ({ selectedHouses }: { selectedHouses: House[] }) => {
   const houses = useHouses();
+  const allHouseIds = houses.map((x) => x.houseId);
+
+  const orderedSelectedHouses = useMemo(() => {
+    return houses.filter((house) =>
+      selectedHouses.some(
+        (selectedHouse) => selectedHouse.houseId === house.houseId
+      )
+    );
+  }, [houses, selectedHouses]);
 
   const selectedHouseIds = pipe(
     selectedHouses,
     A.map((x) => x.houseId)
   );
-
-  const getColorClass = (houseId: string, opts: { stale?: boolean } = {}) => {
-    const { stale = false } = opts;
-    const index = selectedHouseIds.indexOf(houseId);
-    return stale ? staleColorVariants[index] : buildingColorVariants[index];
-  };
 
   const houseSelectOptions: { houseId: string; houseName: string }[] = houses
     .map((house) =>
@@ -80,10 +91,10 @@ const Level2 = ({ selectedHouses }: { selectedHouses: House[] }) => {
 
   return (
     <div className="flex flex-wrap items-center space-x-2 px-4 py-1.5 border-b">
-      {selectedHouses.map((house) => {
+      {orderedSelectedHouses.map((house) => {
         const { houseId } = house;
 
-        const colorClass = getColorClass(houseId);
+        const colorClass = getColorClass(allHouseIds, houseId);
 
         return (
           <p
@@ -129,7 +140,10 @@ const Level2 = ({ selectedHouses }: { selectedHouses: House[] }) => {
                   className="block w-full px-4 py-2 text-left transition-colors duration-200 hover:bg-gray-100"
                   key={houseSelectOption.houseId}
                   onClick={() => {
-                    store.selectedHouseIds.push(houseSelectOption.houseId);
+                    store.selectedHouseIds = [
+                      ...store.selectedHouseIds,
+                      houseSelectOption.houseId,
+                    ];
                   }}
                   value={houseSelectOption.houseName}
                 >

@@ -13,6 +13,7 @@ import { A } from "~/utils/functions";
 import css from "./app.module.css";
 import MinimalBuildXScene from "./MinimalBuildXScene";
 import useDownloads from "./useDownloads";
+import { useSelectedHouseIds } from "@/app/ui/HousesPillsSelector";
 
 const OverviewIndex = () => {
   useOutputsWorker();
@@ -30,11 +31,37 @@ const OverviewIndex = () => {
     shareUrl
   )}`;
 
+  const selectedHouseIds = useSelectedHouseIds();
+
   const {
     areas: { totalFloor },
     embodiedCo2,
     costs: { total },
+    byHouse,
   } = useAnalysisData();
+
+  // Calculate metrics only for selected houses
+  const selectedHousesMetrics = selectedHouseIds.reduce(
+    (acc, houseId) => {
+      const house = byHouse[houseId];
+      if (!house) return acc;
+
+      return {
+        totalFloorArea: acc.totalFloorArea + house.areas.totalFloor,
+        embodiedCo2Min: acc.embodiedCo2Min + house.embodiedCo2.total.min,
+        embodiedCo2Max: acc.embodiedCo2Max + house.embodiedCo2.total.max,
+        costMin: acc.costMin + house.costs.total.min,
+        costMax: acc.costMax + house.costs.total.max,
+      };
+    },
+    {
+      totalFloorArea: 0,
+      embodiedCo2Min: 0,
+      embodiedCo2Max: 0,
+      costMin: 0,
+      costMax: 0,
+    }
+  );
 
   const { totalTotalCost } = useOrderListData();
 
@@ -44,7 +71,7 @@ const OverviewIndex = () => {
   const overviewFields = [
     {
       label: "Total floor area",
-      value: `${totalFloor.toFixed(1)}m²`,
+      value: `${selectedHousesMetrics.totalFloorArea.toFixed(1)}m²`,
     },
     {
       label: (
@@ -55,16 +82,20 @@ const OverviewIndex = () => {
           </div>
         </div>
       ),
-      value: format(totalTotalCost),
+      value: `${format(selectedHousesMetrics.costMin)} to ${format(
+        selectedHousesMetrics.costMax
+      )}`,
     },
     {
       label: "Total estimated build cost",
-      value: `${format(total.min)} to ${format(total.max)}`,
+      value: `${format(selectedHousesMetrics.costMin)} to ${format(
+        selectedHousesMetrics.costMax
+      )}`,
     },
     {
       label: "Total estimated carbon cost",
-      value: `${(embodiedCo2.total.min / 1000).toFixed(2)} to ${(
-        embodiedCo2.total.max / 1000
+      value: `${(selectedHousesMetrics.embodiedCo2Min / 1000).toFixed(2)} to ${(
+        selectedHousesMetrics.embodiedCo2Max / 1000
       ).toFixed(2)} tCO₂e`,
     },
   ];

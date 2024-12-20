@@ -1,6 +1,6 @@
 "use client";
-import { A, pipeLog } from "@/app/utils/functions";
-import { TE } from "@/app/utils/functions";
+import { subscribeSelectedHouseIds } from "@/app/ui/HousesPillsSelector";
+import { A, TE } from "@/app/utils/functions";
 import {
   BuildXScene,
   createHouseGroupTE,
@@ -69,8 +69,17 @@ const MinimalBuildXScene = () => {
       })
     )();
 
+    const unsubscribeSelectedHouseIds = subscribeSelectedHouseIds(
+      (selectedHouseIds) => {
+        scene.houses.forEach((house) => {
+          house.visible = selectedHouseIds.includes(house.userData.houseId);
+        });
+      }
+    );
+
     return () => {
       scene.dispose();
+      unsubscribeSelectedHouseIds();
     };
   }, []);
 

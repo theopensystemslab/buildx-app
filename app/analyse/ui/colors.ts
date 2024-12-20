@@ -31,13 +31,16 @@ export const staleColorVariants: Record<number, string> = {
 };
 
 export const getColorClass = (
-  houseIds: string[],
+  allHouseIds: string[],
   houseId: string,
   stale: boolean = false
 ) => {
-  const index = houseIds.indexOf(houseId);
+  const index = allHouseIds.indexOf(houseId);
+  const colorIndex =
+    index %
+    Object.keys(stale ? staleColorVariants : buildingColorVariants).length;
   const colorClass = stale
-    ? staleColorVariants[index]
-    : buildingColorVariants[index];
+    ? staleColorVariants[colorIndex]
+    : buildingColorVariants[colorIndex];
   return colorClass;
 };
