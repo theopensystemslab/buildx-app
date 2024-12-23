@@ -21,8 +21,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@opensystemslab/buildx-core':
-        specifier: 0.8.0-canary.5
-        version: 0.8.0-canary.5(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(@types/react@18.3.3)(graphql@16.9.0)(mixpanel@0.17.0)(monocle-ts@2.3.13(fp-ts@2.16.8))(newtype-ts@0.3.5(fp-ts@2.16.8)(monocle-ts@2.3.13(fp-ts@2.16.8)))(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.166.1)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))
+        specifier: 0.8.0-canary.6
+        version: 0.8.0-canary.6(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(@types/react@18.3.3)(graphql@16.9.0)(mixpanel@0.17.0)(monocle-ts@2.3.13(fp-ts@2.16.8))(newtype-ts@0.3.5(fp-ts@2.16.8)(monocle-ts@2.3.13(fp-ts@2.16.8)))(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.166.1)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))
       '@tanstack/react-table':
         specifier: ^8.19.3
         version: 8.19.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -457,8 +457,8 @@ packages:
       react: 16.8 - 18
       react-dom: 16.8 - 18
 
-  '@opensystemslab/buildx-core@0.8.0-canary.5':
-    resolution: {integrity: sha512-RquHdYlSZKXQwtOtV2P0BrhDfTMdMuCF+G5BtJVDsfS2ylr84szSjE2SAlC6XSQPNbJJT0WoXGAWBNuddL/gLQ==}
+  '@opensystemslab/buildx-core@0.8.0-canary.6':
+    resolution: {integrity: sha512-wYXRl34v4fFbm7McAOB4FFf1uE65y2WbJiUUsfOVEsYzdZvpWo5GmP4QMM+FDhrZd2zcEbrb6oUffiSz1yDNHA==}
     peerDependencies:
       react: '>=18.3.1'
       react-dom: '>=18.3.1'
@@ -3859,7 +3859,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       ua-parser-js: 1.0.2
 
-  '@opensystemslab/buildx-core@0.8.0-canary.5(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(@types/react@18.3.3)(graphql@16.9.0)(mixpanel@0.17.0)(monocle-ts@2.3.13(fp-ts@2.16.8))(newtype-ts@0.3.5(fp-ts@2.16.8)(monocle-ts@2.3.13(fp-ts@2.16.8)))(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.166.1)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))':
+  '@opensystemslab/buildx-core@0.8.0-canary.6(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(@types/react@18.3.3)(graphql@16.9.0)(mixpanel@0.17.0)(monocle-ts@2.3.13(fp-ts@2.16.8))(newtype-ts@0.3.5(fp-ts@2.16.8)(monocle-ts@2.3.13(fp-ts@2.16.8)))(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.166.1)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))':
     dependencies:
       '@speckle/objectloader': 2.20.1(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(mixpanel@0.17.0)(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))(zod@3.23.8)
       '@turf/turf': 7.0.0
