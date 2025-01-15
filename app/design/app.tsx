@@ -120,8 +120,8 @@ const DesignAppMain = ({
 
   const router = useRouter();
 
-  const snapshot = usePngSnapshotsWorker();
-  const updateModels = useExportersWorker();
+  const { upsertSnapshot, deleteSnapshot } = usePngSnapshotsWorker();
+  const { upsertModels, deleteModels } = useExportersWorker();
 
   const initializeScene = (
     canvas: HTMLCanvasElement,
@@ -151,10 +151,15 @@ const DesignAppMain = ({
       setMode(scopeElement.elementGroup.scene?.contextManager?.mode ?? null);
     };
 
+    const {
+      onHouseCreate: defaultOnHouseCreate,
+      onHouseUpdate: defaultOnHouseUpdate,
+      onHouseDelete: defaultOnHouseDelete,
+    } = defaultCachedHousesOps;
+
     const scene = new BuildXScene({
       canvas,
       container,
-      ...defaultCachedHousesOps,
       onLongTapBuildElement: contextMenu,
       onRightClickBuildElement: contextMenu,
       onTapMissed: closeContextMenu,
@@ -198,6 +203,7 @@ const DesignAppMain = ({
           userAgent?.os?.name && ["Mac OS"].includes(String(userAgent.os.name)),
       },
       onHouseUpdate: (houseId, changes) => {
+        defaultOnHouseUpdate(houseId, changes);
         pipe(
           scene.children,
           A.findFirst((x): x is HouseGroup => x.userData.houseId === houseId),
@@ -206,17 +212,50 @@ const DesignAppMain = ({
             const halfSize =
               house.unsafeActiveLayoutGroup.obb.halfSize.toArray();
 
-            snapshot({
+            upsertSnapshot({
               houseId,
               objectJson,
               halfSize,
             });
-            updateModels({
+            upsertModels({
               houseId,
               objectJson,
             });
           })
         );
+      },
+      onHouseCreate: (house) => {
+        defaultOnHouseCreate(house);
+
+        const houseGroup = scene.children.find(
+          (x): x is HouseGroup => x.userData.houseId === house.houseId
+        );
+        if (houseGroup) {
+          upsertSnapshot({
+            houseId: houseGroup.userData.houseId,
+            objectJson: houseGroup.toJSON(),
+            halfSize: houseGroup.unsafeActiveLayoutGroup.obb.halfSize.toArray(),
+          });
+          upsertModels({
+            houseId: houseGroup.userData.houseId,
+            objectJson: houseGroup.toJSON(),
+          });
+        }
+      },
+      onHouseDelete: (houseId) => {
+        const houseGroup = scene.children.find(
+          (x): x is HouseGroup => x.userData.houseId === houseId
+        );
+        if (houseGroup) {
+          houseGroup.removeFromParent();
+          deleteSnapshot({
+            houseId: houseGroup.userData.houseId,
+          });
+          deleteModels({
+            houseId: houseGroup.userData.houseId,
+          });
+        }
+        defaultOnHouseDelete(houseId);
       },
     });
 
@@ -276,6 +315,16 @@ const DesignAppMain = ({
                       houseGroup.position.set(x, y, z);
                       houseGroup.rotation.set(0, rotation, 0);
                       sceneState.scene?.addHouseGroup(houseGroup);
+                      upsertSnapshot({
+                        houseId: houseGroup.userData.houseId,
+                        objectJson: houseGroup.toJSON(),
+                        halfSize:
+                          houseGroup.unsafeActiveLayoutGroup.obb.halfSize.toArray(),
+                      });
+                      upsertModels({
+                        houseId: houseGroup.userData.houseId,
+                        objectJson: houseGroup.toJSON(),
+                      });
                     })
                   )
               )
@@ -291,7 +340,7 @@ const DesignAppMain = ({
       unsubscribe();
       isLoadingHousesRef.current = false;
     };
-  }, []);
+  }, [upsertSnapshot, upsertModels]);
 
   useEffect(() => {
     if (!canvasRef.current || !containerRef.current) return;

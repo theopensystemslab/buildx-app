@@ -17,7 +17,7 @@ const SiteModeContextMenuItems = ({ scopeElement, close }: Props) => {
   const houseGroup = elementGroup.houseGroup;
 
   const deleteHouse = () => {
-    houseGroup.delete();
+    houseGroup.hooks.onHouseDelete?.(houseGroup.userData.houseId);
     close();
   };
 

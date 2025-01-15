@@ -62,8 +62,13 @@ const OverviewIndex = () => {
 
   const { totalTotalCost } = useOrderListData();
 
-  const { allFilesZipURL, materialsListCsvURL, modelsZipURL, orderListCsvURL } =
-    useDownloads();
+  const {
+    allFilesZipURL,
+    materialsListCsvURL,
+    modelsZipURL,
+    orderListCsvURL,
+    labourListCsvURL: labourCsvURL,
+  } = useDownloads();
 
   const overviewFields = [
     {

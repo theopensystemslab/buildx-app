@@ -22,7 +22,7 @@ const LabourApp = () => {
           {csvDownloadUrl !== null && (
             <a
               href={csvDownloadUrl}
-              download={`materials-list.csv`}
+              download={`labour.csv`}
               className="flex font-semibold items-center"
             >
               <span>Download CSV</span>

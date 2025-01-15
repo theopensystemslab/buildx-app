@@ -1,3 +1,4 @@
+// useOutputsWorker.ts
 import { useEffect, useRef } from "react";
 
 const useOutputsWorker = () => {

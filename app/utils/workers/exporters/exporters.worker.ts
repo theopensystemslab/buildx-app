@@ -1,9 +1,15 @@
 // outputsWorker.ts
 import { ExportersWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
 
-self.onmessage = (e) => {
-  ExportersWorkerUtils.updateModels({
-    houseId: e.data.houseId,
-    objectJson: e.data.objectJson,
-  });
+self.onmessage = (e: MessageEvent) => {
+  const { type, payload } = e.data;
+
+  switch (type) {
+    case "upsert":
+      ExportersWorkerUtils.upsertModels(payload);
+      break;
+    case "delete":
+      ExportersWorkerUtils.deleteModels(payload);
+      break;
+  }
 };

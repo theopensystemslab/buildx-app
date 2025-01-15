@@ -2,6 +2,9 @@
 import { ExportersWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
 import { useEffect, useRef } from "react";
 
+type UpsertParams = Parameters<typeof ExportersWorkerUtils.upsertModels>[0];
+type DeleteParams = Parameters<typeof ExportersWorkerUtils.deleteModels>[0];
+
 export const useExportersWorker = () => {
   const workerRef = useRef<Worker>();
 
@@ -15,7 +18,12 @@ export const useExportersWorker = () => {
     };
   }, []);
 
-  return (v: Parameters<typeof ExportersWorkerUtils.updateModels>[0]) => {
-    workerRef.current?.postMessage(v);
+  return {
+    upsertModels: (payload: UpsertParams) => {
+      workerRef.current?.postMessage({ type: "upsert", payload });
+    },
+    deleteModels: (payload: DeleteParams) => {
+      workerRef.current?.postMessage({ type: "delete", payload });
+    },
   };
 };
