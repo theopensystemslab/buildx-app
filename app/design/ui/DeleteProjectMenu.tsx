@@ -1,10 +1,8 @@
-import Loader from "@/app/ui/Loader";
 import Modal from "@/app/ui/Modal";
 import Sidebar from "@/app/ui/Sidebar";
 import { deleteProject } from "@opensystemslab/buildx-core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import usePortal from "react-cool-portal";
 
 type Props = {
   open: boolean;
@@ -14,31 +12,21 @@ type Props = {
 const DeleteProjectMenu = ({ open, close }: Props) => {
   const router = useRouter();
 
-  const [modelOpen, setModalOpen] = useState(false);
-  const [deleting, setDeleting] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const reallyDelete = () => {
-    setDeleting(true);
-
-    deleteProject().then(() => {
-      router.refresh();
-    });
+    deleteProject();
+    setModalOpen(false);
+    close();
+    router.push("/locate");
   };
-
-  const { Portal } = usePortal();
 
   return (
     <Sidebar expanded={open} onClose={close}>
       <div className="p-4">
         <button onClick={() => setModalOpen(true)}>Delete Project</button>
       </div>
-      {deleting ? (
-        <Portal>
-          <div className="absolute z-50 flex h-full w-full items-center justify-center bg-white">
-            <Loader />
-          </div>
-        </Portal>
-      ) : modelOpen ? (
+      {modalOpen ? (
         <Modal onClose={() => setModalOpen(false)} title="Delete Project?">
           <p>You will not be able to undo this</p>
 
