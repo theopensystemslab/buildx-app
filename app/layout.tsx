@@ -59,8 +59,29 @@ const Layout = async ({ children }: PropsWithChildren<{}>) => {
 export const metadata: Metadata = {
   title: "Design your WikiHouse",
   description:
-    "Explore the prototype WikiHouse design tool, and share your suggestions or ideas for how we can improve it using the ‘feedback’ link. You can find the password at community.wikihouse.cc",
+    "Explore the prototype WikiHouse design tool, and share your suggestions or ideas for how we can improve it using the 'feedback' link.",
   metadataBase: new URL("https://build.wikihouse.cc"),
+  openGraph: {
+    images: [
+      {
+        url: "/BuildWikiHouse_OpenGraph.png",
+        width: 1200,
+        height: 630,
+        alt: "WikiHouse Design Tool",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [
+      {
+        url: "/BuildWikiHouse_OpenGraph.png",
+        width: 1200,
+        height: 630,
+        alt: "WikiHouse Design Tool",
+      },
+    ],
+  },
 };
 
 export default Layout;
