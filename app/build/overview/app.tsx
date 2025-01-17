@@ -15,7 +15,7 @@ import useDownloads from "./useDownloads";
 import { useSelectedHouseIds } from "@/app/ui/HousesPillsSelector";
 
 const OverviewIndex = () => {
-  const { format } = useProjectCurrency();
+  const { format, kformat } = useProjectCurrency();
 
   const { projectName, shareUrlPayload } = useProjectData();
 
@@ -84,13 +84,13 @@ const OverviewIndex = () => {
           </div>
         </div>
       ),
-      value: `${format(selectedHousesMetrics.costMin)} to ${format(
+      value: `${kformat(selectedHousesMetrics.costMin)} to ${kformat(
         selectedHousesMetrics.costMax
       )}`,
     },
     {
       label: "Total estimated build cost",
-      value: `${format(selectedHousesMetrics.costMin)} to ${format(
+      value: `${kformat(selectedHousesMetrics.costMin)} to ${kformat(
         selectedHousesMetrics.costMax
       )}`,
     },

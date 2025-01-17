@@ -45,18 +45,6 @@ const ChassisCostChart = ({
 
   const currency = useProjectCurrency();
 
-  function formatNumberWithK(number: number): string {
-    if (number >= 1000) {
-      return (number / 1000).toFixed(1) + "k";
-    } else {
-      return number.toString();
-    }
-  }
-
-  function formatCurrencyWithK(number: number): string {
-    return `${currency.symbol}${formatNumberWithK(number)}`;
-  }
-
   return (
     <ChartColumn>
       <ChartTitles
@@ -77,7 +65,7 @@ const ChassisCostChart = ({
               renderItem={(item) => (
                 <div className="flex flex-col justify-center  items-center">
                   <div>{capitalizeFirstLetters(item.buildingName)}</div>
-                  <div>{formatCurrencyWithK(item.totalCost)}</div>
+                  <div>{currency.kformat(item.totalCost)}</div>
                 </div>
               )}
             />
@@ -87,7 +75,7 @@ const ChassisCostChart = ({
       </ChartContainer>
       <ChartMetrics>
         <div className="text-5xl font-normal flex">
-          {formatCurrencyWithK(totalCost)}
+          {currency.kformat(totalCost)}
         </div>
         <div>
           <div>
