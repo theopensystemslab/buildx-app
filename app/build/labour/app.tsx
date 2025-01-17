@@ -12,10 +12,11 @@ const LabourApp = () => {
         <div>
           <h1>Labour</h1>
           <p className="max-w-3xl mt-2">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab illum
-            vel sapiente placeat obcaecati laudantium officia tenetur eum, quod,
-            animi rem accusantium culpa doloribus voluptatum autem at recusandae
-            molestias deleniti.
+            An outline of how long it might take to assemble and install the
+            building on site. These are very rough estimates only. Actual time
+            will vary depending on the team, local labour costs and site
+            conditions. Does not include wider project planning and site
+            preparation.
           </p>
         </div>
         <div>

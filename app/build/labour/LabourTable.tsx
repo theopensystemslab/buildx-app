@@ -72,7 +72,7 @@ const LabourTable = (props: Props) => {
       }),
       columnHelper.accessor("hours", {
         cell: (info) => <span>{info.getValue().toFixed(1)}h</span>,
-        header: () => <span>Hours</span>,
+        header: () => <span>Person-hours</span>,
       }),
       columnHelper.accessor("cost", {
         cell: (info) => <span>{format(info.getValue())}</span>,
