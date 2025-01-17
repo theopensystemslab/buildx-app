@@ -28,7 +28,7 @@ const HouseThumbnailButton = ({
         houseTypeId,
       }),
       TE.map((houseGroup) => {
-        scene.addHouseGroup(houseGroup);
+        scene.addHouseGroup(houseGroup, { collisions: true });
         close();
       })
     )();
