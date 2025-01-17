@@ -1,14 +1,14 @@
-"use client"
-import { ArrowDown, ArrowUp } from "@carbon/icons-react"
-import Link from "next/link"
-import { Fragment, useState } from "react"
-import AlphaBanner from "./AlphaBanner"
-import ExternalTextLink from "./ExternalTextLink"
-import css from "./Footer.module.css"
-import IconButton from "./IconButton"
+"use client";
+import { ArrowDown, ArrowUp } from "@carbon/icons-react";
+import Link from "next/link";
+import { Fragment, useState } from "react";
+import BetaBanner from "./BetaBanner";
+import ExternalTextLink from "./ExternalTextLink";
+import css from "./Footer.module.css";
+import IconButton from "./IconButton";
 
-const FEEDBACK_LINK = "https://form.typeform.com/to/inbsKUl2"
-const ABOUT_LINK = "https://www.wikihouse.cc/product"
+const FEEDBACK_LINK = "https://form.typeform.com/to/inbsKUl2";
+const ABOUT_LINK = "https://www.wikihouse.cc/product";
 
 const mainLinks = [
   { href: ABOUT_LINK, label: "About WikiHouse" },
@@ -16,7 +16,7 @@ const mainLinks = [
   { href: "/terms", label: "Terms of use" },
   { href: "https://www.wikihouse.cc/privacy", label: "Privacy" },
   { href: "/accessibility", label: "Accessibility" },
-]
+];
 
 const FooterBar = ({ expanded }: { expanded: boolean }) => {
   return (
@@ -37,8 +37,8 @@ const FooterBar = ({ expanded }: { expanded: boolean }) => {
         <ExternalTextLink href="https://wikihouse.cc" label="WikiHouse.cc" />
       </div>
     </div>
-  )
-}
+  );
+};
 
 const FooterContent = ({ expanded }: { expanded: boolean }) => {
   return (
@@ -79,30 +79,30 @@ const FooterContent = ({ expanded }: { expanded: boolean }) => {
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
 const Footer = () => {
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(false);
 
-  const size = "24"
+  const size = "24";
 
   return (
     <Fragment>
-      <AlphaBanner />
+      <BetaBanner />
       <FooterBar expanded={expanded} />
       <FooterContent expanded={expanded} />
       <div className={css.arrow}>
         <IconButton
           onClick={() => {
-            setExpanded((prev) => !prev)
+            setExpanded((prev) => !prev);
           }}
         >
           {expanded ? <ArrowDown size={size} /> : <ArrowUp size={size} />}
         </IconButton>
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

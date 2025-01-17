@@ -1,7 +1,7 @@
 import { Close } from "@carbon/icons-react";
 import { useState, useEffect } from "react";
 
-const AlphaBanner = () => {
+const BetaBanner = () => {
   const [open, setOpen] = useState(true);
 
   const fireResize = () => {
@@ -14,11 +14,10 @@ const AlphaBanner = () => {
   }, [open]);
 
   return open ? (
-    <div className="flex justify-between pt-2 pb-16 px-4 text-lg w-full bg-safety">
+    <div className="flex justify-between pt-2 px-4 text-lg w-full bg-safety">
       <div>
-        <span className="font-bold">ALPHA</span>
+        <span className="font-bold">BETA</span>
         <span className="ml-2">This is a prototype.</span>
-        <span>{` Do not use it for real projects.`}</span>
         <span>
           {` You can help us improve by giving `}
           <a
@@ -42,4 +41,4 @@ const AlphaBanner = () => {
   ) : null;
 };
 
-export default AlphaBanner;
+export default BetaBanner;
