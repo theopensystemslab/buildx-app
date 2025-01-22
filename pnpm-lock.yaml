@@ -21,8 +21,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@opensystemslab/buildx-core':
-        specifier: 0.9.0-canary.3
-        version: 0.9.0-canary.3(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(@types/react@18.3.3)(graphql@16.9.0)(mixpanel@0.17.0)(monocle-ts@2.3.13(fp-ts@2.16.8))(newtype-ts@0.3.5(fp-ts@2.16.8)(monocle-ts@2.3.13(fp-ts@2.16.8)))(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.166.1)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))
+        specifier: 0.9.0-canary.4
+        version: 0.9.0-canary.4(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(@types/react@18.3.3)(graphql@16.9.0)(mixpanel@0.17.0)(monocle-ts@2.3.13(fp-ts@2.16.8))(newtype-ts@0.3.5(fp-ts@2.16.8)(monocle-ts@2.3.13(fp-ts@2.16.8)))(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.166.1)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))
       '@sentry/nextjs':
         specifier: ^8
         version: 8.48.0(@opentelemetry/core@1.30.0(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.56.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.0(@opentelemetry/api@1.9.0))(next@14.2.21(@babel/core@7.24.9)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.97.1)
@@ -463,8 +463,8 @@ packages:
       react: 16.8 - 18
       react-dom: 16.8 - 18
 
-  '@opensystemslab/buildx-core@0.9.0-canary.3':
-    resolution: {integrity: sha512-H3OWuWq2JBgRikPdob9Cza337oamA520K0/Yg/PvhUst1jSsbVA7rYbJ4rqQQfEHP8FVLr8F0gk9PYrx5IzYkQ==}
+  '@opensystemslab/buildx-core@0.9.0-canary.4':
+    resolution: {integrity: sha512-kly4KO3N2wyysVgdcr1V0IowS5fkbo2fIsHixAjDEHG5AaAU8YR1t8QNKeYdLZIjPGU0ziFnOZC8HKlgmZ6z4A==}
     peerDependencies:
       react: '>=18.3.1'
       react-dom: '>=18.3.1'
@@ -2951,8 +2951,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanoid@5.0.7:
-    resolution: {integrity: sha512-oLxFY2gd2IqnjcYyOXD8XGCftpGtZP2AbHbOkthDkvRywH5ayNtPVy9YlOPcHckXzbLTCHpkb7FB+yuxKV13pQ==}
+  nanoid@5.0.9:
+    resolution: {integrity: sha512-Aooyr6MXU6HpvvWXKoVoXwKMs/KyVakWwg7xQfv5/S/RIgJMy0Ifa45H9qqYy7pTCszrHzP21Uk4PZq2HpEM8Q==}
     engines: {node: ^18 || >=20}
     hasBin: true
 
@@ -4594,7 +4594,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       ua-parser-js: 1.0.2
 
-  '@opensystemslab/buildx-core@0.9.0-canary.3(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(@types/react@18.3.3)(graphql@16.9.0)(mixpanel@0.17.0)(monocle-ts@2.3.13(fp-ts@2.16.8))(newtype-ts@0.3.5(fp-ts@2.16.8)(monocle-ts@2.3.13(fp-ts@2.16.8)))(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.166.1)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))':
+  '@opensystemslab/buildx-core@0.9.0-canary.4(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(@types/react@18.3.3)(graphql@16.9.0)(mixpanel@0.17.0)(monocle-ts@2.3.13(fp-ts@2.16.8))(newtype-ts@0.3.5(fp-ts@2.16.8)(monocle-ts@2.3.13(fp-ts@2.16.8)))(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.166.1)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))':
     dependencies:
       '@speckle/objectloader': 2.20.1(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))(mixpanel@0.17.0)(pino-http@8.6.1)(pino-pretty@11.2.2)(pino@8.21.0)(ua-parser-js@1.0.38)(znv@0.4.0(zod@3.23.8))(zod@3.23.8)
       '@turf/turf': 7.0.0
@@ -4616,7 +4616,7 @@ snapshots:
       js-base64: 3.7.7
       jszip: 3.10.1
       lodash: 4.17.21
-      nanoid: 5.0.7
+      nanoid: 5.0.9
       pako: 2.1.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -7126,7 +7126,7 @@ snapshots:
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.9.0(eslint@8.57.0)
       eslint-plugin-react: 7.34.4(eslint@8.57.0)
       eslint-plugin-react-hooks: 4.6.2(eslint@8.57.0)
@@ -7149,8 +7149,8 @@ snapshots:
       debug: 4.3.5
       enhanced-resolve: 5.17.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.5
       is-core-module: 2.14.0
@@ -7161,7 +7161,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -7172,7 +7172,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -7182,7 +7182,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.14.0
       is-glob: 4.0.3
@@ -8135,7 +8135,7 @@ snapshots:
 
   nanoid@3.3.8: {}
 
-  nanoid@5.0.7: {}
+  nanoid@5.0.9: {}
 
   natural-compare@1.4.0: {}
 

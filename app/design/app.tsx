@@ -247,7 +247,7 @@ const DesignAppMain = ({
           (x): x is HouseGroup => x.userData.houseId === houseId
         );
         if (houseGroup) {
-          houseGroup.removeFromParent();
+          houseGroup.dispose();
           deleteSnapshot({
             houseId: houseGroup.userData.houseId,
           });
