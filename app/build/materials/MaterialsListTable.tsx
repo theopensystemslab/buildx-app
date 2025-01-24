@@ -3,7 +3,7 @@ import { ArrowUp } from "@carbon/icons-react";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { pipe } from "fp-ts/lib/function";
 import { memo, useEffect, useMemo } from "react";
-import { A, capitalizeFirstLetters } from "~/utils/functions";
+import { A, capitalizeFirstLetters, O } from "~/utils/functions";
 import PaginatedTable from "../PaginatedTable";
 import { csvFormatRows } from "d3-dsv";
 import {
@@ -56,10 +56,17 @@ const MaterialsListTable = (props: Props) => {
 
   const allHouseIds = houses.map((x) => x.houseId);
 
-  const materialsListRows = useMaterialsListRows(selectedHouseIds).map((x) => ({
-    ...x,
-    colorClass: getColorClass(allHouseIds, x.houseId),
-  }));
+  const materialsListRows = pipe(
+    useMaterialsListRows(selectedHouseIds),
+    A.filterMap((row) =>
+      row.quantity > 0
+        ? O.some({
+            ...row,
+            colorClass: getColorClass(allHouseIds, row.houseId),
+          })
+        : O.none
+    )
+  );
 
   const materialsListDownload = useMaterialsListDownload(materialsListRows);
 
