@@ -208,7 +208,7 @@ const DesignAppMain = ({
           scene.children,
           A.findFirst((x): x is HouseGroup => x.userData.houseId === houseId),
           O.map((house) => {
-            const objectJson = house.toJSON();
+            const objectJson = house.unsafeActiveLayoutGroup.toJSON();
             const halfSize =
               house.unsafeActiveLayoutGroup.obb.halfSize.toArray();
 
@@ -231,14 +231,18 @@ const DesignAppMain = ({
           (x): x is HouseGroup => x.userData.houseId === house.houseId
         );
         if (houseGroup) {
+          const objectJson = houseGroup.unsafeActiveLayoutGroup.toJSON();
+          const halfSize =
+            houseGroup.unsafeActiveLayoutGroup.obb.halfSize.toArray();
+
           upsertSnapshot({
             houseId: houseGroup.userData.houseId,
-            objectJson: houseGroup.toJSON(),
-            halfSize: houseGroup.unsafeActiveLayoutGroup.obb.halfSize.toArray(),
+            objectJson,
+            halfSize,
           });
           upsertModels({
             houseId: houseGroup.userData.houseId,
-            objectJson: houseGroup.toJSON(),
+            objectJson,
           });
         }
       },
@@ -315,15 +319,20 @@ const DesignAppMain = ({
                       houseGroup.position.set(x, y, z);
                       houseGroup.rotation.set(0, rotation, 0);
                       sceneState.scene?.addHouseGroup(houseGroup);
+
+                      const objectJson =
+                        houseGroup.unsafeActiveLayoutGroup.toJSON();
+                      const halfSize =
+                        houseGroup.unsafeActiveLayoutGroup.obb.halfSize.toArray();
+
                       upsertSnapshot({
                         houseId: houseGroup.userData.houseId,
-                        objectJson: houseGroup.toJSON(),
-                        halfSize:
-                          houseGroup.unsafeActiveLayoutGroup.obb.halfSize.toArray(),
+                        objectJson,
+                        halfSize,
                       });
                       upsertModels({
                         houseId: houseGroup.userData.houseId,
-                        objectJson: houseGroup.toJSON(),
+                        objectJson,
                       });
                     })
                   )
