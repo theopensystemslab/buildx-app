@@ -1,6 +1,20 @@
 import { withSentryConfig } from '@sentry/nextjs';
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.js$/,
+      loader: 'babel-loader',
+      options: {
+        plugins: [
+          '@babel/plugin-transform-private-methods',
+          '@babel/plugin-transform-class-properties'
+        ]
+      }
+    });
+    return config;
+  }
+};
 
 export default withSentryConfig(nextConfig, {
   // For all available options, see:
