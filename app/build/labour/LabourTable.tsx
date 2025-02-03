@@ -38,7 +38,7 @@ export const useLabourListDownload = (labourListRows: LabourListRow[]) =>
 
 const LabourTable = (props: Props) => {
   const { setCsvDownloadUrl } = props;
-  const { symbol, format } = useProjectCurrency();
+  const { format } = useProjectCurrency();
 
   const labourListRows = useLabourListRows();
 
