@@ -22,7 +22,13 @@ interface MetricsWidgetProps {
 }
 
 const MetricsWidget = ({ mode, isOpen, setOpen }: MetricsWidgetProps) => {
-  const buildingMode = mode?.label === SceneContextModeLabel.Enum.BUILDING;
+  const buildingMode =
+    mode?.label &&
+    [
+      SceneContextModeLabel.Enum.BUILDING,
+      SceneContextModeLabel.Enum.ROW,
+      // @ts-ignore
+    ].includes(mode.label);
 
   const houseId =
     mode !== null
