@@ -30,12 +30,9 @@ const OverviewIndex = () => {
 
   const selectedHouseIds = useSelectedHouseIds();
 
-  const {
-    areas: { totalFloor },
-    embodiedCo2,
-    costs: { total },
-    byHouse,
-  } = useAnalysisData();
+  const { totalTotalCost } = useOrderListData(selectedHouseIds);
+
+  const { byHouse } = useAnalysisData();
 
   // Calculate metrics only for selected houses
   const selectedHousesMetrics = selectedHouseIds.reduce(
@@ -60,8 +57,6 @@ const OverviewIndex = () => {
     }
   );
 
-  const { totalTotalCost } = useOrderListData();
-
   const {
     allFilesZipURL,
     materialsListCsvURL,
@@ -84,9 +79,7 @@ const OverviewIndex = () => {
           </div>
         </div>
       ),
-      value: `${kformat(selectedHousesMetrics.costMin)} to ${kformat(
-        selectedHousesMetrics.costMax
-      )}`,
+      value: `${format(totalTotalCost)} + VAT`,
     },
     {
       label: "Total estimated build cost",

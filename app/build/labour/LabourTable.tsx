@@ -41,6 +41,7 @@ const LabourTable = (props: Props) => {
   const { symbol, format } = useProjectCurrency();
 
   const labourListRows = useLabourListRows();
+
   const houses = useHouses();
   const allHouseIds = houses.map((x) => x.houseId);
 
