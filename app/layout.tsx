@@ -8,10 +8,17 @@ import Footer from "./ui/Footer";
 import Nav from "./ui/Nav";
 import Fathom from "./utils/Fathom";
 import config from "@/buildx-app.config.json";
+import dynamic from "next/dynamic";
 
 const inter = Inter({
   subsets: ["latin"],
 });
+
+// Dynamic import with no SSR
+const BrowserCompatibilityWrapper = dynamic(
+  () => import("./BrowserCompatibilityWrapper"),
+  { ssr: false }
+);
 
 const TakedownMessage = () => {
   return (
@@ -38,7 +45,7 @@ const Layout = async ({ children }: PropsWithChildren<{}>) => {
           {isTakedownEnabled ? (
             <TakedownMessage />
           ) : (
-            <>
+            <BrowserCompatibilityWrapper>
               <div className="flex-1 flex-grow-0">
                 <Nav />
               </div>
@@ -48,7 +55,7 @@ const Layout = async ({ children }: PropsWithChildren<{}>) => {
               <div className="flex-1 flex-grow-0">
                 <Footer />
               </div>
-            </>
+            </BrowserCompatibilityWrapper>
           )}
         </body>
       </html>

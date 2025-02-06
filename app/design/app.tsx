@@ -106,11 +106,6 @@ const DesignAppMain = ({
   const [orthographic, setOrthographic] = useState(false);
 
   const userAgent = useUserAgent();
-  const { Portal: HeaderEndPortal } = usePortal({
-    containerId: "headerEnd",
-    autoRemoveContainer: false,
-    internalShowHide: false,
-  });
 
   const { Portal: HeaderStartPortal } = usePortal({
     containerId: "headerStart",
