@@ -62,6 +62,7 @@ const ChangeOpenings = (props: Props) => {
               onChange={(value) => {
                 houseGroup.managers.layouts.activeLayoutGroup =
                   value.layoutGroup;
+                houseGroup.managers.zStretch?.init();
                 close();
               }}
               selected={openingsChangeInfo.currentOpt}

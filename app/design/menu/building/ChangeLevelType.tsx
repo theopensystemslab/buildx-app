@@ -66,6 +66,7 @@ const ChangeLevelType = (props: Props) => {
               onChange={(value) => {
                 houseGroup.managers.layouts.activeLayoutGroup =
                   value.layoutGroup;
+                houseGroup.managers.zStretch?.init();
                 close();
               }}
               selected={levelTypesChangeInfo.currentOpt}
