@@ -29,12 +29,8 @@ const MinimalBuildXScene = () => {
 
     pipe(
       localHousesTE,
-      TE.chain((houses) => {
-        if (houses.length === 0) {
-          return TE.right(null);
-        }
-
-        return pipe(
+      TE.chain((houses) =>
+        pipe(
           houses,
           A.traverse(TE.ApplicativePar)(
             // @ts-ignore
@@ -62,11 +58,13 @@ const MinimalBuildXScene = () => {
                   houseGroup.position.set(x, y, z);
                   houseGroup.rotation.set(0, rotation, 0);
                   scene.addHouseGroup(houseGroup);
+
+                  return houseGroup;
                 })
               )
           )
-        );
-      })
+        )
+      )
     )();
 
     const unsubscribeSelectedHouseIds = subscribeSelectedHouseIds(
