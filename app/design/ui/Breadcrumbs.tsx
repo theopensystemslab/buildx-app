@@ -119,7 +119,7 @@ const Breadcrumbs = ({
     return breadcrumbs;
   };
 
-  return <>{renderBreadcrumbs()}</>;
+  return <div className="ml-4">{renderBreadcrumbs()}</div>;
 };
 
 export default Breadcrumbs;
