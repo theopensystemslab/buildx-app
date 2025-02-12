@@ -1,3 +1,4 @@
+"use client";
 import usePortal from "react-cool-portal";
 import { Information } from "@carbon/icons-react";
 
