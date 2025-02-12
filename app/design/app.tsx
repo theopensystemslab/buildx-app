@@ -12,6 +12,7 @@ import {
   defaultCachedHousesOps,
   HouseGroup,
   localHousesTE,
+  SceneContextModeLabel,
   useAllBuildSystemsDataLiveQuery,
 } from "@opensystemslab/buildx-core";
 import { SharingWorkerUtils } from "@opensystemslab/buildx-core/worker-utils";
@@ -38,6 +39,7 @@ import ObjectsSidebar from "./ui/objects-sidebar/ObjectsSidebar";
 import { getModeUrl } from "./util";
 import usePngSnapshotsWorker from "../utils/workers/png-snapshots/usePngSnapshotsWorker";
 import { useExportersWorker } from "../utils/workers/exporters/useExportersWorker";
+import InteractionHint from "./ui/InteractionHint";
 
 const DesignAppMain = ({
   systemsData: { houseTypes },
@@ -118,6 +120,8 @@ const DesignAppMain = ({
   const { upsertSnapshot, deleteSnapshot } = usePngSnapshotsWorker();
   const { upsertModels, deleteModels } = useExportersWorker();
 
+  const [selectedHouseId, setSelectedHouseId] = useState<string | null>(null);
+
   const initializeScene = (
     canvas: HTMLCanvasElement,
     container: HTMLDivElement,
@@ -157,7 +161,10 @@ const DesignAppMain = ({
       container,
       onLongTapBuildElement: contextMenu,
       onRightClickBuildElement: contextMenu,
-      onTapMissed: closeContextMenu,
+      onTapMissed: () => {
+        closeContextMenu();
+        setSelectedHouseId(null);
+      },
       onModeChange: (prev, next) => {
         setMode(next);
         const url = getModeUrl(next);
@@ -255,6 +262,12 @@ const DesignAppMain = ({
           });
         }
         defaultOnHouseDelete(houseId);
+      },
+      onHouseSelect: (houseId) => {
+        setSelectedHouseId(houseId);
+      },
+      onHouseDeselect: (houseId) => {
+        setSelectedHouseId(null);
       },
     });
 
@@ -391,6 +404,13 @@ const DesignAppMain = ({
           }}
         />
       </HeaderStartPortal>
+
+      <InteractionHint
+        show={
+          mode?.label === SceneContextModeLabel.Enum.SITE &&
+          selectedHouseId !== null
+        }
+      />
 
       <div className="absolute left-0 top-1/2 z-10 flex -translate-y-1/2 transform flex-col justify-center bg-white shadow">
         {/* <IconMenu icon={() => <ChoroplethMap size={24} className="m-auto" />}>
