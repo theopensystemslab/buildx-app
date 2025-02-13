@@ -1,6 +1,10 @@
 "use client";
 import { ArrowUp } from "@carbon/icons-react";
-import { OrderListRow, useProjectCurrency } from "@opensystemslab/buildx-core";
+import {
+  OrderListRow,
+  useProjectCurrency,
+  useOrderListData,
+} from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
 import { A, capitalizeFirstLetters, O, R } from "~/utils/functions";
 import ChartBar from "./ChartBar";
@@ -21,6 +25,7 @@ const ChassisCostChart = ({
   orderListRows: OrderListRow[];
   selectedHouseIds: string[];
 }) => {
+  const { totalTotalCost } = useOrderListData(selectedHouseIds);
   const orderListByBuilding = pipe(
     orderListRows,
     A.reduce({}, (acc: Record<string, OrderListRow>, x) =>
@@ -75,7 +80,7 @@ const ChassisCostChart = ({
       </ChartContainer>
       <ChartMetrics>
         <div className="text-5xl font-normal flex">
-          {currency.kformat(totalCost)}
+          {currency.kformat(totalTotalCost)}
         </div>
         <div>
           <div>

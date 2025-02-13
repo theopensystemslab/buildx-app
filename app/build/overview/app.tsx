@@ -5,6 +5,7 @@ import {
   useOrderListData,
   useProjectCurrency,
   useProjectData,
+  useTotalCosts,
 } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
 import { Fragment } from "react";
@@ -33,6 +34,8 @@ const OverviewIndex = () => {
   const { totalTotalCost } = useOrderListData(selectedHouseIds);
 
   const { byHouse } = useAnalysisData();
+
+  const { labourTotal, materialsTotals } = useTotalCosts(selectedHouseIds);
 
   // Calculate metrics only for selected houses
   const selectedHousesMetrics = selectedHouseIds.reduce(
@@ -83,14 +86,14 @@ const OverviewIndex = () => {
     },
     {
       label: "Total estimated build cost",
-      value: `${kformat(selectedHousesMetrics.costMin)} to ${kformat(
-        selectedHousesMetrics.costMax
-      )}`,
+      value: `${kformat(
+        materialsTotals.totalEstimatedCost.min + labourTotal
+      )} to ${kformat(materialsTotals.totalEstimatedCost.max + labourTotal)}`,
     },
     {
       label: "Total estimated carbon cost",
-      value: `${(selectedHousesMetrics.embodiedCo2Min / 1000).toFixed(2)} to ${(
-        selectedHousesMetrics.embodiedCo2Max / 1000
+      value: `${(materialsTotals.totalCarbonCost.min / 1000).toFixed(2)} to ${(
+        materialsTotals.totalCarbonCost.max / 1000
       ).toFixed(2)} tCO₂e`,
     },
   ];

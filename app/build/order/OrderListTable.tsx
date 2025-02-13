@@ -103,7 +103,12 @@ const OrderListTable = (props: Props) => {
         columnHelper.accessor("count", {
           id: "Count",
           cell: (info) => <span>{info.getValue()}</span>,
-          header: () => <span>Number</span>,
+          header: () => <span>Count</span>,
+          footer: () => (
+            <span>
+              {orderListRows.reduce((sum, row) => sum + row.count, 0)}
+            </span>
+          ),
         }),
         columnHelper.accessor("costPerBlock", {
           id: "Cost Per Block",
@@ -121,6 +126,18 @@ const OrderListTable = (props: Props) => {
           cell: (info) => <span>{fmt(info.getValue())}</span>,
           header: () => <span>Manufacturing Cost</span>,
           footer: () => <span>{format(totalManufacturingCost)}</span>,
+        }),
+        columnHelper.accessor("embodiedCarbonGwp", {
+          id: "Embodied Carbon Gwp",
+          cell: (info) => <span>{info.getValue().toFixed(1)}</span>,
+          header: () => <span>Embodied Carbon Gwp</span>,
+          footer: () => (
+            <span>
+              {orderListRows
+                .reduce((sum, row) => sum + row.embodiedCarbonGwp, 0)
+                .toFixed(1)}
+            </span>
+          ),
         }),
         config.cuttingFiles !== "false"
           ? columnHelper.accessor("cuttingFileUrl", {
@@ -152,6 +169,7 @@ const OrderListTable = (props: Props) => {
       totalManufacturingCost,
       totalMaterialCost,
       totalTotalCost,
+      orderListRows,
     ]
   );
 

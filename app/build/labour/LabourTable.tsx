@@ -55,7 +55,15 @@ const LabourTable = (props: Props) => {
 
   const totalCost = pipe(
     labourListRows,
-    A.reduce(0, (acc, row) => acc + row.cost)
+    A.reduce({ min: 0, max: 0 }, (acc, row) => ({
+      min: acc.min + row.cost.min,
+      max: acc.max + row.cost.max,
+    }))
+  );
+
+  const totalHours = pipe(
+    labourListRows,
+    A.reduce(0, (acc, row) => acc + row.hours)
   );
 
   const columnHelper = createColumnHelper<LabourListRow>();
@@ -71,17 +79,34 @@ const LabourTable = (props: Props) => {
         cell: (info) => <span>{info.getValue()}</span>,
         header: () => <span>Labour Type</span>,
       }),
+      columnHelper.accessor("rate", {
+        cell: (info) => (
+          <span>
+            {format(info.getValue().min)}/h - {format(info.getValue().max)}/h
+          </span>
+        ),
+        header: () => <span>Rate</span>,
+      }),
       columnHelper.accessor("hours", {
         cell: (info) => <span>{info.getValue().toFixed(1)}h</span>,
         header: () => <span>Person-hours</span>,
+        footer: () => <span>{totalHours.toFixed(1)}h</span>,
       }),
       columnHelper.accessor("cost", {
-        cell: (info) => <span>{format(info.getValue())}</span>,
+        cell: (info) => (
+          <span>
+            {format(info.getValue().min)} - {format(info.getValue().max)}
+          </span>
+        ),
         header: () => <span>Cost</span>,
-        footer: () => <span>{format(totalCost)}</span>,
+        footer: () => (
+          <span>
+            {format(totalCost.min)} - {format(totalCost.max)}
+          </span>
+        ),
       }),
     ],
-    [columnHelper, format, totalCost]
+    [columnHelper, format, totalCost, totalHours]
   );
 
   const enhancedRows = labourListRows.map((row) => ({

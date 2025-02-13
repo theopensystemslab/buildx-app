@@ -15,6 +15,7 @@ import {
   useHouses,
   housesToRecord,
   AnalysisData,
+  useTotalCosts,
 } from "@opensystemslab/buildx-core";
 import { getColorClass } from "./colors";
 import { mean } from "@/app/utils/math";
@@ -27,6 +28,7 @@ const CarbonEmissionsChart = ({
   analysisData: AnalysisData;
 }) => {
   const houses = housesToRecord(useHouses());
+  const { materialsTotals } = useTotalCosts(selectedHouseIds);
 
   return (
     <ChartColumn>
@@ -35,9 +37,9 @@ const CarbonEmissionsChart = ({
         <div
           className={clsx(
             "grid grid-cols-3 border-black h-full",
-            analysisData.embodiedCo2.total.max === 0
+            materialsTotals.totalCarbonCost.max === 0
               ? "hidden"
-              : analysisData.embodiedCo2.total.max > 0
+              : materialsTotals.totalCarbonCost.max > 0
               ? "border-b"
               : "border-t"
           )}
@@ -75,8 +77,8 @@ const CarbonEmissionsChart = ({
       </ChartContainer>
       <ChartMetrics2>
         <div className="text-4xl font-normal">
-          {`${(analysisData.embodiedCo2.total.min / 1000).toFixed(2)} to ${(
-            analysisData.embodiedCo2.total.max / 1000
+          {`${(materialsTotals.totalCarbonCost.min / 1000).toFixed(2)} to ${(
+            materialsTotals.totalCarbonCost.max / 1000
           ).toFixed(2)} tCO₂e`}
         </div>
         <div>Project will remove carbon dioxide from the atmosphere</div>

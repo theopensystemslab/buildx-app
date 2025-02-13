@@ -174,17 +174,26 @@ const MaterialsListTable = (props: Props) => {
         },
       }),
       columnHelper.accessor("embodiedCarbonCost", {
-        cell: (info) => (
-          <span>{`${Number(info.getValue().min).toFixed(0)} to ${Number(
-            info.getValue().max
-          ).toFixed(0)} kgCO₂`}</span>
-        ),
+        cell: (info) => {
+          const { min, max } = info.getValue();
+          return (
+            <span>
+              {min === max
+                ? `${Number(min).toFixed(0)} kgCO₂`
+                : `${Number(min).toFixed(0)} to ${Number(max).toFixed(
+                    0
+                  )} kgCO₂`}
+            </span>
+          );
+        },
         header: () => <span>Carbon cost</span>,
         footer: () => (
           <span>
-            {`${totalCarbonCost.min.toFixed(
-              0
-            )} to ${totalCarbonCost.max.toFixed(0)} T CO₂`}
+            {totalCarbonCost.min === totalCarbonCost.max
+              ? `${totalCarbonCost.min.toFixed(0)} kgCO₂`
+              : `${totalCarbonCost.min.toFixed(
+                  0
+                )} to ${totalCarbonCost.max.toFixed(0)} kgCO₂`}
           </span>
         ),
       }),
