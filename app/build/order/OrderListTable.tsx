@@ -128,14 +128,15 @@ const OrderListTable = (props: Props) => {
           footer: () => <span>{format(totalManufacturingCost)}</span>,
         }),
         columnHelper.accessor("embodiedCarbonGwp", {
-          id: "Embodied Carbon Gwp",
-          cell: (info) => <span>{info.getValue().toFixed(1)}</span>,
-          header: () => <span>Embodied Carbon Gwp</span>,
+          id: "Carbon cost",
+          cell: (info) => <span>{info.getValue().toFixed(0)} kgCO₂</span>,
+          header: () => <span>Carbon cost</span>,
           footer: () => (
             <span>
               {orderListRows
                 .reduce((sum, row) => sum + row.embodiedCarbonGwp, 0)
-                .toFixed(1)}
+                .toFixed(0)}{" "}
+              kgCO₂
             </span>
           ),
         }),
