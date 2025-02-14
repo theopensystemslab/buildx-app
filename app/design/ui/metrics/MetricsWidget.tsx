@@ -6,6 +6,7 @@ import {
   useHouses,
   useOrderListData,
   useProjectCurrency,
+  useTotalCosts,
 } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
 import { useEffect, useRef, useState } from "react";
@@ -41,10 +42,15 @@ const MetricsWidget = ({ mode, isOpen, setOpen }: MetricsWidgetProps) => {
         )
       : null;
 
-  const { costs, embodiedCo2, byHouse, areas } = useAnalysisData();
-  const currency = useProjectCurrency();
-
   const houses = useHouses();
+  const allHouseIds = houses.map((h) => h.houseId);
+  const relevantHouseIds = buildingMode && houseId ? [houseId] : allHouseIds;
+
+  const { labourTotal, materialsTotals } = useTotalCosts(relevantHouseIds);
+  const { totalTotalCost } = useOrderListData(relevantHouseIds);
+
+  const { byHouse, areas } = useAnalysisData();
+  const currency = useProjectCurrency();
 
   const { orderListRows } = useOrderListData();
 
@@ -60,11 +66,6 @@ const MetricsWidget = ({ mode, isOpen, setOpen }: MetricsWidgetProps) => {
   const houseChassisCosts = pipe(
     orderListRowsByHouse,
     R.map(A.reduce(0, (b, a) => b + a.totalCost))
-  );
-
-  const totalChassisCost = pipe(
-    houseChassisCosts,
-    R.reduce(S.Ord)(0, (b, a) => b + a)
   );
 
   const hasHouseBeenAdded = useRef(false);
@@ -109,13 +110,16 @@ const MetricsWidget = ({ mode, isOpen, setOpen }: MetricsWidgetProps) => {
       : [
           {
             label: "Estimated build cost",
-            value: costs.total,
+            value: {
+              min: materialsTotals.totalEstimatedCost.min + labourTotal,
+              max: materialsTotals.totalEstimatedCost.max + labourTotal,
+            },
             displayFn: ({ min, max }: Range) =>
               `${formatCurrencyWithK(min)} to ${formatCurrencyWithK(max)}`,
           },
           {
             label: "Estimated chassis cost",
-            value: totalChassisCost,
+            value: totalTotalCost,
             displayFn: (value: number) =>
               value.toLocaleString("en-GB", {
                 style: "currency",
@@ -143,7 +147,6 @@ const MetricsWidget = ({ mode, isOpen, setOpen }: MetricsWidgetProps) => {
             label: "Internal floor area",
             value: byHouse[houseId!].areas.totalFloor,
             unit: "m²",
-
             displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
           } as Metric<number>,
         ]
@@ -151,8 +154,8 @@ const MetricsWidget = ({ mode, isOpen, setOpen }: MetricsWidgetProps) => {
           {
             label: "Estimated carbon cost",
             value: {
-              min: embodiedCo2.total.min / 1000,
-              max: embodiedCo2.total.max / 1000,
+              min: materialsTotals.totalCarbonCost.min / 1000,
+              max: materialsTotals.totalCarbonCost.max / 1000,
             },
             unit: "tCO₂e",
             displayFn: (value, unit) =>
@@ -162,7 +165,6 @@ const MetricsWidget = ({ mode, isOpen, setOpen }: MetricsWidgetProps) => {
             label: "Internal floor area",
             value: areas.totalFloor,
             unit: "m²",
-
             displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
           } as Metric<number>,
         ];
