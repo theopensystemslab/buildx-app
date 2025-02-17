@@ -1,5 +1,4 @@
 import {
-  OrderListRow,
   SceneContextMode,
   SceneContextModeLabel,
   useAnalysisData,
@@ -9,10 +8,10 @@ import {
   useTotalCosts,
 } from "@opensystemslab/buildx-core";
 import { pipe } from "fp-ts/lib/function";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useCallback } from "react";
 import IconButton from "../../../ui/IconButton";
 import { Analyse, Close } from "../../../ui/icons";
-import { A, NEA, O, R, S } from "../../../utils/functions";
+import { A, NEA, O, R } from "../../../utils/functions";
 import MetricsCarousel, { Metric, Range } from "./MetricsCarousel";
 import css from "./MetricsWidget.module.css";
 
@@ -23,28 +22,36 @@ interface MetricsWidgetProps {
 }
 
 const MetricsWidget = ({ mode, isOpen, setOpen }: MetricsWidgetProps) => {
-  const buildingMode =
-    mode?.label &&
-    [
-      SceneContextModeLabel.Enum.BUILDING,
-      SceneContextModeLabel.Enum.ROW,
-      // @ts-ignore
-    ].includes(mode.label);
+  const buildingMode = useMemo(
+    () =>
+      mode?.label &&
+      [
+        SceneContextModeLabel.Enum.BUILDING,
+        SceneContextModeLabel.Enum.ROW,
+        // @ts-ignore
+      ].includes(mode.label),
+    [mode?.label]
+  );
 
-  const houseId =
-    mode !== null
-      ? pipe(
-          mode.buildingHouseGroup,
-          O.match(
-            () => null,
-            (v) => v.userData.houseId
+  const houseId = useMemo(
+    () =>
+      mode !== null
+        ? pipe(
+            mode.buildingHouseGroup,
+            O.match(
+              () => null,
+              (v) => v.userData.houseId
+            )
           )
-        )
-      : null;
+        : null,
+    [mode]
+  );
 
   const houses = useHouses();
-  const allHouseIds = houses.map((h) => h.houseId);
-  const relevantHouseIds = buildingMode && houseId ? [houseId] : allHouseIds;
+  const relevantHouseIds = useMemo(
+    () => (buildingMode && houseId ? [houseId] : undefined),
+    [buildingMode, houseId]
+  );
 
   const { labourTotal, materialsTotals } = useTotalCosts(relevantHouseIds);
   const { totalTotalCost } = useOrderListData(relevantHouseIds);
@@ -54,18 +61,21 @@ const MetricsWidget = ({ mode, isOpen, setOpen }: MetricsWidgetProps) => {
 
   const { orderListRows } = useOrderListData();
 
-  const orderListRowsByHouse: Record<string, OrderListRow[]> = A.isNonEmpty(
-    orderListRows
-  )
-    ? pipe(
-        orderListRows,
-        NEA.groupBy((x) => x.houseId)
-      )
-    : {};
+  const orderListRowsByHouse = useMemo(
+    () =>
+      A.isNonEmpty(orderListRows)
+        ? pipe(
+            orderListRows,
+            NEA.groupBy((x) => x.houseId)
+          )
+        : {},
+    [orderListRows]
+  );
 
-  const houseChassisCosts = pipe(
-    orderListRowsByHouse,
-    R.map(A.reduce(0, (b, a) => b + a.totalCost))
+  const houseChassisCosts = useMemo(
+    () =>
+      pipe(orderListRowsByHouse, R.map(A.reduce(0, (b, a) => b + a.totalCost))),
+    [orderListRowsByHouse]
   );
 
   const hasHouseBeenAdded = useRef(false);
@@ -88,86 +98,105 @@ const MetricsWidget = ({ mode, isOpen, setOpen }: MetricsWidgetProps) => {
     }
   }
 
-  function formatCurrencyWithK(number: number): string {
-    return `${currency.symbol}${formatNumberWithK(number)}`;
-  }
+  const formatCurrencyWithK = useCallback(
+    (number: number): string =>
+      `${currency.symbol}${formatNumberWithK(number)}`,
+    [currency.symbol]
+  );
 
-  const topMetrics =
-    buildingMode && houseId && houseId in byHouse
-      ? [
-          {
-            label: "Estimated build cost",
-            value: byHouse[houseId].costs.total,
-            displayFn: ({ min, max }: Range) =>
-              `${formatCurrencyWithK(min)} to ${formatCurrencyWithK(max)}`,
-          },
-          {
-            label: "Estimated chassis cost",
-            value: houseChassisCosts[houseId],
-            displayFn: (value: number) => formatCurrencyWithK(value),
-          },
-        ]
-      : [
-          {
-            label: "Estimated build cost",
-            value: {
-              min: materialsTotals.totalEstimatedCost.min + labourTotal,
-              max: materialsTotals.totalEstimatedCost.max + labourTotal,
+  const topMetrics = useMemo(
+    () =>
+      buildingMode && houseId && houseId in byHouse
+        ? [
+            {
+              label: "Estimated build cost",
+              value: byHouse[houseId].costs.total,
+              displayFn: ({ min, max }: Range) =>
+                `${formatCurrencyWithK(min)} to ${formatCurrencyWithK(max)}`,
             },
-            displayFn: ({ min, max }: Range) =>
-              `${formatCurrencyWithK(min)} to ${formatCurrencyWithK(max)}`,
-          },
-          {
-            label: "Estimated chassis cost",
-            value: totalTotalCost,
-            displayFn: (value: number) =>
-              value.toLocaleString("en-GB", {
-                style: "currency",
-                currency: currency.code,
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              }),
-          },
-        ];
+            {
+              label: "Estimated chassis cost",
+              value: houseChassisCosts[houseId],
+              displayFn: (value: number) => formatCurrencyWithK(value),
+            },
+          ]
+        : [
+            {
+              label: "Estimated build cost",
+              value: {
+                min: materialsTotals.totalEstimatedCost.min + labourTotal,
+                max: materialsTotals.totalEstimatedCost.max + labourTotal,
+              },
+              displayFn: ({ min, max }: Range) =>
+                `${formatCurrencyWithK(min)} to ${formatCurrencyWithK(max)}`,
+            },
+            {
+              label: "Estimated chassis cost",
+              value: totalTotalCost,
+              displayFn: (value: number) =>
+                value.toLocaleString("en-GB", {
+                  style: "currency",
+                  currency: currency.code,
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }),
+            },
+          ],
+    [
+      buildingMode,
+      houseId,
+      byHouse,
+      houseChassisCosts,
+      materialsTotals.totalEstimatedCost.min,
+      materialsTotals.totalEstimatedCost.max,
+      labourTotal,
+      totalTotalCost,
+      formatCurrencyWithK,
+      currency.code,
+    ]
+  );
 
-  const bottomMetrics =
-    buildingMode && houseId && houseId in byHouse
-      ? [
-          {
-            label: "Estimated carbon cost",
-            value: {
-              min: byHouse[houseId!].embodiedCo2.total.min / 1000,
-              max: byHouse[houseId!].embodiedCo2.total.max / 1000,
-            },
-            unit: "tCO₂e",
-            displayFn: (value, unit) =>
-              `${value.min.toFixed(2)} to ${value.max.toFixed(2)} ${unit}`,
-          } as Metric<Range>,
-          {
-            label: "Internal floor area",
-            value: byHouse[houseId!].areas.totalFloor,
-            unit: "m²",
-            displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
-          } as Metric<number>,
-        ]
-      : [
-          {
-            label: "Estimated carbon cost",
-            value: {
-              min: materialsTotals.totalCarbonCost.min / 1000,
-              max: materialsTotals.totalCarbonCost.max / 1000,
-            },
-            unit: "tCO₂e",
-            displayFn: (value, unit) =>
-              `${value.min.toFixed(2)} to ${value.max.toFixed(2)} ${unit}`,
-          } as Metric<Range>,
-          {
-            label: "Internal floor area",
-            value: areas.totalFloor,
-            unit: "m²",
-            displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
-          } as Metric<number>,
-        ];
+  const bottomMetrics = useMemo(
+    () =>
+      buildingMode && houseId && houseId in byHouse
+        ? [
+            {
+              label: "Estimated carbon cost",
+              value: {
+                min: byHouse[houseId!].embodiedCo2.total.min / 1000,
+                max: byHouse[houseId!].embodiedCo2.total.max / 1000,
+              },
+              unit: "tCO₂e",
+              displayFn: (value, unit) =>
+                `${value.min.toFixed(2)} to ${value.max.toFixed(2)} ${unit}`,
+            } as Metric<Range>,
+            {
+              label: "Internal floor area",
+              value: byHouse[houseId!].areas.totalFloor,
+              unit: "m²",
+              displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
+            } as Metric<number>,
+          ]
+        : [
+            {
+              label: "Estimated carbon cost",
+              value: {
+                min: materialsTotals.totalCarbonCost.min / 1000,
+                max: materialsTotals.totalCarbonCost.max / 1000,
+              },
+              unit: "tCO₂e",
+              displayFn: (value, unit) =>
+                `${value.min.toFixed(2)} to ${value.max.toFixed(2)} ${unit}`,
+            } as Metric<Range>,
+            {
+              label: "Internal floor area",
+              value: areas.totalFloor,
+              unit: "m²",
+              displayFn: (value, unit) => `${value.toFixed(2)} ${unit}`,
+            } as Metric<number>,
+          ],
+    [buildingMode, houseId, byHouse, materialsTotals, areas]
+  );
 
   return (
     <div className={css.container}>
